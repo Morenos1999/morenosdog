@@ -494,15 +494,15 @@ const PAY={
  dc1:"https://buy.stripe.com/9B6fZi8IH990eMudS1fAc1k",
  consulta:"https://buy.stripe.com/dRmdRa1gf3OG7k2bJTfAc11",dc05:"https://buy.stripe.com/28E5kEf75clceMu7tDfAc13",dc5:"https://buy.stripe.com/5kQ9AU7ED84WawebJTfAc14",dc10:"https://buy.stripe.com/fZu7sMcYXetk6fY3dnfAc15",
  basico:{clases:["https://buy.stripe.com/bJefZi8IH0CuawedS1fAc16","https://buy.stripe.com/eVqcN65wvad40VEbJTfAc17"],daycare:["https://buy.stripe.com/14AcN63onad47k28xHfAc18","https://buy.stripe.com/9B64gA0cbfxodIq01bfAc19"]},
- intensivo:{clases:["https://buy.stripe.com/5kQ28s0cb1GyeMu15ffAc1a","https://buy.stripe.com/aFa6oIcYXad4bAi4hrfAc1b"],daycare:["https://buy.stripe.com/8x2cN6e3184WawebJTfAc1c","https://buy.stripe.com/00w7sM8IH5WOdIq01bfAc1d"]},
+ intensivo:{clases:["https://buy.stripe.com/5kQ28s0cb1GyeMu15ffAc1a","https://buy.stripe.com/aFa6oIcYXad4bAi4hrfAc1b"],daycare:["https://buy.stripe.com/cNi4gAf7584WcEm8xHfAc1n","https://buy.stripe.com/28E3cw0cbfxoeMu9BLfAc1o"]},
  servicio:{clases:["https://buy.stripe.com/7sY28s2kj0CugUC8xHfAc1e","https://buy.stripe.com/bJefZi3on1Gyawe29jfAc1f"],daycare:["https://buy.stripe.com/cNi00kgb94SK8o69BLfAc1g","https://buy.stripe.com/bJe7sM7ED70SbAi7tDfAc1h"]}
 };
 const ORLPAY={full:"https://buy.stripe.com/5kQaEY7EDdpgeMu15ffAc1l",dep:"https://buy.stripe.com/fZu28s9ML5WOeMug09fAc1m"};
-const PRICES={basico:{clases:600,daycare:800},intensivo:{clases:800,daycare:1050},servicio:{clases:1200,daycare:1600}};
+const PRICES={basico:{clases:600,daycare:800},intensivo:{clases:800,daycare:1200},servicio:{clases:1200,daycare:1600}};
 const PK={daycare:{t:"Paquetes de daycare",tag:"Primer mes: $25 por día",o:[["Día completo","$30","por día (regular). Primer mes: $25 por día.",[["Pagar $25 (oferta de apertura)",PAY.dc1]]],["Medio día","$18","hasta 5 horas",[["Pagar $18",PAY.dc05]]],["Paquete de 5 días","$135","$27 por día",[["Pagar $135",PAY.dc5]]],["Paquete de 10 días","$250","$25 por día",[["Pagar $250",PAY.dc10]]]]},consulta:{t:"Consulta de conducta",tag:"Para un problema específico",o:[["Consulta de conducta","$65","45 a 60 minutos.",[["Pagar $65",PAY.consulta]]]]}};
 const MODOS=(k,cl,n,sem,ven,dp,dc)=>[["Con clases","$"+cl,n+" clases de 45 a 60 min, 4 por semana. Terminas en "+sem+". Vence en "+ven+" semanas.",[["Pagar $"+cl,PAY[k].clases[0]],["Depósito $"+cl/2,PAY[k].clases[1]]]],["Daycare + entrenamiento","$"+dp,dc,[["Pagar $"+dp,PAY[k].daycare[0]],["Depósito $"+dp/2,PAY[k].daycare[1]]]]];
 PK.basico={t:"Paquete Básico",tag:"Obedece en casa · 8 clases",o:MODOS("basico",600,8,"2 semanas",4,800,"Lunes a viernes, unas 1.5 semanas. Tu perro entrena durante el día y lo recoges en la tarde. Incluye 2 clases contigo para aprender a manejarlo.")};
-PK.intensivo={t:"Paquete Intensivo",tag:"Obedece en cualquier lugar · 12 clases",o:MODOS("intensivo",800,12,"3 semanas",6,1050,"Lunes a viernes, unas 2 semanas. Tu perro entrena durante el día y lo recoges en la tarde. Incluye 2 clases contigo para aprender a manejarlo.")};
+PK.intensivo={t:"Paquete Intensivo",tag:"Obedece en cualquier lugar · 12 clases",o:MODOS("intensivo",800,12,"3 semanas",6,1200,"Lunes a viernes, unas 2 semanas. Tu perro entrena durante el día y lo recoges en la tarde. Incluye 2 clases contigo para aprender a manejarlo.")};
 PK.servicio={t:"Paquete Acceso Público",tag:"Te acompaña a todas partes · 14 clases",o:MODOS("servicio",1200,14,"3.5 semanas",8,1600,"Lunes a viernes, unas 3 semanas. Tu perro entrena durante el día y lo recoges en la tarde. Incluye 2 clases contigo para aprender a manejarlo.")};
 const ORL_DATES=["2026-11-07","2026-11-08","2026-12-05","2026-12-06"];
 const TIMES={pr:["9:00 am","11:00 am","2:00 pm","4:00 pm"],orl:["10:00 am","1:00 pm","3:00 pm"]};
