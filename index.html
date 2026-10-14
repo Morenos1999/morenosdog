@@ -412,7 +412,7 @@ body.orl-mode #membresias,body.orl-mode #tienda,body.orl-mode #reglas,body.orl-m
       <select id="bl"><option value="pr">Puerto Rico</option><option value="orl">Orlando</option></select>
       <label for="bs">Servicio</label>
       <select id="bs"></select>
-      <div id="bmw" hidden><label for="bm">Modalidad</label><select id="bm"><option>Con clases (traigo a mi perro)</option><option>Daycare + entrenamiento (lunes a viernes)</option></select></div>
+      <div id="bmw" hidden><label for="bm">Modalidad</label><select id="bm"><option>Con clases (traigo a mi perro)</option><option>Daycare + entrenamiento (lunes a viernes)</option><option>En parque</option><option>A domicilio</option></select></div>
       <div id="dtw"><label>Día</label><div class="days" id="days"></div>
       <label>Hora</label><div class="slots" id="slots"></div></div>
     </div>
@@ -498,9 +498,11 @@ const PAY={
  servicio:{clases:["https://buy.stripe.com/7sY28s2kj0CugUC8xHfAc1e","https://buy.stripe.com/bJefZi3on1Gyawe29jfAc1f"],daycare:["https://buy.stripe.com/cNi00kgb94SK8o69BLfAc1g","https://buy.stripe.com/bJe7sM7ED70SbAi7tDfAc1h"]}
 };
 const ORLPAY={full:"https://buy.stripe.com/5kQaEY7EDdpgeMu15ffAc1l",dep:"https://buy.stripe.com/fZu28s9ML5WOeMug09fAc1m"};
-const PRICES={basico:{clases:600,daycare:800},intensivo:{clases:800,daycare:1200},servicio:{clases:1200,daycare:1600}};
+const PRICES={basico:{clases:600,daycare:800,parque:850,domicilio:1100},intensivo:{clases:800,daycare:1200,parque:1050,domicilio:1300},servicio:{clases:1200,daycare:1600,parque:1450,domicilio:1700}};
+const MDS=["clases","daycare","parque","domicilio"];
+const PAYWA="Te enviamos el enlace de pago por WhatsApp al confirmar tu reserva.";
 const PK={daycare:{t:"Paquetes de daycare",tag:"Primer mes: $25 por día",o:[["Día completo","$30","por día (regular). Primer mes: $25 por día.",[["Pagar $25 (oferta de apertura)",PAY.dc1]]],["Medio día","$18","hasta 5 horas",[["Pagar $18",PAY.dc05]]],["Paquete de 5 días","$135","$27 por día",[["Pagar $135",PAY.dc5]]],["Paquete de 10 días","$250","$25 por día",[["Pagar $250",PAY.dc10]]]]},consulta:{t:"Consulta de conducta",tag:"Para un problema específico",o:[["Consulta de conducta","$65","45 a 60 minutos.",[["Pagar $65",PAY.consulta]]]]}};
-const MODOS=(k,cl,n,sem,ven,dp,dc)=>[["Con clases","$"+cl,n+" clases de 45 a 60 min, 4 por semana. Terminas en "+sem+". Vence en "+ven+" semanas.",[["Pagar $"+cl,PAY[k].clases[0]],["Depósito $"+cl/2,PAY[k].clases[1]]]],["Daycare + entrenamiento","$"+dp,dc,[["Pagar $"+dp,PAY[k].daycare[0]],["Depósito $"+dp/2,PAY[k].daycare[1]]]]];
+const MODOS=(k,cl,n,sem,ven,dp,dc)=>[["Con clases","$"+cl,n+" clases de 45 a 60 min, 4 por semana. Terminas en "+sem+". Vence en "+ven+" semanas.",[["Pagar $"+cl,PAY[k].clases[0]],["Depósito $"+cl/2,PAY[k].clases[1]]]],["Daycare + entrenamiento","$"+dp,dc,[["Pagar $"+dp,PAY[k].daycare[0]],["Depósito $"+dp/2,PAY[k].daycare[1]]]],["En parque","$"+(cl+250),n+" clases de 45 a 60 min en un parque, para practicar con distracciones reales. Mismo horario y vencimiento que con clases. "+PAYWA,[]],["A domicilio","$"+(cl+500),n+" clases de 45 a 60 min en tu casa: vamos nosotros a donde estás tú. Mismo horario y vencimiento que con clases. "+PAYWA,[]]];
 PK.basico={t:"Paquete Básico",tag:"Obedece en casa · 8 clases",o:MODOS("basico",600,8,"2 semanas",4,800,"Lunes a viernes, unas 1.5 semanas. Tu perro entrena durante el día y lo recoges en la tarde. Incluye 2 clases contigo para aprender a manejarlo.")};
 PK.intensivo={t:"Paquete Intensivo",tag:"Obedece en cualquier lugar · 12 clases",o:MODOS("intensivo",800,12,"3 semanas",6,1200,"Lunes a viernes, unas 2 semanas. Tu perro entrena durante el día y lo recoges en la tarde. Incluye 2 clases contigo para aprender a manejarlo.")};
 PK.servicio={t:"Paquete Acceso Público",tag:"Te acompaña a todas partes · 14 clases",o:MODOS("servicio",1200,14,"3.5 semanas",8,1600,"Lunes a viernes, unas 3 semanas. Tu perro entrena durante el día y lo recoges en la tarde. Incluye 2 clases contigo para aprender a manejarlo.")};
@@ -540,8 +542,8 @@ function payUpd(){
   if(s[0]==="Daycare"){b=[["Día completo $25 (apertura)",PAY.dc1],["Medio día $18",PAY.dc05],["5 días $135",PAY.dc5],["10 días $250",PAY.dc10]];m="Paga un día, un medio día o un paquete de daycare.";}
   else if(s[0]==="Consulta de conducta")b=[["Pagar $65",PAY.consulta]];
   else if(s[0]==="Clase grupal")m="Pagas cuando se llene el grupo y confirmemos la fecha. Te enviamos el enlace de pago por WhatsApp.";
-  else if(PKS.includes(s[4])){const k=s[4],md=$("#bm").selectedIndex===0?"clases":"daycare",pr=PRICES[k][md],L=PAY[k][md];
-   b=[["Pagar $"+pr+" completo",L[0]],["Pagar depósito de $"+pr/2,L[1]]];}
+  else if(PKS.includes(s[4])){const k=s[4],md=MDS[$("#bm").selectedIndex],pr=PRICES[k][md],L=PAY[k][md];
+   if(L)b=[["Pagar $"+pr+" completo",L[0]],["Pagar depósito de $"+pr/2,L[1]]];else m="Precio: $"+pr+". "+PAYWA+" Aceptamos plan de pago: 50% para apartar y el resto antes de la mitad del paquete.";}
   if(b&&s&&s[0]!=="Daycare"&&!orl())m="Para apartar tu espacio paga ahora el depósito del 50% o el pago completo. El resto se paga antes de la mitad del paquete. Confirmamos tu fecha por WhatsApp.";
  }
  $("#paymsg").textContent=m;
