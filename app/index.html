@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Moreno's Dog Training</title>
+<meta name="description" content="Reserva daycare, entrenamiento y clases para tu perro, y paga desde tu teléfono.">
+<meta name="theme-color" content="#0F2528">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Moreno's">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0F2528; --bg2:#0B1B1E; --teal:#1F5C63; --teal2:#2A6A72;
+  --ink:#F4EEE9; --muted:#A9C2C3; --soft:#D6E3E4;
+  --orange:#F08455; --peach:#FFB08F; --gold:#FFD76A; --dark:#17191A;
+  --glass:rgba(255,255,255,.06); --glass2:rgba(255,255,255,.09); --line:rgba(255,255,255,.14);
+  --cream:#F4EEE9; --creamInk:#4F676B;
+  --safeB:env(safe-area-inset-bottom,0px); --safeT:env(safe-area-inset-top,0px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Plus Jakarta Sans",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;min-height:100dvh;background:
+  radial-gradient(420px 380px at 100% 45%,rgba(222,106,62,.16),transparent 70%),
+  radial-gradient(420px 420px at 0% 85%,rgba(48,128,140,.24),transparent 70%),var(--bg);background-attachment:fixed}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--peach)}
+.d{font-family:"Baloo 2",system-ui,sans-serif;font-weight:800;line-height:1.05}
+.app{max-width:520px;margin:0 auto;padding-bottom:calc(120px + var(--safeB))}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.18em;color:var(--orange);text-transform:uppercase}
+.hero{position:relative;overflow:hidden;border-radius:0 0 36px 36px;border-bottom:1px solid rgba(255,255,255,.13);
+  padding:calc(30px + var(--safeT)) 22px 28px;display:flex;flex-direction:column;gap:12px;
+  background:radial-gradient(60% 70% at 82% 35%,rgba(222,106,62,.5),transparent 70%),linear-gradient(160deg,#1E4247 0%,#122D31 55%,#0B1B1E 100%)}
+.hero.tall{padding-bottom:72px}
+.paw{position:absolute;fill:#DE6A3E;pointer-events:none}
+.hero h1{margin:0;font-size:38px;color:#fff}
+.hero h1 em{font-style:normal;color:var(--peach)}
+.hero p{margin:0;color:var(--soft);font-size:15px;font-weight:500}
+.topbar{display:flex;align-items:center;justify-content:space-between;position:relative}
+.brand{font-family:"Baloo 2";font-weight:800;font-size:15px;letter-spacing:.06em;background:var(--orange);color:var(--dark);padding:2px 12px;border-radius:20px}
+.avatar{width:52px;height:52px;border-radius:26px;background:var(--teal);border:2px solid var(--peach);display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:"Baloo 2";font-weight:800;font-size:22px;color:var(--ink);padding:0;text-decoration:none}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.sec{padding:24px 18px 0;display:flex;flex-direction:column;gap:12px}
+.sec h2{margin:0;font-size:24px}
+.ticket{margin:-50px 18px 0;position:relative;background:var(--cream);color:var(--dark);border-radius:26px;box-shadow:0 16px 36px rgba(0,0,0,.45)}
+.ticket .top{padding:18px 20px 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ticket .lbl{font-size:12px;font-weight:800;letter-spacing:.16em;color:#B04A22}
+.ticket .ttl{font-size:23px;margin:2px 0}
+.ticket .sub{font-size:14px;color:var(--creamInk)}
+.ticket .cut{border-top:2px dashed #D8CBC2;margin:0 16px}
+.ticket .acts{display:flex;gap:8px;padding:14px 16px 16px}
+.count{flex-shrink:0;width:64px;height:64px;border-radius:18px;background:linear-gradient(160deg,#1E4247,#0F2528);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(4deg);color:#fff}
+.count small{font-size:11px;font-weight:700;color:var(--muted)}
+.count b{font-family:"Baloo 2";font-size:26px;line-height:.9;color:var(--peach)}
+.btn{min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:16px;border:0;padding:0 18px;font-weight:800;font-size:15px;text-decoration:none;background:var(--orange);color:var(--dark)}
+.btn.dark{background:var(--bg);color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid rgba(255,255,255,.3)}
+.btn.teal{background:var(--teal);color:#fff;border:1px solid rgba(255,255,255,.16)}
+.btn.wa{background:#1F8A5B;color:#fff}
+.btn.block{width:100%}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tile{position:relative;min-height:120px;border-radius:22px;padding:16px;text-decoration:none;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;text-align:left;border:1px solid transparent}
+.tile b{font-family:"Baloo 2";font-weight:800;font-size:20px;line-height:1.1;display:block}
+.tile span{font-size:13px}
+.t-teal{background:linear-gradient(160deg,#2A6A72,#1F5C63);color:#fff;border-color:rgba(255,255,255,.16)}
+.t-teal span{color:var(--soft)}
+.t-orange{background:var(--orange);color:var(--dark)} .t-orange span{color:#3A2016}
+.t-glass{background:var(--glass);color:var(--ink);border-color:rgba(255,255,255,.16)} .t-glass span{color:var(--muted)}
+.t-gold{background:var(--gold);color:var(--dark)} .t-gold span{color:#4A3A10}
+.sticker{position:absolute;top:-8px;right:-4px;background:var(--gold);color:var(--dark);font-size:12px;font-weight:800;padding:4px 10px;border-radius:12px;transform:rotate(6deg);box-shadow:0 4px 10px rgba(0,0,0,.35)}
+.card{background:var(--glass);border:1px solid var(--line);border-radius:24px;padding:16px;color:var(--ink);text-decoration:none}
+.row{display:flex;align-items:center;gap:14px}
+.muted{color:var(--muted)}
+.plus{position:relative;overflow:hidden;background:var(--orange);border:2px solid var(--gold);border-radius:24px;padding:18px;text-decoration:none;color:var(--dark);display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 16px 36px rgba(222,106,62,.3)}
+.plus .bigword{position:absolute;right:-10px;bottom:-26px;font-family:"Baloo 2";font-weight:800;font-size:96px;line-height:1;color:#F59A72}
+.plus .tag{position:relative;background:var(--bg);color:var(--gold);font-weight:800;font-size:16px;padding:8px 12px;border-radius:14px}
+/* Reservar */
+.tabs{position:relative;display:flex;gap:4px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.13);padding:5px;border-radius:18px}
+.tabs button{flex:1;min-height:44px;border:0;border-radius:14px;font-size:13px;font-weight:800;background:transparent;color:var(--soft);padding:0 4px}
+.tabs button[aria-pressed="true"]{background:var(--orange);color:var(--dark)}
+.opt{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;border-radius:22px;background:rgba(255,255,255,.05);border:1px solid var(--line);text-align:left}
+.opt[aria-pressed="true"]{background:rgba(240,132,85,.12);border:2px solid var(--orange);padding:15px;box-shadow:0 10px 28px rgba(222,106,62,.25)}
+.opt b{font-family:"Baloo 2";font-weight:800;font-size:19px;line-height:1.15;display:block}
+.opt small{font-size:13px;color:var(--muted);display:block;margin-top:2px;line-height:1.4}
+.price{flex-shrink:0;font-family:"Baloo 2";font-weight:800;font-size:20px;padding:4px 12px;border-radius:14px;color:var(--peach);background:rgba(255,255,255,.08)}
+.opt[aria-pressed="true"] .price{background:var(--orange);color:var(--dark)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:44px;padding:0 16px;border-radius:22px;font-size:14px;font-weight:800;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--orange);border-color:var(--orange);color:var(--dark)}
+.days{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:none}
+.days::-webkit-scrollbar{display:none}
+.day{flex-shrink:0;width:58px;min-height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:18px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:var(--ink)}
+.day small{font-size:11px;font-weight:800;letter-spacing:.06em}
+.day b{font-family:"Baloo 2";font-size:24px;line-height:1}
+.day[aria-pressed="true"]{background:var(--orange);border-color:var(--orange);color:var(--dark)}
+.note{font-size:13px;color:var(--muted);line-height:1.5;margin:0}
+.paybar{position:fixed;left:50%;transform:translateX(-50%);width:min(492px,calc(100% - 28px));bottom:calc(96px + var(--safeB));background:var(--cream);color:var(--dark);border-radius:24px;box-shadow:0 14px 34px rgba(0,0,0,.5);padding:12px 12px 12px 18px;display:flex;align-items:center;gap:12px;z-index:20}
+.paybar small{font-size:12px;color:var(--creamInk);font-weight:600;display:block}
+.paybar b{font-family:"Baloo 2";font-size:28px;font-weight:800;line-height:1}
+.paybar .btn{flex-grow:1}
+/* Mi perro */
+.dogpic{position:relative;flex-shrink:0;width:104px;height:104px;border-radius:52px;background:rgba(255,255,255,.08);border:3px solid var(--orange);box-shadow:0 0 0 6px rgba(240,132,85,.18);display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:12px;color:var(--muted);padding:0}
+.dogpic img{width:100%;height:100%;object-fit:cover}
+.pill{display:inline-block;font-size:12px;font-weight:800;padding:3px 10px;border-radius:12px}
+.p-gold{background:var(--gold);color:var(--dark)} .p-orange{background:var(--orange);color:var(--dark)} .p-red{background:#FFB3A8;color:#5A1209} .p-glass{background:rgba(255,255,255,.1);color:var(--soft)}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:13px;font-weight:700;color:var(--soft)}
+.field input{min-height:48px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.25);padding:0 14px;font-size:16px}
+.field input:focus{outline:2px solid var(--orange);outline-offset:1px}
+.res{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.res:last-child{border-bottom:0}
+.cmd{border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:6px;background:linear-gradient(160deg,#2A6A72,#1F5C63);border:1px solid rgba(255,255,255,.16)}
+.cmd b{font-family:"Baloo 2";font-weight:800;font-size:18px;line-height:1.05}
+.cmd span{font-size:12px;color:var(--soft)}
+/* Daycare */
+.stat{background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.13);border-radius:16px;padding:10px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.stat small{font-size:11px;font-weight:700;color:var(--muted)}
+.stat b{font-family:"Baloo 2";font-weight:800;font-size:18px;color:var(--peach)}
+.rule{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.rule:last-child{border-bottom:0}
+.rule .ic{flex-shrink:0;width:36px;height:36px;border-radius:12px;background:rgba(240,132,85,.16);display:flex;align-items:center;justify-content:center;color:var(--peach)}
+.rule b{display:block;font-size:15px}
+.rule span{font-size:13px;color:var(--muted);line-height:1.45}
+.polaroid{background:var(--cream);color:var(--dark);border-radius:8px;padding:10px 10px 14px;box-shadow:0 16px 34px rgba(0,0,0,.5);transform:rotate(-1.5deg)}
+.polaroid .ph{height:150px;border-radius:4px;background:#CFE3E5;display:flex;align-items:center;justify-content:center;color:var(--teal)}
+/* Membresía */
+.tier{border-radius:28px;padding:20px 18px 18px;display:flex;flex-direction:column;gap:14px;position:relative}
+.tier.top{background:linear-gradient(150deg,#F59468,#F08455);color:var(--dark);border:2px solid var(--gold);box-shadow:0 18px 44px rgba(222,106,62,.35)}
+.tier.basic{background:var(--glass);border:1px solid var(--line)}
+.tier ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:14px;font-weight:600}
+.tier li{display:flex;gap:10px;align-items:center}
+/* Nav */
+nav.tabbar{position:fixed;left:50%;transform:translateX(-50%);width:min(492px,calc(100% - 28px));bottom:calc(22px + var(--safeB));display:flex;gap:2px;background:rgba(8,22,25,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.13);border-radius:30px;padding:8px;box-shadow:0 12px 30px rgba(0,0,0,.5);z-index:30}
+nav.tabbar a{flex:1;min-height:48px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:22px;text-decoration:none;color:var(--muted);font-size:13px;font-weight:800}
+nav.tabbar a span{display:none}
+nav.tabbar a[aria-current="page"]{flex:1.6;background:var(--orange);color:var(--dark)}
+nav.tabbar a[aria-current="page"] span{display:inline}
+/* Sheet */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:min(520px,100%);max-height:92vh;overflow:auto;background:linear-gradient(180deg,#163236,#0F2528);border:1px solid var(--line);border-bottom:0;border-radius:28px 28px 0 0;padding:22px 20px calc(24px + var(--safeB));display:flex;flex-direction:column;gap:14px;animation:up .28s cubic-bezier(.2,.7,.2,1)}
+.sheet h3{margin:0;font-size:26px}
+.step{display:flex;gap:12px;align-items:flex-start}
+.step .n{flex-shrink:0;width:30px;height:30px;border-radius:15px;background:var(--orange);color:var(--dark);font-weight:800;display:flex;align-items:center;justify-content:center}
+.sum{background:rgba(0,0,0,.25);border-radius:18px;padding:14px;font-size:14px;line-height:1.7}
+.sum b{color:var(--peach)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(16px + var(--safeT));background:var(--cream);color:var(--dark);font-weight:700;padding:12px 18px;border-radius:16px;z-index:50;box-shadow:0 10px 24px rgba(0,0,0,.4)}
+@keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.view{animation:fade .25s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.view,.sheet{animation:none}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div class="app"><main id="view" tabindex="-1"></main></div>
+
+<nav class="tabbar" aria-label="Navegación">
+  <a href="#inicio" data-r="inicio"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Inicio</span><i class="sr">Inicio</i></a>
+  <a href="#reservar" data-r="reservar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>Reservar</span><i class="sr">Reservar</i></a>
+  <a href="#perro" data-r="perro"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" aria-hidden="true"><circle cx="6" cy="10" r="2"/><circle cx="10" cy="5.5" r="2"/><circle cx="14" cy="5.5" r="2"/><circle cx="18" cy="10" r="2"/><path d="M12 12c-3 0-5.5 3.5-5.5 6 0 1.7 1.3 2.5 2.8 2.5 1.2 0 1.8-.6 2.7-.6s1.5.6 2.7.6c1.5 0 2.8-.8 2.8-2.5 0-2.5-2.5-6-5.5-6z"/></svg><span>Mi perro</span><i class="sr">Mi perro</i></a>
+  <a href="#daycare" data-r="daycare"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>Daycare</span><i class="sr">Daycare</i></a>
+  <a href="#membresia" data-r="membresia"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.8 5.8 6.2.9-4.5 4.4 1 6.2L12 17.4 6.5 20.3l1-6.2L3 9.7l6.2-.9z"/></svg><span>Membresía</span><i class="sr">Membresía</i></a>
+</nav>
+
+<div id="layer"></div>
+<input type="file" id="photo" accept="image/*" hidden>
+
+<script>
+/* ====== CONFIG: precios, links y horarios. Edita aquí. ====== */
+const WA = "17874722230";
+const IG = "https://www.instagram.com/dogmorenos";
+const PAY = {
+  dc1: "https://buy.stripe.com/9B6fZi8IH990eMudS1fAc1k",
+  dc05: "https://buy.stripe.com/28E5kEf75clceMu7tDfAc13",
+  dc5: "https://buy.stripe.com/5kQ9AU7ED84WawebJTfAc14",
+  dc10: "https://buy.stripe.com/fZu7sMcYXetk6fY3dnfAc15",
+  consulta: "https://buy.stripe.com/dRmdRa1gf3OG7k2bJTfAc11",
+  basico: { clases: ["https://buy.stripe.com/bJefZi8IH0CuawedS1fAc16", "https://buy.stripe.com/eVqcN65wvad40VEbJTfAc17"], daycare: ["https://buy.stripe.com/14AcN63onad47k28xHfAc18", "https://buy.stripe.com/9B64gA0cbfxodIq01bfAc19"] },
+  intensivo: { clases: ["https://buy.stripe.com/5kQ28s0cb1GyeMu15ffAc1a", "https://buy.stripe.com/aFa6oIcYXad4bAi4hrfAc1b"] },
+  servicio: { clases: ["https://buy.stripe.com/7sY28s2kj0CugUC8xHfAc1e", "https://buy.stripe.com/bJefZi3on1Gyawe29jfAc1f"] },
+  miembro: "https://buy.stripe.com/3cI00k0cbad47k29BLfAc1i",
+  plus: "https://buy.stripe.com/aFa3cw5wvfxo47Q5lvfAc1j"
+};
+const TIMES = ["9:00 am", "11:00 am", "2:00 pm", "4:00 pm"];
+const PKG = {
+  basico: { name: "Básico", n: 8, sub: "8 clases · obedece en casa", prices: { clases: 600, daycare: 800, parque: 1050, domicilio: 1300 } },
+  intensivo: { name: "Intensivo", n: 12, sub: "12 clases · obedece en cualquier lugar", prices: { clases: 800, daycare: 1100, parque: 1350, domicilio: 1600 } },
+  servicio: { name: "Acceso Público", n: 14, sub: "14 clases · te acompaña a todas partes", prices: { clases: 1200, daycare: 1550, parque: 1800, domicilio: 2050 } }
+};
+const MODS = [
+  ["clases", "Con clases", "Traes a tu perro a clases de 45 a 60 min."],
+  ["daycare", "En daycare", "Se queda en daycare y entrena durante el día, lunes a viernes. Lo recoges en la tarde. Incluye 2 clases contigo."],
+  ["parque", "En parque", "Clases en un parque, con distracciones reales."],
+  ["domicilio", "A domicilio", "Vamos nosotros a tu casa."]
+];
+const CMDS = [["Ven", "Viene cuando lo llamas"], ["Siéntate", "Se sienta a la orden"], ["Échate", "Se acuesta y espera"], ["Caminar sin halar", "Camina a tu lado con correa"], ["Quieto", "Se queda en su sitio"]];
+const RULES = [
+  ["Vacunas al día", "Rabia, DHPP y Bordetella. Trae el récord de tu veterinario antes del primer día."],
+  ["Evaluación de temperamento", "Todo perro nuevo se evalúa antes de entrar al grupo, para que el juego sea seguro para todos."],
+  ["Edad mínima", "Aceptamos perros desde los 4 meses de edad."],
+  ["Pulgas y garrapatas", "Tu perro debe llegar libre de pulgas y garrapatas y con su prevención al día."],
+  ["Llegada y recogido", "Llega con correa y collar o arnés con identificación. Recógelo antes de las 5:30 pm; pasada la hora puede aplicar un cargo extra."],
+  ["Cancelaciones", "Avísanos con 24 horas de anticipación. Las ausencias sin aviso repetidas pueden afectar futuras reservas."],
+  ["Conducta", "Perros agresivos con personas o con otros perros no pueden entrar al grupo. Si pasa algo, te avisamos de inmediato."],
+  ["Comida y medicinas", "Trae la comida porcionada y las medicinas rotuladas con instrucciones. Marca todas las pertenencias con el nombre de tu perro."]
+];
+/* ============================================================ */
+
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const money = (n) => "$" + Number(n).toLocaleString("en-US");
+const PAW = '<path d="M12 12c-3 0-5.5 3.5-5.5 6 0 1.7 1.3 2.5 2.8 2.5 1.2 0 1.8-.6 2.7-.6s1.5.6 2.7.6c1.5 0 2.8-.8 2.8-2.5 0-2.5-2.5-6-5.5-6z"/><circle cx="6" cy="10" r="2.2"/><circle cx="10" cy="5.5" r="2.2"/><circle cx="14" cy="5.5" r="2.2"/><circle cx="18" cy="10" r="2.2"/>';
+const paw = (style, size) => `<svg class="paw" width="${size}" height="${size}" viewBox="0 0 24 24" style="${style}" aria-hidden="true">${PAW}</svg>`;
+const CHECK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12 5 5L20 6"/></svg>';
+const waLink = (text) => `https://wa.me/${WA}?text=${encodeURIComponent(text)}`;
+
+/* ---- Datos guardados en el teléfono del cliente ---- */
+const KEY = "mdt-app-v1";
+let S = { cliente: "", perro: { nombre: "", raza: "", edad: "", vacunas: "", foto: "" }, reservas: [], onboarded: false };
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast("No se pudo guardar en este teléfono"); } }
+
+/* ---- Fechas ---- */
+const DOW = ["DOM", "LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB"];
+const MES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+const iso = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const parse = (s) => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const nice = (s) => { const d = parse(s); return DOW[d.getDay()].charAt(0) + DOW[d.getDay()].slice(1).toLowerCase() + " " + d.getDate() + " " + MES[d.getMonth()]; };
+function nextDays(n) {
+  const out = [], d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + 1);
+  while (out.length < n) { if (d.getDay() >= 1 && d.getDay() <= 5) out.push(iso(d)); d.setDate(d.getDate() + 1); }
+  return out;
+}
+const daysUntil = (s) => { const t = new Date(); t.setHours(0, 0, 0, 0); return Math.round((parse(s) - t) / 864e5); };
+
+/* ---- Estado de la pantalla Reservar ---- */
+const R = { tab: "daycare", opt: 0, mod: "clases", day: "", time: "", method: "stripe", plan: "full" };
+
+function options() {
+  if (R.tab === "daycare") return [
+    { id: "dc1", name: "Día completo", sub: "Oferta de apertura · regular $30", price: 25, pay: [PAY.dc1] },
+    { id: "dc05", name: "Medio día", sub: "Hasta 5 horas", price: 18, pay: [PAY.dc05] },
+    { id: "dc5", name: "Paquete de 5 días", sub: "$27 por día · úsalos cuando quieras", price: 135, pay: [PAY.dc5] },
+    { id: "dc10", name: "Paquete de 10 días", sub: "$25 por día · el mejor precio", price: 250, pay: [PAY.dc10] }
+  ];
+  if (R.tab === "train") return Object.keys(PKG).map((k) => {
+    const p = PKG[k], links = PAY[k][R.mod] || null;
+    return { id: k, name: p.name, sub: p.sub, price: p.prices[R.mod], pay: links, deposit: true };
+  });
+  if (R.tab === "clase") return [
+    { id: "consulta", name: "Consulta de conducta", sub: "Ansiedad, ladridos, reactividad · 45 a 60 min", price: 65, pay: [PAY.consulta] },
+    { id: "uncomando", name: "Clase de un comando", sub: "Una sola destreza · unos 30 min", price: 40, pay: null }
+  ];
+  return [{ id: "grupal", name: "Clase grupal", sub: "Socialización y obediencia · sábados 8:00 am a 1:00 pm · 6 a 10 perros", price: 60, pay: null }];
+}
+const needsTime = () => (R.tab === "clase") || (R.tab === "train" && R.mod !== "daycare");
+const isGroup = () => R.tab === "grupal";
+
+/* ---- Pantallas ---- */
+const V = {};
+
+V.inicio = () => {
+  const name = S.cliente ? esc(S.cliente) : "";
+  const dog = S.perro.nombre ? esc(S.perro.nombre) : "";
+  const up = S.reservas.filter((r) => r.date && daysUntil(r.date) >= 0).sort((a, b) => a.date.localeCompare(b.date))[0];
+  const d = up ? daysUntil(up.date) : 0;
+  const ticket = up ? `
+    <div class="ticket">
+      <div class="top">
+        <div><div class="lbl">PRÓXIMA CITA</div><div class="ttl d">${esc(up.title)}</div><div class="sub">${nice(up.date)}${up.time ? " · " + esc(up.time) : ""} · ${up.confirmed ? "Confirmada" : "Pendiente de confirmar"}</div></div>
+        <div class="count"><small>${d === 0 ? "ES" : "EN"}</small><b>${d === 0 ? "¡Hoy!" : d}</b><small>${d === 0 ? "" : d === 1 ? "DÍA" : "DÍAS"}</small></div>
+      </div>
+      <div class="cut"></div>
+      <div class="acts"><a class="btn" style="flex:1" href="#perro">Ver detalles</a><a class="btn dark" style="flex:1" href="${waLink("Hola, quiero cambiar mi cita del " + nice(up.date) + " (" + up.title + ").")}" target="_blank" rel="noopener">Cambiar</a></div>
+    </div>` : `
+    <div class="ticket">
+      <div class="top"><div><div class="lbl">TU PRÓXIMA CITA</div><div class="ttl d">Todavía no tienes citas</div><div class="sub">Reserva el primer día de ${dog || "tu perro"} en un minuto.</div></div>
+      <div class="count"><small>¡A</small><b>✓</b><small>JUGAR!</small></div></div>
+      <div class="cut"></div>
+      <div class="acts"><a class="btn block" href="#reservar">Reservar ahora</a></div>
+    </div>`;
+  const dogCard = dog ? `
+    <a class="card row" href="#perro">
+      <div class="dogpic" style="width:72px;height:72px;border-width:2px;box-shadow:none">${S.perro.foto ? `<img src="${esc(S.perro.foto)}" alt="">` : '<svg width="30" height="30" viewBox="0 0 24 24" fill="#FFB08F" aria-hidden="true">' + PAW + "</svg>"}</div>
+      <div><b class="d" style="font-size:20px">${dog}</b><div class="muted" style="font-size:13px">${vacStatus().text} · ${S.reservas.length} ${S.reservas.length === 1 ? "reserva" : "reservas"}</div></div>
+    </a>` : `
+    <a class="card row" href="#perro">
+      <div class="dogpic" style="width:72px;height:72px;border-width:2px;box-shadow:none"><svg width="30" height="30" viewBox="0 0 24 24" fill="#FFB08F" aria-hidden="true">${PAW}</svg></div>
+      <div><b class="d" style="font-size:20px">Añade a tu perro</b><div class="muted" style="font-size:13px">Nombre, foto y vacunas, todo en un sitio.</div></div>
+    </a>`;
+  return `
+  <section class="hero tall">
+    ${paw("right:-24px;top:30px;transform:rotate(18deg);opacity:.22", 140)}${paw("left:52%;top:120px;transform:rotate(-20deg);opacity:.16", 64)}
+    <div class="topbar"><span class="brand">MORENO'S</span>
+      <a class="avatar" href="#perro" aria-label="Mi perro">${S.perro.foto ? `<img src="${esc(S.perro.foto)}" alt="">` : esc((dog || name || "M").charAt(0).toUpperCase())}</a></div>
+    <div style="position:relative">
+      <h1 class="d">¡Wepa${name ? `, <em>${name}</em>` : ""}!</h1>
+      <p style="margin-top:8px">${dog ? dog + " te está esperando con la cola en alto." : "Daycare, entrenamiento y clases para tu perro en Guaynabo."}</p>
+    </div>
+  </section>
+  ${ticket}
+  ${installCard()}
+  <section class="sec">
+    <span class="eyebrow">Servicios</span>
+    <h2 class="d" style="margin-top:-6px">¿Qué hacemos hoy?</h2>
+    <div class="grid2">
+      <button class="tile t-teal" data-go="daycare"><span class="sticker">¡$25 apertura!</span>${ic("home")}<div><b>Daycare</b><span>Desde $18</span></div></button>
+      <button class="tile t-orange" data-go="train">${ic("train")}<div><b>Entrenamiento</b><span>Desde $600</span></div></button>
+      <button class="tile t-glass" data-go="grupal">${ic("group")}<div><b>Clase grupal</b><span>Sábados · $60</span></div></button>
+      <button class="tile t-gold" data-go="clase">${ic("chat")}<div><b>Consulta</b><span>Conducta · $65</span></div></button>
+    </div>
+  </section>
+  <section class="sec">${dogCard}</section>
+  <section class="sec">
+    <a class="plus" href="#membresia"><span class="bigword" aria-hidden="true">PLUS</span>
+      <span style="position:relative"><b class="d" style="font-size:20px;display:block">Hazte Miembro Plus</b><span style="font-size:13px;font-weight:600;color:#3A2016">2 días de daycare incluidos al mes</span></span>
+      <span class="tag">$99</span></a>
+  </section>
+  <section class="sec" style="padding-bottom:8px">
+    <a class="btn wa block" href="${waLink("Hola Moreno's, tengo una pregunta:")}" target="_blank" rel="noopener">${ic("wa", 20)} Escríbenos por WhatsApp</a>
+    <p class="note" style="text-align:center">Calle Carazo, Guaynabo · Lun a vie 8:00 am a 5:30 pm</p>
+  </section>`;
+};
+
+V.reservar = () => {
+  const opts = options();
+  if (R.opt >= opts.length) R.opt = 0;
+  const o = opts[R.opt];
+  const tabs = [["daycare", "Daycare"], ["train", "Entrenar"], ["clase", "Clases"], ["grupal", "Grupal"]];
+  const days = nextDays(15);
+  if (R.day && !days.includes(R.day)) R.day = "";
+  const hasStripe = !!(o.pay && o.pay[0]);
+  if (!hasStripe && R.method === "stripe") R.method = "ath";
+  if (!o.deposit) R.plan = "full";
+  const amount = R.plan === "dep" ? o.price / 2 : o.price;
+  const titleFor = { daycare: "Elige el plan", train: "Elige el paquete", clase: "Elige la clase", grupal: "Clase grupal" }[R.tab];
+  return `
+  <section class="hero">
+    ${paw("right:-20px;top:24px;transform:rotate(18deg);opacity:.22", 130)}
+    <span class="eyebrow" style="position:relative">Reservar</span>
+    <h1 class="d" style="position:relative;font-size:36px;margin-top:-6px">Reserva en un<br><em>dos por tres</em></h1>
+    <div class="tabs" role="group" aria-label="Tipo de servicio">${tabs.map((t) => `<button type="button" data-tab="${t[0]}" aria-pressed="${R.tab === t[0]}">${t[1]}</button>`).join("")}</div>
+  </section>
+
+  ${R.tab === "train" ? `<section class="sec"><h2 class="d" style="font-size:22px">¿Cómo lo entrenamos?</h2>
+    <div class="chips" role="group" aria-label="Modalidad">${MODS.map((m) => `<button type="button" class="chip" data-mod="${m[0]}" aria-pressed="${R.mod === m[0]}">${m[1]}</button>`).join("")}</div>
+    <p class="note">${MODS.find((m) => m[0] === R.mod)[2]}</p></section>` : ""}
+
+  <section class="sec"><h2 class="d" style="font-size:22px">${titleFor}</h2>
+    ${opts.map((x, i) => `<button type="button" class="opt" data-opt="${i}" aria-pressed="${i === R.opt}"><span><b>${esc(x.name)}</b><small>${esc(x.sub)}</small></span><span class="price">${money(x.price)}</span></button>`).join("")}
+    ${R.tab === "train" ? '<p class="note">Los mismos 5 comandos en los tres paquetes: ven, siéntate, échate, caminar sin halar y quieto. Lo que cambia es dónde y con cuántas distracciones los obedece.</p>' : ""}
+  </section>
+
+  ${isGroup() ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona?</b><p class="note" style="margin-top:6px">Te apuntamos en la lista y, cuando se llenan los cupos (6 a 10 perros), fijamos el sábado y te avisamos por WhatsApp. Es para perros que ya saben algunos comandos.</p></div></section>` : `
+  <section class="sec"><h2 class="d" style="font-size:22px">${R.tab === "daycare" || (R.tab === "train") ? "¿Qué día empezamos?" : "¿Qué día?"}</h2>
+    <div class="days" role="group" aria-label="Día">${days.map((d) => { const x = parse(d); return `<button type="button" class="day" data-day="${d}" aria-pressed="${R.day === d}" aria-label="${nice(d)}"><small>${DOW[x.getDay()]}</small><b>${x.getDate()}</b></button>`; }).join("")}</div>
+    ${needsTime() ? `<div class="chips" role="group" aria-label="Hora">${TIMES.map((t) => `<button type="button" class="chip" data-time="${t}" aria-pressed="${R.time === t}">${t}</button>`).join("")}</div>` : R.tab === "daycare" || R.mod === "daycare" ? '<p class="note">Entrada desde las 8:00 am · recogido antes de las 5:30 pm.</p>' : ""}
+  </section>`}
+
+  <section class="sec"><h2 class="d" style="font-size:22px">¿Cómo pagas?</h2>
+    ${o.deposit ? `<div class="chips" role="group" aria-label="Plan">${[["full", "Pago completo"], ["dep", "Depósito 50%"]].map((p) => `<button type="button" class="chip" data-plan="${p[0]}" aria-pressed="${R.plan === p[0]}">${p[1]}</button>`).join("")}</div>` : ""}
+    <div class="chips" role="group" aria-label="Forma de pago">${[["stripe", "Tarjeta o Klarna"], ["ath", "ATH Móvil"], ["cash", "Efectivo"], ["check", "Cheque"]].map((m) => `<button type="button" class="chip" data-method="${m[0]}" aria-pressed="${R.method === m[0]}" ${m[0] === "stripe" && !hasStripe ? "disabled style=\"opacity:.4\"" : ""}>${m[1]}</button>`).join("")}</div>
+    <p class="note">${R.plan === "dep" ? "Depositas el 50% para apartar tu espacio y pagas el resto antes de la mitad del paquete." : !hasStripe ? "Este servicio se paga por ATH Móvil, efectivo o cheque. Te damos las instrucciones por WhatsApp." : R.method === "stripe" ? "Pagas seguro con Stripe. Con Klarna lo divides en cuotas." : "Te damos las instrucciones de pago por WhatsApp."}</p>
+  </section>
+  <div style="height:90px"></div>
+  <div class="paybar"><div><small>${R.plan === "dep" ? "Pagas hoy" : "Total"}</small><b>${money(amount)}</b></div>
+    <button type="button" class="btn" id="confirm">${isGroup() ? "¡Apúntame!" : "¡Reservar!"}</button></div>`;
+};
+
+function vacStatus() {
+  if (!S.perro.vacunas) return { text: "Falta el récord de vacunas", cls: "p-glass" };
+  const d = daysUntil(S.perro.vacunas);
+  if (d < 0) return { text: "Vacunas vencidas", cls: "p-red" };
+  if (d <= 30) return { text: "Vacunas vencen pronto", cls: "p-orange" };
+  return { text: "Vacunas al día", cls: "p-gold" };
+}
+
+V.perro = () => {
+  const p = S.perro, vs = vacStatus();
+  const res = S.reservas.slice().sort((a, b) => (b.date || "9").localeCompare(a.date || "9"));
+  const training = S.reservas.find((r) => r.tab === "train");
+  return `
+  <section class="hero">
+    ${paw("right:-30px;bottom:-40px;transform:rotate(-14deg);opacity:.2", 150)}
+    <div class="row" style="position:relative">
+      <button type="button" class="dogpic" id="pickPhoto" aria-label="${p.foto ? "Cambiar foto" : "Añadir foto"}">${p.foto ? `<img src="${esc(p.foto)}" alt="Foto de ${esc(p.nombre)}">` : '<span style="display:flex;flex-direction:column;align-items:center;gap:4px"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFB08F" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg>Añadir foto</span>'}</button>
+      <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+        <h1 class="d" style="font-size:42px;line-height:.95;overflow-wrap:anywhere">${p.nombre ? esc(p.nombre) : "Tu perro"}</h1>
+        <span class="muted" style="font-size:14px;font-weight:600">${[p.raza, p.edad].filter(Boolean).map(esc).join(" · ") || "Completa su perfil abajo"}</span>
+        <div><span class="pill ${vs.cls}" style="transform:rotate(-2deg)">${vs.text}</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec"><h2 class="d" style="font-size:22px">Sus reservas</h2>
+    <div class="card">${res.length ? res.map((r) => `
+      <div class="res"><div style="min-width:0"><b style="display:block">${esc(r.title)}</b><span class="muted" style="font-size:13px">${r.date ? nice(r.date) : "Lista de espera"}${r.time ? " · " + esc(r.time) : ""} · ${money(r.total)}</span></div>
+      <span style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><span class="pill ${r.confirmed ? "p-gold" : "p-glass"}">${r.confirmed ? "Confirmada" : "Pendiente"}</span>
+      <button type="button" data-del="${r.id}" style="min-height:32px;background:none;border:0;color:var(--peach);font-size:13px;font-weight:700;padding:0">Quitar</button></span></div>`).join("") : '<p class="note">Aún no hay reservas. <a href="#reservar">Haz la primera</a>.</p>'}
+    </div>
+    ${res.length ? '<p class="note">Las reservas quedan confirmadas cuando Hector te contesta por WhatsApp.</p>' : ""}
+  </section>
+
+  ${training ? `<section class="sec"><h2 class="d" style="font-size:22px">Lo que va a aprender</h2>
+    <div class="grid2">${CMDS.map((c) => `<div class="cmd"><b>${c[0]}</b><span>${c[1]}</span></div>`).join("")}</div>
+    <p class="note">Muy pronto vas a ver aquí su progreso y las notas de Hector después de cada clase.</p></section>` : ""}
+
+  <section class="sec"><h2 class="d" style="font-size:22px">Su perfil</h2>
+    <form class="card" id="dogForm" style="display:flex;flex-direction:column;gap:14px">
+      <div class="field"><label for="f-cli">Tu nombre</label><input id="f-cli" name="cliente" value="${esc(S.cliente)}" autocomplete="given-name"></div>
+      <div class="field"><label for="f-nom">Nombre del perro</label><input id="f-nom" name="nombre" value="${esc(p.nombre)}"></div>
+      <div class="grid2">
+        <div class="field"><label for="f-raza">Raza</label><input id="f-raza" name="raza" value="${esc(p.raza)}"></div>
+        <div class="field"><label for="f-edad">Edad</label><input id="f-edad" name="edad" value="${esc(p.edad)}" placeholder="Ej. 2 años"></div>
+      </div>
+      <div class="field"><label for="f-vac">Las vacunas vencen el</label><input id="f-vac" name="vacunas" type="date" value="${esc(p.vacunas)}"></div>
+      <button class="btn block" type="submit">Guardar</button>
+    </form>
+    <p class="note">Esta información se guarda solo en tu teléfono.</p>
+  </section>`;
+};
+
+V.daycare = () => `
+  <section class="hero">
+    ${paw("right:-24px;top:20px;transform:rotate(16deg);opacity:.22", 140)}
+    <span class="eyebrow" style="position:relative">Daycare</span>
+    <h1 class="d" style="position:relative;margin-top:-6px">Un día de <em>juego</em> supervisado</h1>
+    <div class="grid2" style="grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;position:relative">
+      <div class="stat"><small>ENTRADA</small><b>8:00am</b></div>
+      <div class="stat"><small>RECOGIDO</small><b>5:30pm</b></div>
+      <div class="stat"><small>DÍAS</small><b>Lun–Vie</b></div>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="polaroid"><div class="ph"><span style="display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:700;font-size:14px"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#1F5C63" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg>Muy pronto: fotos en vivo</span></div>
+      <div style="padding:10px 4px 0"><span style="font-size:12px;font-weight:800;color:#1F5C63">EN VIVO · PRÓXIMAMENTE</span><p style="margin:2px 0 0;font-size:15px;line-height:1.45">Vas a ver aquí las fotos, videos y el reporte del día de tu perro mientras está con nosotros.</p></div></div>
+    <a class="btn ghost block" href="${IG}" target="_blank" rel="noopener">Mientras tanto, síguenos en Instagram @dogmorenos</a>
+  </section>
+  <section class="sec"><h2 class="d" style="font-size:22px">Reglas del daycare</h2>
+    <div class="card" style="padding:4px 16px">${RULES.map((r) => `<div class="rule"><span class="ic">${CHECK}</span><div><b>${r[0]}</b><span>${r[1]}</span></div></div>`).join("")}</div>
+  </section>
+  <section class="sec"><button class="btn block" data-go="daycare">Reservar daycare</button>
+    <a class="btn wa block" href="${waLink("Hola, quiero saber si hay espacio en el daycare.")}" target="_blank" rel="noopener">${ic("wa", 20)} Pregunta por espacio</a></section>`;
+
+V.membresia = () => `
+  <section class="hero">
+    <span aria-hidden="true" class="d" style="position:absolute;right:-18px;top:20px;font-size:120px;color:rgba(255,176,143,.12)">VIP</span>
+    <span class="eyebrow" style="position:relative">Membresías</span>
+    <h1 class="d" style="position:relative;font-size:40px;margin-top:-6px">Únete a la<br><em>manada</em></h1>
+    <p style="position:relative">Ahorra en cada visita y reserva primero que nadie.</p>
+  </section>
+  <section class="sec" style="padding-top:30px">
+    <div class="tier top">
+      <span class="sticker" style="top:-14px;right:18px;transform:rotate(4deg)">¡La más popular!</span>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:8px"><b class="d" style="font-size:28px">Miembro Plus</b><span><b class="d" style="font-size:34px">$99</b><span style="font-size:13px;font-weight:600;color:#3A2016">/mes</span></span></div>
+      <ul>${["2 días de daycare incluidos al mes", "Daycare a $25 el día", "Clase grupal a $45 y primero en la lista", "1 clase de un comando al mes", "20% de descuento en la tienda"].map((x) => `<li>${CHECK}${x}</li>`).join("")}</ul>
+      <a class="btn dark" style="color:var(--gold)" href="${PAY.plus}" target="_blank" rel="noopener">¡Quiero ser Plus!</a>
+      <span style="font-size:12px;font-weight:600;color:#3A2016">Los días incluidos no se acumulan de un mes a otro. Cancelas cuando quieras.</span>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="tier basic">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:8px"><b class="d" style="font-size:26px">Miembro</b><span><b class="d" style="font-size:30px;color:var(--peach)">$39</b><span class="muted" style="font-size:13px">/mes</span></span></div>
+      <div class="chips">${["Daycare $27", "Grupal $50", "10% en tienda", "Prioridad al reservar"].map((x) => `<span class="pill p-glass" style="font-size:13px;padding:6px 12px">${x}</span>`).join("")}</div>
+      <a class="btn ghost" href="${PAY.miembro}" target="_blank" rel="noopener">Elegir Miembro</a>
+    </div>
+  </section>`;
+
+function ic(name, s = 30) {
+  const st = `width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"`;
+  return {
+    home: `<svg ${st}><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>`,
+    train: `<svg ${st}><path d="M4 20 20 4M14 4h6v6"/><circle cx="6" cy="8" r="2"/></svg>`,
+    group: `<svg ${st}><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M3 20c0-3 2.5-5 5-5s5 2 5 5M11 20c0-3 2.5-5 5-5s5 2 5 5"/></svg>`,
+    chat: `<svg ${st}><path d="M4 5h16v11H9l-5 4z"/><path d="M9 10h6"/></svg>`,
+    wa: `<svg ${st}><path d="M20 12a8 8 0 0 1-11.8 7L4 20l1.1-4A8 8 0 1 1 20 12z"/><path d="M9 9.5c.5 2 2 3.6 4 4.3l1.2-1.1 1.8.8-.4 1.7c-3.3.2-7-3.2-7.1-6.7l1.7-.5.8 1.8z"/></svg>`
+  }[name];
+}
+
+/* ---- Instalar ---- */
+let deferred = null;
+const standalone = () => window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferred = e; if (route() === "inicio") render(); });
+function installCard() {
+  if (standalone()) return "";
+  if (deferred) return `<section class="sec"><div class="card row" style="justify-content:space-between"><div><b>Instala la app</b><div class="muted" style="font-size:13px">Tenla en tu pantalla de inicio.</div></div><button class="btn" id="install">Instalar</button></div></section>`;
+  if (isIOS) return `<section class="sec"><div class="card"><b>Instala la app en tu iPhone</b><p class="note" style="margin-top:4px">Toca el botón de Compartir (el cuadrito con la flecha) y luego <b style="color:var(--ink)">Añadir a pantalla de inicio</b>.</p></div></section>`;
+  return "";
+}
+
+/* ---- Router ---- */
+const ROUTES = ["inicio", "reservar", "perro", "daycare", "membresia"];
+const route = () => { const h = location.hash.replace("#", ""); return ROUTES.includes(h) ? h : "inicio"; };
+function render(keepScroll) {
+  const r = route(), y = window.scrollY;
+  $("#view").innerHTML = `<div class="view">${V[r]()}</div>`;
+  document.querySelectorAll("nav.tabbar a").forEach((a) => { if (a.dataset.r === r) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  window.scrollTo(0, keepScroll ? y : 0);
+}
+window.addEventListener("hashchange", () => render(false));
+
+/* ---- Acciones ---- */
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("button, a");
+  if (!t) return;
+  const ds = t.dataset;
+  if (ds.go) { R.tab = ds.go; R.opt = 0; R.plan = "full"; R.method = "stripe"; if (location.hash !== "#reservar") location.hash = "reservar"; else render(); return; }
+  if (ds.tab) { R.tab = ds.tab; R.opt = 0; R.plan = "full"; R.method = "stripe"; R.time = ""; render(true); return; }
+  if (ds.mod) { R.mod = ds.mod; R.method = "stripe"; R.time = ""; render(true); return; }
+  if (ds.opt) { R.opt = +ds.opt; R.method = "stripe"; render(true); return; }
+  if (ds.day) { R.day = ds.day; render(true); return; }
+  if (ds.time) { R.time = ds.time; render(true); return; }
+  if (ds.plan) { R.plan = ds.plan; render(true); return; }
+  if (ds.method) { R.method = ds.method; render(true); return; }
+  if (ds.del) { S.reservas = S.reservas.filter((r) => String(r.id) !== ds.del); save(); render(true); toast("Reserva quitada"); return; }
+  if (t.id === "confirm") return confirmBooking();
+  if (t.id === "pickPhoto") return $("#photo").click();
+  if (t.id === "install" && deferred) { deferred.prompt(); deferred.userChoice.finally(() => { deferred = null; render(true); }); return; }
+  if (t.dataset.close != null) return closeSheet();
+});
+
+document.addEventListener("submit", (e) => {
+  if (e.target.id === "dogForm") {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    S.cliente = (f.get("cliente") || "").trim();
+    ["nombre", "raza", "edad", "vacunas"].forEach((k) => (S.perro[k] = (f.get(k) || "").trim()));
+    save(); render(true); toast("¡Guardado!");
+  }
+  if (e.target.id === "onb") {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    S.cliente = (f.get("cliente") || "").trim(); S.perro.nombre = (f.get("perro") || "").trim(); S.onboarded = true;
+    save(); closeSheet(); render();
+  }
+});
+
+$("#photo").addEventListener("change", (e) => {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const img = new Image(), url = URL.createObjectURL(file);
+  img.onload = () => {
+    const s = 360, c = document.createElement("canvas"); c.width = c.height = s;
+    const m = Math.min(img.width, img.height), ctx = c.getContext("2d");
+    ctx.drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, s, s);
+    S.perro.foto = c.toDataURL("image/jpeg", 0.82); URL.revokeObjectURL(url); save(); render(true);
+  };
+  img.src = url; e.target.value = "";
+});
+
+function confirmBooking() {
+  const o = options()[R.opt];
+  if (!isGroup() && !R.day) return toast("Escoge el día");
+  if (needsTime() && !R.time) return toast("Escoge la hora");
+  const mod = R.tab === "train" ? MODS.find((m) => m[0] === R.mod)[1] : "";
+  const title = R.tab === "train" ? `Paquete ${o.name} · ${mod}` : R.tab === "daycare" ? `Daycare · ${o.name}` : o.name;
+  const payNow = R.plan === "dep" ? o.price / 2 : o.price;
+  const methodName = { stripe: "Tarjeta o Klarna (Stripe)", ath: "ATH Móvil", cash: "Efectivo", check: "Cheque" }[R.method];
+  const link = R.method === "stripe" && o.pay ? (R.plan === "dep" ? o.pay[1] : o.pay[0]) : "";
+  const msg = [
+    "Hola Moreno's, quiero reservar:",
+    "Servicio: " + title,
+    isGroup() ? "Fecha: apúntenme en la lista del próximo grupo" : "Día: " + nice(R.day) + (R.time ? " a las " + R.time : ""),
+    "Pago: " + methodName + " · " + (R.plan === "dep" ? "Depósito 50% (" + money(payNow) + " de " + money(o.price) + ")" : "Completo (" + money(o.price) + ")"),
+    "Cliente: " + (S.cliente || "-"),
+    "Perro: " + (S.perro.nombre || "-") + (S.perro.raza ? " (" + S.perro.raza + ")" : ""),
+    "(Enviado desde la app)"
+  ].join("\n");
+  const r = { id: Date.now(), tab: R.tab, title, date: isGroup() ? "" : R.day, time: R.time, total: o.price, payNow, method: R.method, plan: R.plan, confirmed: false };
+  S.reservas.push(r); save();
+  openSheet(`
+    <h3 class="d">¡Casi listo${S.perro.nombre ? ", " + esc(S.perro.nombre) : ""}!</h3>
+    <div class="sum"><b>${esc(title)}</b><br>${isGroup() ? "Lista del próximo grupo" : nice(R.day) + (R.time ? " · " + esc(R.time) : "")}<br>${R.plan === "dep" ? "Depósito hoy: " + money(payNow) + " de " + money(o.price) : "Total: " + money(o.price)} · ${methodName}</div>
+    <div class="step"><span class="n">1</span><div style="flex:1;display:flex;flex-direction:column;gap:8px"><b>Envía tu reserva</b><a class="btn wa block" href="${waLink(msg)}" target="_blank" rel="noopener">${ic("wa", 20)} Enviar por WhatsApp</a></div></div>
+    <div class="step"><span class="n">2</span><div style="flex:1;display:flex;flex-direction:column;gap:8px"><b>Paga</b>${link ? `<a class="btn block" href="${link}" target="_blank" rel="noopener">Pagar ${money(payNow)} ahora</a><span class="note">Pagas seguro con Stripe. Klarna te deja pagar en cuotas.</span>` : `<span class="note">Te enviamos las instrucciones de pago por WhatsApp${R.method === "ath" ? " para ATH Móvil" : ""}.</span>`}</div></div>
+    <button class="btn ghost block" data-close>Listo</button>`);
+}
+
+/* ---- Sheet y toast ---- */
+function openSheet(html) {
+  $("#layer").innerHTML = `<div class="scrim" data-scrim><div class="sheet" role="dialog" aria-modal="true">${html}</div></div>`;
+  $("#layer .scrim").addEventListener("click", (e) => { if (e.target.dataset.scrim != null) closeSheet(); });
+  const f = $("#layer .sheet input, #layer .sheet a, #layer .sheet button"); if (f) f.focus();
+}
+function closeSheet() { $("#layer").innerHTML = ""; render(true); }
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && $("#layer").innerHTML) closeSheet(); });
+let tt;
+function toast(m) {
+  clearTimeout(tt); let el = $(".toast");
+  if (!el) { el = document.createElement("div"); el.className = "toast"; el.setAttribute("role", "status"); document.body.appendChild(el); }
+  el.textContent = m; tt = setTimeout(() => el.remove(), 2200);
+}
+
+/* ---- Arranque ---- */
+render();
+if (!S.onboarded) {
+  openSheet(`
+    <img src="assets/logo-dog.png" alt="" width="64" height="62" style="align-self:flex-start">
+    <h3 class="d">¡Bienvenido a Moreno's!</h3>
+    <p class="note" style="font-size:15px">Daycare, entrenamiento y clases para tu perro. Reserva y paga desde aquí.</p>
+    <form id="onb" style="display:flex;flex-direction:column;gap:14px">
+      <div class="field"><label for="o-cli">¿Cómo te llamas?</label><input id="o-cli" name="cliente" autocomplete="given-name"></div>
+      <div class="field"><label for="o-dog">¿Cómo se llama tu perro?</label><input id="o-dog" name="perro"></div>
+      <button class="btn block" type="submit">¡Vamos!</button>
+    </form>`);
+}
+if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+</script>
+</body>
+</html>
