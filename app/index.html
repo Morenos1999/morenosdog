@@ -159,24 +159,65 @@ nav.tabbar a[aria-current="page"] span{display:inline}
 @keyframes fade{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.view,.sheet{animation:none}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---- v2: cuentas, panel ---- */
+.field select,.field textarea{min-height:48px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.25);padding:10px 14px;font-size:16px;color:var(--ink)}
+.field textarea{min-height:96px;resize:vertical;line-height:1.5}
+.field select:focus,.field textarea:focus{outline:2px solid var(--orange);outline-offset:1px}
+.field select option{background:#0F2528}
+.linkbtn{background:none;border:0;color:var(--peach);font-weight:700;font-size:14px;padding:8px 0;min-height:40px;text-align:left}
+.err{background:#5A1209;color:#FFD9D2;border-radius:14px;padding:10px 14px;font-size:14px;font-weight:600}
+.okmsg{background:rgba(31,138,91,.25);color:#C9F2DC;border-radius:14px;padding:10px 14px;font-size:14px;font-weight:600}
+.feed{display:flex;flex-direction:column;gap:22px}
+.polaroid img,.polaroid video{width:100%;max-height:420px;object-fit:cover;border-radius:4px;display:block;background:#CFE3E5}
+.polaroid.r{transform:rotate(1.2deg)}
+.polaroid .meta{padding:10px 4px 0}
+.polaroid .meta small{font-size:12px;font-weight:800;color:#1F5C63;text-transform:uppercase}
+.polaroid .meta p{margin:2px 0 0;font-size:15px;line-height:1.45}
+.cmd.dom{background:linear-gradient(160deg,#2A6A72,#1F5C63)}
+.cmd.pra{background:rgba(240,132,85,.14);border:2px solid var(--orange)}
+.cmd.pen{background:transparent;border:2px dashed rgba(255,255,255,.2);color:var(--muted)}
+.cmd .st{align-self:flex-start;font-size:11px;font-weight:800;padding:2px 8px;border-radius:8px}
+.cmd.dom .st{background:var(--gold);color:var(--dark)} .cmd.pra .st{background:var(--orange);color:var(--dark)} .cmd.pen .st{background:rgba(255,255,255,.1);color:var(--soft)}
+button.cmd{text-align:left;color:var(--ink);font:inherit;min-height:84px}
+.bubble{display:flex;gap:10px;align-items:flex-end}
+.bubble .who{flex-shrink:0;width:40px;height:40px;border-radius:20px;background:var(--orange);color:var(--dark);display:flex;align-items:center;justify-content:center;font-family:"Baloo 2";font-weight:800}
+.bubble .txt{background:var(--cream);color:var(--dark);border-radius:22px 22px 22px 6px;padding:12px 16px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.bubble .txt small{font-size:12px;font-weight:700;color:var(--creamInk)}
+.bubble .txt span{font-size:15px;line-height:1.5;white-space:pre-line;overflow-wrap:anywhere}
+.adm{background:var(--glass);border:1px solid var(--line);border-radius:22px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.adm .hd{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.adm .acts{display:flex;flex-wrap:wrap;gap:8px}
+.adm .acts .btn{min-height:42px;padding:0 14px;font-size:14px;border-radius:14px}
+.statgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.statgrid .stat b{font-size:26px}
+.p-green{background:#BFF0D4;color:#0E3D25}
+.p-gray{background:rgba(255,255,255,.08);color:var(--muted)}
+.empty{text-align:center;padding:22px 10px;color:var(--muted);font-size:14px;line-height:1.5}
+.spin{width:22px;height:22px;border-radius:50%;border:3px solid rgba(255,255,255,.2);border-top-color:var(--orange);animation:sp 1s linear infinite;display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
+.dogchips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;position:relative}
+.dogchips::-webkit-scrollbar{display:none}
+.dogchips .chip{flex-shrink:0;display:inline-flex;align-items:center;gap:8px;padding:0 14px 0 6px}
+.dogchips .chip i{width:32px;height:32px;border-radius:16px;background:rgba(255,255,255,.1) center/cover;display:inline-block;flex-shrink:0}
+.offline{position:fixed;left:0;right:0;top:0;z-index:60;background:#5A1209;color:#FFD9D2;text-align:center;font-size:13px;font-weight:700;padding:calc(6px + var(--safeT)) 12px 6px}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
 </head>
 <body>
 <div class="app"><main id="view" tabindex="-1"></main></div>
 
-<nav class="tabbar" aria-label="Navegación">
-  <a href="#inicio" data-r="inicio"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Inicio</span><i class="sr">Inicio</i></a>
-  <a href="#reservar" data-r="reservar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>Reservar</span><i class="sr">Reservar</i></a>
-  <a href="#perro" data-r="perro"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" aria-hidden="true"><circle cx="6" cy="10" r="2"/><circle cx="10" cy="5.5" r="2"/><circle cx="14" cy="5.5" r="2"/><circle cx="18" cy="10" r="2"/><path d="M12 12c-3 0-5.5 3.5-5.5 6 0 1.7 1.3 2.5 2.8 2.5 1.2 0 1.8-.6 2.7-.6s1.5.6 2.7.6c1.5 0 2.8-.8 2.8-2.5 0-2.5-2.5-6-5.5-6z"/></svg><span>Mi perro</span><i class="sr">Mi perro</i></a>
-  <a href="#daycare" data-r="daycare"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>Daycare</span><i class="sr">Daycare</i></a>
-  <a href="#membresia" data-r="membresia"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.8 5.8 6.2.9-4.5 4.4 1 6.2L12 17.4 6.5 20.3l1-6.2L3 9.7l6.2-.9z"/></svg><span>Membresía</span><i class="sr">Membresía</i></a>
-</nav>
+<nav class="tabbar" aria-label="Navegación" id="tabbar"></nav>
 
 <div id="layer"></div>
 <input type="file" id="photo" accept="image/*" hidden>
+<input type="file" id="media" accept="image/*,video/*" hidden>
 
 <script>
 /* ====== CONFIG: precios, links y horarios. Edita aquí. ====== */
+const SB_URL = "https://izxrwlfppyhmixzgtszi.supabase.co";
+const SB_KEY = "sb_publishable_zlagmwExxroomeqSBvWAWA_OT2nouon";
+const APP_URL = "https://morenosdogtraining.com/app/";
 const WA = "17874722230";
 const IG = "https://www.instagram.com/dogmorenos";
 const PAY = {
@@ -193,9 +234,9 @@ const PAY = {
 };
 const TIMES = ["9:00 am", "11:00 am", "2:00 pm", "4:00 pm"];
 const PKG = {
-  basico: { name: "Básico", n: 8, sub: "8 clases · obedece en casa", prices: { clases: 600, daycare: 800, parque: 1050, domicilio: 1300 } },
-  intensivo: { name: "Intensivo", n: 12, sub: "12 clases · obedece en cualquier lugar", prices: { clases: 800, daycare: 1100, parque: 1350, domicilio: 1600 } },
-  servicio: { name: "Acceso Público", n: 14, sub: "14 clases · te acompaña a todas partes", prices: { clases: 1200, daycare: 1550, parque: 1800, domicilio: 2050 } }
+  basico: { name: "Básico", sub: "8 clases · obedece en casa", prices: { clases: 600, daycare: 800, parque: 1050, domicilio: 1300 } },
+  intensivo: { name: "Intensivo", sub: "12 clases · obedece en cualquier lugar", prices: { clases: 800, daycare: 1100, parque: 1350, domicilio: 1600 } },
+  servicio: { name: "Acceso Público", sub: "14 clases · te acompaña a todas partes", prices: { clases: 1200, daycare: 1550, parque: 1800, domicilio: 2050 } }
 };
 const MODS = [
   ["clases", "Con clases", "Traes a tu perro a clases de 45 a 60 min."],
@@ -204,6 +245,9 @@ const MODS = [
   ["domicilio", "A domicilio", "Vamos nosotros a tu casa."]
 ];
 const CMDS = [["Ven", "Viene cuando lo llamas"], ["Siéntate", "Se sienta a la orden"], ["Échate", "Se acuesta y espera"], ["Caminar sin halar", "Camina a tu lado con correa"], ["Quieto", "Se queda en su sitio"]];
+const CMD_ST = { dominado: ["dom", "DOMINADO"], practicando: ["pra", "PRACTICANDO"], pendiente: ["pen", "PENDIENTE"] };
+const COMIO = ["Todo", "La mitad", "Poquito", "Nada"];
+const ANIMO = ["Feliz", "Juguetón", "Tranquilo", "Cansado", "Nervioso"];
 const RULES = [
   ["Vacunas al día", "Rabia, DHPP y Bordetella. Trae el récord de tu veterinario antes del primer día."],
   ["Evaluación de temperamento", "Todo perro nuevo se evalúa antes de entrar al grupo, para que el juego sea seguro para todos."],
@@ -222,20 +266,26 @@ const money = (n) => "$" + Number(n).toLocaleString("en-US");
 const PAW = '<path d="M12 12c-3 0-5.5 3.5-5.5 6 0 1.7 1.3 2.5 2.8 2.5 1.2 0 1.8-.6 2.7-.6s1.5.6 2.7.6c1.5 0 2.8-.8 2.8-2.5 0-2.5-2.5-6-5.5-6z"/><circle cx="6" cy="10" r="2.2"/><circle cx="10" cy="5.5" r="2.2"/><circle cx="14" cy="5.5" r="2.2"/><circle cx="18" cy="10" r="2.2"/>';
 const paw = (style, size) => `<svg class="paw" width="${size}" height="${size}" viewBox="0 0 24 24" style="${style}" aria-hidden="true">${PAW}</svg>`;
 const CHECK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12 5 5L20 6"/></svg>';
-const waLink = (text) => `https://wa.me/${WA}?text=${encodeURIComponent(text)}`;
+const waLink = (text, to = WA) => `https://wa.me/${to}?text=${encodeURIComponent(text)}`;
+const waNum = (tel) => { const d = String(tel || "").replace(/\D/g, ""); return d.length === 10 ? "1" + d : d; };
+const pawImg = (s = 30) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="#FFB08F" aria-hidden="true">${PAW}</svg>`;
 
-/* ---- Datos guardados en el teléfono del cliente ---- */
-const KEY = "mdt-app-v1";
-let S = { cliente: "", perro: { nombre: "", raza: "", edad: "", vacunas: "", foto: "" }, reservas: [], onboarded: false };
-try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast("No se pudo guardar en este teléfono"); } }
+/* ---- Preferencias en el teléfono (no son datos importantes) ---- */
+const PREF_KEY = "mdt-pref";
+let PREF = { cur: null, seenWelcome: false };
+try { const v = localStorage.getItem(PREF_KEY); if (v) PREF = Object.assign(PREF, JSON.parse(v)); } catch (e) {}
+function savePref() { try { localStorage.setItem(PREF_KEY, JSON.stringify(PREF)); } catch (e) {} }
+let OLD = null; // datos de la versión anterior de la app, para llenar el registro
+try { const v = localStorage.getItem("mdt-app-v1"); if (v) OLD = JSON.parse(v); } catch (e) {}
 
 /* ---- Fechas ---- */
 const DOW = ["DOM", "LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB"];
 const MES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
 const iso = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const today = () => iso(new Date());
 const parse = (s) => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
 const nice = (s) => { const d = parse(s); return DOW[d.getDay()].charAt(0) + DOW[d.getDay()].slice(1).toLowerCase() + " " + d.getDate() + " " + MES[d.getMonth()]; };
+const when = (ts) => { const d = new Date(ts), t = d.toLocaleTimeString("es-PR", { hour: "numeric", minute: "2-digit" }); return iso(d) === today() ? "Hoy " + t : nice(iso(d)) + " · " + t; };
 function nextDays(n) {
   const out = [], d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + 1);
   while (out.length < n) { if (d.getDay() >= 1 && d.getDay() <= 5) out.push(iso(d)); d.setDate(d.getDate() + 1); }
@@ -243,73 +293,197 @@ function nextDays(n) {
 }
 const daysUntil = (s) => { const t = new Date(); t.setHours(0, 0, 0, 0); return Math.round((parse(s) - t) / 864e5); };
 
-/* ---- Estado de la pantalla Reservar ---- */
-const R = { tab: "daycare", opt: 0, mod: "clases", day: "", time: "", method: "stripe", plan: "full" };
+/* ---- Conexión ---- */
+let sb = null;
+try { sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }); } catch (e) { sb = null; }
 
+const A = { ready: false, user: null, profile: null, admin: false, dogs: [], bookings: [], progress: {}, notes: [], updates: [], reports: {} };
+const ADM = { loaded: false, bookings: [], dogs: [], filter: "pendiente", dog: null, busy: false };
+const curDog = () => A.dogs.find((d) => d.id === PREF.cur) || A.dogs[0] || null;
+const firstName = () => ((A.profile && A.profile.nombre) || "").split(" ")[0];
+
+async function loadAll() {
+  if (!sb || !A.user) { Object.assign(A, { profile: null, admin: false, dogs: [], bookings: [], progress: {}, notes: [], updates: [], reports: {} }); return; }
+  const uid = A.user.id;
+  const [p, ad, d, b, gen] = await Promise.all([
+    sb.from("profiles").select("*").eq("id", uid).maybeSingle(),
+    sb.rpc("is_admin"),
+    sb.from("dogs").select("*").eq("owner_id", uid).order("created_at"),
+    sb.from("bookings").select("*").eq("owner_id", uid).order("created_at", { ascending: false }),
+    sb.from("updates").select("*").is("dog_id", null).order("created_at", { ascending: false }).limit(20)
+  ]);
+  A.profile = p.data || { id: uid, nombre: "", telefono: "" };
+  A.admin = ad.data === true;
+  A.dogs = d.data || [];
+  A.bookings = b.data || [];
+  const ids = A.dogs.map((x) => x.id);
+  let updates = gen.data || [];
+  A.progress = {}; A.notes = []; A.reports = {};
+  if (ids.length) {
+    const [pr, n, u, r] = await Promise.all([
+      sb.from("dog_progress").select("*").in("dog_id", ids),
+      sb.from("notes").select("*").in("dog_id", ids).order("created_at", { ascending: false }).limit(60),
+      sb.from("updates").select("*").in("dog_id", ids).order("created_at", { ascending: false }).limit(60),
+      sb.from("day_reports").select("*").in("dog_id", ids).eq("fecha", today())
+    ]);
+    (pr.data || []).forEach((x) => (A.progress[x.dog_id] = x.comandos || {}));
+    A.notes = n.data || [];
+    updates = updates.concat(u.data || []);
+    (r.data || []).forEach((x) => (A.reports[x.dog_id] = x));
+  }
+  A.updates = updates.sort((x, y) => String(y.created_at).localeCompare(String(x.created_at)));
+}
+
+async function loadAdmin() {
+  if (!A.admin) return;
+  const [b, d] = await Promise.all([
+    sb.from("bookings").select("*, dogs(nombre), profiles(nombre,telefono)").order("created_at", { ascending: false }).limit(300),
+    sb.from("dogs").select("*, profiles(nombre,telefono)").order("nombre")
+  ]);
+  ADM.bookings = b.data || []; ADM.dogs = d.data || []; ADM.loaded = true;
+}
+
+async function loadAdminDog(id) {
+  const [dg, pr, n, u, r] = await Promise.all([
+    sb.from("dogs").select("*, profiles(nombre,telefono)").eq("id", id).maybeSingle(),
+    sb.from("dog_progress").select("*").eq("dog_id", id).maybeSingle(),
+    sb.from("notes").select("*").eq("dog_id", id).order("created_at", { ascending: false }).limit(30),
+    sb.from("updates").select("*").eq("dog_id", id).order("created_at", { ascending: false }).limit(30),
+    sb.from("day_reports").select("*").eq("dog_id", id).eq("fecha", today()).maybeSingle()
+  ]);
+  ADM.dog = { id, dog: dg.data, comandos: (pr.data && pr.data.comandos) || {}, notes: n.data || [], updates: u.data || [], report: r.data || null };
+}
+
+let refreshing = null, again = false;
+async function refresh() {
+  if (refreshing) { again = true; return refreshing; }
+  refreshing = (async () => {
+    do {
+      again = false;
+      try {
+        await loadAll();
+        const r = route();
+        if (A.admin && r.name.startsWith("admin")) {
+          await loadAdmin();
+          if (r.name === "admin-perro") await loadAdminDog(r.arg);
+        }
+      } catch (e) { console.error(e); }
+    } while (again);
+    A.ready = true; refreshing = null; render(true);
+  })();
+  return refreshing;
+}
+
+/* ---- Reservar ---- */
+const R = { tab: "daycare", opt: 0, mod: "clases", day: "", time: "", method: "stripe", plan: "full" };
 function options() {
   if (R.tab === "daycare") return [
-    { id: "dc1", name: "Día completo", sub: "Oferta de apertura · regular $30", price: 25, pay: [PAY.dc1] },
-    { id: "dc05", name: "Medio día", sub: "Hasta 5 horas", price: 18, pay: [PAY.dc05] },
-    { id: "dc5", name: "Paquete de 5 días", sub: "$27 por día · úsalos cuando quieras", price: 135, pay: [PAY.dc5] },
-    { id: "dc10", name: "Paquete de 10 días", sub: "$25 por día · el mejor precio", price: 250, pay: [PAY.dc10] }
+    { name: "Día completo", sub: "Oferta de apertura · regular $30", price: 25, pay: [PAY.dc1] },
+    { name: "Medio día", sub: "Hasta 5 horas", price: 18, pay: [PAY.dc05] },
+    { name: "Paquete de 5 días", sub: "$27 por día · úsalos cuando quieras", price: 135, pay: [PAY.dc5] },
+    { name: "Paquete de 10 días", sub: "$25 por día · el mejor precio", price: 250, pay: [PAY.dc10] }
   ];
-  if (R.tab === "train") return Object.keys(PKG).map((k) => {
-    const p = PKG[k], links = PAY[k][R.mod] || null;
-    return { id: k, name: p.name, sub: p.sub, price: p.prices[R.mod], pay: links, deposit: true };
-  });
+  if (R.tab === "train") return Object.keys(PKG).map((k) => ({ name: PKG[k].name, sub: PKG[k].sub, price: PKG[k].prices[R.mod], pay: PAY[k][R.mod] || null, deposit: true }));
   if (R.tab === "clase") return [
-    { id: "consulta", name: "Consulta de conducta", sub: "Ansiedad, ladridos, reactividad · 45 a 60 min", price: 65, pay: [PAY.consulta] },
-    { id: "uncomando", name: "Clase de un comando", sub: "Una sola destreza · unos 30 min", price: 40, pay: null }
+    { name: "Consulta de conducta", sub: "Ansiedad, ladridos, reactividad · 45 a 60 min", price: 65, pay: [PAY.consulta] },
+    { name: "Clase de un comando", sub: "Una sola destreza · unos 30 min", price: 40, pay: null }
   ];
-  return [{ id: "grupal", name: "Clase grupal", sub: "Socialización y obediencia · sábados 8:00 am a 1:00 pm · 6 a 10 perros", price: 60, pay: null }];
+  return [{ name: "Clase grupal", sub: "Socialización y obediencia · sábados 8:00 am a 1:00 pm · 6 a 10 perros", price: 60, pay: null }];
 }
-const needsTime = () => (R.tab === "clase") || (R.tab === "train" && R.mod !== "daycare");
+const needsTime = () => R.tab === "clase" || (R.tab === "train" && R.mod !== "daycare");
 const isGroup = () => R.tab === "grupal";
 
-/* ---- Pantallas ---- */
+/* ---- Iconos ---- */
+function ic(name, s = 30) {
+  const st = `width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"`;
+  return {
+    home: `<svg ${st}><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>`,
+    cal: `<svg ${st}><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>`,
+    paw: `<svg ${st}><circle cx="6" cy="10" r="2"/><circle cx="10" cy="5.5" r="2"/><circle cx="14" cy="5.5" r="2"/><circle cx="18" cy="10" r="2"/><path d="M12 12c-3 0-5.5 3.5-5.5 6 0 1.7 1.3 2.5 2.8 2.5 1.2 0 1.8-.6 2.7-.6s1.5.6 2.7.6c1.5 0 2.8-.8 2.8-2.5 0-2.5-2.5-6-5.5-6z"/></svg>`,
+    cam: `<svg ${st}><path d="M4 8h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg>`,
+    star: `<svg ${st}><path d="m12 3 2.8 5.8 6.2.9-4.5 4.4 1 6.2L12 17.4 6.5 20.3l1-6.2L3 9.7l6.2-.9z"/></svg>`,
+    key: `<svg ${st}><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M14 9l2 2"/></svg>`,
+    train: `<svg ${st}><path d="M4 20 20 4M14 4h6v6"/><circle cx="6" cy="8" r="2"/></svg>`,
+    group: `<svg ${st}><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M3 20c0-3 2.5-5 5-5s5 2 5 5M11 20c0-3 2.5-5 5-5s5 2 5 5"/></svg>`,
+    chat: `<svg ${st}><path d="M4 5h16v11H9l-5 4z"/><path d="M9 10h6"/></svg>`,
+    wa: `<svg ${st}><path d="M20 12a8 8 0 0 1-11.8 7L4 20l1.1-4A8 8 0 1 1 20 12z"/><path d="M9 9.5c.5 2 2 3.6 4 4.3l1.2-1.1 1.8.8-.4 1.7c-3.3.2-7-3.2-7.1-6.7l1.7-.5.8 1.8z"/></svg>`
+  }[name];
+}
+
+/* ---- Piezas compartidas ---- */
+function vacStatus(dog) {
+  if (!dog || !dog.vacunas) return { text: "Falta el récord de vacunas", cls: "p-glass" };
+  const d = daysUntil(dog.vacunas);
+  if (d < 0) return { text: "Vacunas vencidas", cls: "p-red" };
+  if (d <= 30) return { text: "Vacunas vencen pronto", cls: "p-orange" };
+  return { text: "Vacunas al día", cls: "p-gold" };
+}
+const ESTADO = { pendiente: ["Pendiente", "p-glass"], confirmada: ["Confirmada", "p-gold"], completada: ["Completada", "p-green"], cancelada: ["Cancelada", "p-gray"] };
+const estadoPill = (b) => `<span class="pill ${ESTADO[b.estado][1]}">${ESTADO[b.estado][0]}</span>`;
+const dogAvatar = (dog, s = 72) => `<div class="dogpic" style="width:${s}px;height:${s}px;border-width:2px;box-shadow:none">${dog && dog.foto_url ? `<img src="${esc(dog.foto_url)}" alt="">` : pawImg(Math.round(s * 0.42))}</div>`;
+function dogChips(addBtn) {
+  if (A.dogs.length < 2 && !addBtn) return "";
+  const c = curDog();
+  return `<div class="dogchips" role="group" aria-label="Escoge el perro">${A.dogs.map((d) => `<button type="button" class="chip" data-dog="${d.id}" aria-pressed="${c && c.id === d.id}"><i style="${d.foto_url ? `background-image:url('${esc(d.foto_url)}')` : ""}"></i>${esc(d.nombre)}</button>`).join("")}${addBtn ? '<button type="button" class="chip" data-act="addDog" style="padding:0 14px">+ Añadir perro</button>' : ""}</div>`;
+}
+const loginCard = (why) => `
+  <div class="card" style="display:flex;flex-direction:column;gap:12px">
+    <b class="d" style="font-size:21px">${why}</b>
+    <p class="note">Crea tu cuenta gratis en un minuto. Así ves el progreso de tu perro, las fotos del daycare y tus reservas en cualquier teléfono.</p>
+    <button class="btn block" data-act="signup">Crear mi cuenta</button>
+    <button class="btn ghost block" data-act="login">Ya tengo cuenta</button>
+  </div>`;
+const loadingBox = () => `<div class="empty"><span class="spin" aria-hidden="true"></span><div>Cargando…</div></div>`;
+function mediaHtml(u) {
+  if (!u.media_url) return "";
+  return u.media_tipo === "video" ? `<video src="${esc(u.media_url)}" controls playsinline preload="metadata"></video>` : `<img src="${esc(u.media_url)}" alt="" loading="lazy">`;
+}
+
+/* ================= PANTALLAS DEL CLIENTE ================= */
 const V = {};
 
 V.inicio = () => {
-  const name = S.cliente ? esc(S.cliente) : "";
-  const dog = S.perro.nombre ? esc(S.perro.nombre) : "";
-  const up = S.reservas.filter((r) => r.date && daysUntil(r.date) >= 0).sort((a, b) => a.date.localeCompare(b.date))[0];
-  const d = up ? daysUntil(up.date) : 0;
-  const ticket = up ? `
+  const name = esc(firstName());
+  const dog = curDog();
+  const dn = dog ? esc(dog.nombre) : "";
+  const up = A.bookings.filter((b) => b.fecha && b.estado !== "cancelada" && b.estado !== "completada" && daysUntil(b.fecha) >= 0).sort((a, b) => a.fecha.localeCompare(b.fecha))[0];
+  const d = up ? daysUntil(up.fecha) : 0;
+  let ticket;
+  if (up) ticket = `
     <div class="ticket">
       <div class="top">
-        <div><div class="lbl">PRÓXIMA CITA</div><div class="ttl d">${esc(up.title)}</div><div class="sub">${nice(up.date)}${up.time ? " · " + esc(up.time) : ""} · ${up.confirmed ? "Confirmada" : "Pendiente de confirmar"}</div></div>
+        <div><div class="lbl">PRÓXIMA CITA</div><div class="ttl d">${esc(up.titulo)}</div><div class="sub">${nice(up.fecha)}${up.hora ? " · " + esc(up.hora) : ""} · ${up.estado === "confirmada" ? "Confirmada" : "Pendiente de confirmar"}</div></div>
         <div class="count"><small>${d === 0 ? "ES" : "EN"}</small><b>${d === 0 ? "¡Hoy!" : d}</b><small>${d === 0 ? "" : d === 1 ? "DÍA" : "DÍAS"}</small></div>
       </div>
       <div class="cut"></div>
-      <div class="acts"><a class="btn" style="flex:1" href="#perro">Ver detalles</a><a class="btn dark" style="flex:1" href="${waLink("Hola, quiero cambiar mi cita del " + nice(up.date) + " (" + up.title + ").")}" target="_blank" rel="noopener">Cambiar</a></div>
-    </div>` : `
+      <div class="acts"><a class="btn" style="flex:1" href="#perro">Ver detalles</a><a class="btn dark" style="flex:1" href="${waLink("Hola, quiero cambiar mi cita del " + nice(up.fecha) + " (" + up.titulo + ").")}" target="_blank" rel="noopener">Cambiar</a></div>
+    </div>`;
+  else ticket = `
     <div class="ticket">
-      <div class="top"><div><div class="lbl">TU PRÓXIMA CITA</div><div class="ttl d">Todavía no tienes citas</div><div class="sub">Reserva el primer día de ${dog || "tu perro"} en un minuto.</div></div>
+      <div class="top"><div><div class="lbl">TU PRÓXIMA CITA</div><div class="ttl d">Todavía no tienes citas</div><div class="sub">Reserva el primer día de ${dn || "tu perro"} en un minuto.</div></div>
       <div class="count"><small>¡A</small><b>✓</b><small>JUGAR!</small></div></div>
       <div class="cut"></div>
       <div class="acts"><a class="btn block" href="#reservar">Reservar ahora</a></div>
     </div>`;
-  const dogCard = dog ? `
-    <a class="card row" href="#perro">
-      <div class="dogpic" style="width:72px;height:72px;border-width:2px;box-shadow:none">${S.perro.foto ? `<img src="${esc(S.perro.foto)}" alt="">` : '<svg width="30" height="30" viewBox="0 0 24 24" fill="#FFB08F" aria-hidden="true">' + PAW + "</svg>"}</div>
-      <div><b class="d" style="font-size:20px">${dog}</b><div class="muted" style="font-size:13px">${vacStatus().text} · ${S.reservas.length} ${S.reservas.length === 1 ? "reserva" : "reservas"}</div></div>
-    </a>` : `
-    <a class="card row" href="#perro">
-      <div class="dogpic" style="width:72px;height:72px;border-width:2px;box-shadow:none"><svg width="30" height="30" viewBox="0 0 24 24" fill="#FFB08F" aria-hidden="true">${PAW}</svg></div>
-      <div><b class="d" style="font-size:20px">Añade a tu perro</b><div class="muted" style="font-size:13px">Nombre, foto y vacunas, todo en un sitio.</div></div>
-    </a>`;
+  const news = A.updates[0];
+  let dogCard;
+  if (!A.user) dogCard = loginCard("Tu perro, en tu bolsillo");
+  else if (!dog) dogCard = `<button class="card row" data-act="addDog" style="width:100%;text-align:left">${dogAvatar(null)}<div><b class="d" style="font-size:20px">Añade a tu perro</b><div class="muted" style="font-size:13px">Nombre, foto y vacunas, todo en un sitio.</div></div></button>`;
+  else dogCard = `<a class="card row" href="#perro">${dogAvatar(dog)}<div><b class="d" style="font-size:20px">${dn}</b><div class="muted" style="font-size:13px">${vacStatus(dog).text}${A.reports[dog.id] ? " · Hoy en daycare" : ""}</div></div></a>`;
   return `
   <section class="hero tall">
     ${paw("right:-24px;top:30px;transform:rotate(18deg);opacity:.22", 140)}${paw("left:52%;top:120px;transform:rotate(-20deg);opacity:.16", 64)}
     <div class="topbar"><span class="brand">MORENO'S</span>
-      <a class="avatar" href="#perro" aria-label="Mi perro">${S.perro.foto ? `<img src="${esc(S.perro.foto)}" alt="">` : esc((dog || name || "M").charAt(0).toUpperCase())}</a></div>
+      ${A.user ? `<a class="avatar" href="#perro" aria-label="Mi perro">${dog && dog.foto_url ? `<img src="${esc(dog.foto_url)}" alt="">` : esc((dn || name || "M").charAt(0).toUpperCase())}</a>` : `<button class="avatar" data-act="login" aria-label="Entrar" style="font-size:13px;font-family:inherit">Entrar</button>`}</div>
     <div style="position:relative">
       <h1 class="d">¡Wepa${name ? `, <em>${name}</em>` : ""}!</h1>
-      <p style="margin-top:8px">${dog ? dog + " te está esperando con la cola en alto." : "Daycare, entrenamiento y clases para tu perro en Guaynabo."}</p>
+      <p style="margin-top:8px">${dn ? dn + " te está esperando con la cola en alto." : "Daycare, entrenamiento y clases para tu perro en Guaynabo."}</p>
     </div>
   </section>
   ${ticket}
   ${installCard()}
+  ${A.admin ? `<section class="sec"><a class="card row" href="#admin" style="justify-content:space-between;border-color:var(--orange)"><div><b class="d" style="font-size:20px">Panel de Hector</b><div class="muted" style="font-size:13px">Reservas, perros, notas y fotos</div></div><span class="btn" style="min-height:42px">Abrir</span></a></section>` : ""}
+  ${news && A.user ? `<section class="sec"><a href="#daycare" class="card row" style="gap:12px">${news.media_url && news.media_tipo !== "video" ? `<img src="${esc(news.media_url)}" alt="" style="width:64px;height:64px;border-radius:16px;object-fit:cover;flex-shrink:0">` : `<span class="rule" style="padding:0;border:0"><span class="ic">${ic("cam", 20)}</span></span>`}<div style="min-width:0"><span class="eyebrow" style="font-size:11px">Nuevo en el daycare</span><div style="font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(news.texto || "Foto nueva")}</div><div class="muted" style="font-size:12px">${when(news.created_at)}</div></div></a></section>` : ""}
   <section class="sec">
     <span class="eyebrow">Servicios</span>
     <h2 class="d" style="margin-top:-6px">¿Qué hacemos hoy?</h2>
@@ -351,25 +525,22 @@ V.reservar = () => {
     <h1 class="d" style="position:relative;font-size:36px;margin-top:-6px">Reserva en un<br><em>dos por tres</em></h1>
     <div class="tabs" role="group" aria-label="Tipo de servicio">${tabs.map((t) => `<button type="button" data-tab="${t[0]}" aria-pressed="${R.tab === t[0]}">${t[1]}</button>`).join("")}</div>
   </section>
-
+  ${A.dogs.length > 1 ? `<section class="sec"><h2 class="d" style="font-size:22px">¿Para quién?</h2>${dogChips(false)}</section>` : ""}
   ${R.tab === "train" ? `<section class="sec"><h2 class="d" style="font-size:22px">¿Cómo lo entrenamos?</h2>
     <div class="chips" role="group" aria-label="Modalidad">${MODS.map((m) => `<button type="button" class="chip" data-mod="${m[0]}" aria-pressed="${R.mod === m[0]}">${m[1]}</button>`).join("")}</div>
     <p class="note">${MODS.find((m) => m[0] === R.mod)[2]}</p></section>` : ""}
-
   <section class="sec"><h2 class="d" style="font-size:22px">${titleFor}</h2>
     ${opts.map((x, i) => `<button type="button" class="opt" data-opt="${i}" aria-pressed="${i === R.opt}"><span><b>${esc(x.name)}</b><small>${esc(x.sub)}</small></span><span class="price">${money(x.price)}</span></button>`).join("")}
     ${R.tab === "train" ? '<p class="note">Los mismos 5 comandos en los tres paquetes: ven, siéntate, échate, caminar sin halar y quieto. Lo que cambia es dónde y con cuántas distracciones los obedece.</p>' : ""}
   </section>
-
   ${isGroup() ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona?</b><p class="note" style="margin-top:6px">Te apuntamos en la lista y, cuando se llenan los cupos (6 a 10 perros), fijamos el sábado y te avisamos por WhatsApp. Es para perros que ya saben algunos comandos.</p></div></section>` : `
-  <section class="sec"><h2 class="d" style="font-size:22px">${R.tab === "daycare" || (R.tab === "train") ? "¿Qué día empezamos?" : "¿Qué día?"}</h2>
+  <section class="sec"><h2 class="d" style="font-size:22px">${R.tab === "clase" ? "¿Qué día?" : "¿Qué día empezamos?"}</h2>
     <div class="days" role="group" aria-label="Día">${days.map((d) => { const x = parse(d); return `<button type="button" class="day" data-day="${d}" aria-pressed="${R.day === d}" aria-label="${nice(d)}"><small>${DOW[x.getDay()]}</small><b>${x.getDate()}</b></button>`; }).join("")}</div>
-    ${needsTime() ? `<div class="chips" role="group" aria-label="Hora">${TIMES.map((t) => `<button type="button" class="chip" data-time="${t}" aria-pressed="${R.time === t}">${t}</button>`).join("")}</div>` : R.tab === "daycare" || R.mod === "daycare" ? '<p class="note">Entrada desde las 8:00 am · recogido antes de las 5:30 pm.</p>' : ""}
+    ${needsTime() ? `<div class="chips" role="group" aria-label="Hora">${TIMES.map((t) => `<button type="button" class="chip" data-time="${t}" aria-pressed="${R.time === t}">${t}</button>`).join("")}</div>` : '<p class="note">Entrada desde las 8:00 am · recogido antes de las 5:30 pm.</p>'}
   </section>`}
-
   <section class="sec"><h2 class="d" style="font-size:22px">¿Cómo pagas?</h2>
     ${o.deposit ? `<div class="chips" role="group" aria-label="Plan">${[["full", "Pago completo"], ["dep", "Depósito 50%"]].map((p) => `<button type="button" class="chip" data-plan="${p[0]}" aria-pressed="${R.plan === p[0]}">${p[1]}</button>`).join("")}</div>` : ""}
-    <div class="chips" role="group" aria-label="Forma de pago">${[["stripe", "Tarjeta o Klarna"], ["ath", "ATH Móvil"], ["cash", "Efectivo"], ["check", "Cheque"]].map((m) => `<button type="button" class="chip" data-method="${m[0]}" aria-pressed="${R.method === m[0]}" ${m[0] === "stripe" && !hasStripe ? "disabled style=\"opacity:.4\"" : ""}>${m[1]}</button>`).join("")}</div>
+    <div class="chips" role="group" aria-label="Forma de pago">${[["stripe", "Tarjeta o Klarna"], ["ath", "ATH Móvil"], ["cash", "Efectivo"], ["check", "Cheque"]].map((m) => `<button type="button" class="chip" data-method="${m[0]}" aria-pressed="${R.method === m[0]}" ${m[0] === "stripe" && !hasStripe ? 'disabled style="opacity:.4"' : ""}>${m[1]}</button>`).join("")}</div>
     <p class="note">${R.plan === "dep" ? "Depositas el 50% para apartar tu espacio y pagas el resto antes de la mitad del paquete." : !hasStripe ? "Este servicio se paga por ATH Móvil, efectivo o cheque. Te damos las instrucciones por WhatsApp." : R.method === "stripe" ? "Pagas seguro con Stripe. Con Klarna lo divides en cuotas." : "Te damos las instrucciones de pago por WhatsApp."}</p>
   </section>
   <div style="height:90px"></div>
@@ -377,80 +548,99 @@ V.reservar = () => {
     <button type="button" class="btn" id="confirm">${isGroup() ? "¡Apúntame!" : "¡Reservar!"}</button></div>`;
 };
 
-function vacStatus() {
-  if (!S.perro.vacunas) return { text: "Falta el récord de vacunas", cls: "p-glass" };
-  const d = daysUntil(S.perro.vacunas);
-  if (d < 0) return { text: "Vacunas vencidas", cls: "p-red" };
-  if (d <= 30) return { text: "Vacunas vencen pronto", cls: "p-orange" };
-  return { text: "Vacunas al día", cls: "p-gold" };
-}
-
 V.perro = () => {
-  const p = S.perro, vs = vacStatus();
-  const res = S.reservas.slice().sort((a, b) => (b.date || "9").localeCompare(a.date || "9"));
-  const training = S.reservas.find((r) => r.tab === "train");
+  if (!A.user) return `<section class="hero"><span class="eyebrow" style="position:relative">Mi perro</span><h1 class="d" style="position:relative;margin-top:-6px">Todo sobre <em>tu perro</em></h1><p style="position:relative">Su progreso, las notas de Hector y sus reservas.</p></section><section class="sec">${loginCard("Entra para ver a tu perro")}</section>`;
+  if (!A.ready) return `<section class="hero"><h1 class="d">Mi perro</h1></section><section class="sec">${loadingBox()}</section>`;
+  const dog = curDog();
+  if (!dog) return `<section class="hero"><span class="eyebrow" style="position:relative">Mi perro</span><h1 class="d" style="position:relative;margin-top:-6px">Añade a <em>tu perro</em></h1></section><section class="sec">${dogForm(null)}</section>${accountCard()}`;
+  const vs = vacStatus(dog), pr = A.progress[dog.id] || {}, rep = A.reports[dog.id];
+  const notes = A.notes.filter((n) => n.dog_id === dog.id);
+  const res = A.bookings.filter((b) => b.dog_id === dog.id || (!b.dog_id && A.dogs.length === 1));
+  const anyTrain = res.some((b) => b.servicio === "train") || Object.keys(pr).length;
   return `
   <section class="hero">
     ${paw("right:-30px;bottom:-40px;transform:rotate(-14deg);opacity:.2", 150)}
+    ${dogChips(true)}
     <div class="row" style="position:relative">
-      <button type="button" class="dogpic" id="pickPhoto" aria-label="${p.foto ? "Cambiar foto" : "Añadir foto"}">${p.foto ? `<img src="${esc(p.foto)}" alt="Foto de ${esc(p.nombre)}">` : '<span style="display:flex;flex-direction:column;align-items:center;gap:4px"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFB08F" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg>Añadir foto</span>'}</button>
+      <button type="button" class="dogpic" data-act="photo" aria-label="${dog.foto_url ? "Cambiar foto" : "Añadir foto"}">${dog.foto_url ? `<img src="${esc(dog.foto_url)}" alt="Foto de ${esc(dog.nombre)}">` : `<span style="display:flex;flex-direction:column;align-items:center;gap:4px">${ic("cam", 26).replace('stroke="currentColor"', 'stroke="#FFB08F"')}Añadir foto</span>`}</button>
       <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
-        <h1 class="d" style="font-size:42px;line-height:.95;overflow-wrap:anywhere">${p.nombre ? esc(p.nombre) : "Tu perro"}</h1>
-        <span class="muted" style="font-size:14px;font-weight:600">${[p.raza, p.edad].filter(Boolean).map(esc).join(" · ") || "Completa su perfil abajo"}</span>
+        <h1 class="d" style="font-size:42px;line-height:.95;overflow-wrap:anywhere">${esc(dog.nombre)}</h1>
+        <span class="muted" style="font-size:14px;font-weight:600">${[dog.raza, dog.edad].filter(Boolean).map(esc).join(" · ") || "Completa su perfil abajo"}</span>
         <div><span class="pill ${vs.cls}" style="transform:rotate(-2deg)">${vs.text}</span></div>
       </div>
     </div>
   </section>
-
+  ${rep ? `<section class="sec"><h2 class="d" style="font-size:22px">Hoy en el daycare</h2><div class="statgrid">
+    <div class="stat"><small>LLEGÓ</small><b>${esc(rep.llegada || "—")}</b></div><div class="stat"><small>COMIÓ</small><b>${esc(rep.comio || "—")}</b></div><div class="stat"><small>ÁNIMO</small><b>${esc(rep.animo || "—")}</b></div></div></section>` : ""}
+  ${anyTrain ? `<section class="sec"><h2 class="d" style="font-size:22px">Sus comandos</h2>
+    <div class="grid2">${CMDS.map((c) => { const s = CMD_ST[pr[c[0]] || "pendiente"]; return `<div class="cmd ${s[0]}"><span class="st">${s[1]}</span><b>${c[0]}</b><span>${c[1]}</span></div>`; }).join("")}</div>
+    <p class="note">Hector actualiza los comandos después de cada clase.</p></section>` : ""}
+  <section class="sec"><h2 class="d" style="font-size:22px">Notas de Hector</h2>
+    ${notes.length ? notes.slice(0, 6).map((n) => `<div class="bubble"><div class="who">H</div><div class="txt"><small>${when(n.created_at)}</small><span>${esc(n.texto)}</span></div></div>`).join("") : `<div class="card"><p class="note">Aquí vas a ver lo que Hector escribe después de cada clase o día de daycare.</p></div>`}
+  </section>
   <section class="sec"><h2 class="d" style="font-size:22px">Sus reservas</h2>
     <div class="card">${res.length ? res.map((r) => `
-      <div class="res"><div style="min-width:0"><b style="display:block">${esc(r.title)}</b><span class="muted" style="font-size:13px">${r.date ? nice(r.date) : "Lista de espera"}${r.time ? " · " + esc(r.time) : ""} · ${money(r.total)}</span></div>
-      <span style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><span class="pill ${r.confirmed ? "p-gold" : "p-glass"}">${r.confirmed ? "Confirmada" : "Pendiente"}</span>
-      <button type="button" data-del="${r.id}" style="min-height:32px;background:none;border:0;color:var(--peach);font-size:13px;font-weight:700;padding:0">Quitar</button></span></div>`).join("") : '<p class="note">Aún no hay reservas. <a href="#reservar">Haz la primera</a>.</p>'}
+      <div class="res"><div style="min-width:0"><b style="display:block">${esc(r.titulo)}</b><span class="muted" style="font-size:13px">${r.fecha ? nice(r.fecha) : "Lista de espera"}${r.hora ? " · " + esc(r.hora) : ""} · ${money(r.total)}${r.pagado ? " · Pagado" : ""}</span></div>
+      <span style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${estadoPill(r)}${r.estado === "pendiente" ? `<button type="button" data-del="${r.id}" style="min-height:32px;background:none;border:0;color:var(--peach);font-size:13px;font-weight:700;padding:0">Quitar</button>` : ""}</span></div>`).join("") : '<p class="note">Aún no hay reservas. <a href="#reservar">Haz la primera</a>.</p>'}
     </div>
-    ${res.length ? '<p class="note">Las reservas quedan confirmadas cuando Hector te contesta por WhatsApp.</p>' : ""}
+    ${res.some((r) => r.estado === "pendiente") ? '<p class="note">Las reservas pendientes se confirman cuando Hector las revisa.</p>' : ""}
   </section>
-
-  ${training ? `<section class="sec"><h2 class="d" style="font-size:22px">Lo que va a aprender</h2>
-    <div class="grid2">${CMDS.map((c) => `<div class="cmd"><b>${c[0]}</b><span>${c[1]}</span></div>`).join("")}</div>
-    <p class="note">Muy pronto vas a ver aquí su progreso y las notas de Hector después de cada clase.</p></section>` : ""}
-
-  <section class="sec"><h2 class="d" style="font-size:22px">Su perfil</h2>
-    <form class="card" id="dogForm" style="display:flex;flex-direction:column;gap:14px">
-      <div class="field"><label for="f-cli">Tu nombre</label><input id="f-cli" name="cliente" value="${esc(S.cliente)}" autocomplete="given-name"></div>
-      <div class="field"><label for="f-nom">Nombre del perro</label><input id="f-nom" name="nombre" value="${esc(p.nombre)}"></div>
-      <div class="grid2">
-        <div class="field"><label for="f-raza">Raza</label><input id="f-raza" name="raza" value="${esc(p.raza)}"></div>
-        <div class="field"><label for="f-edad">Edad</label><input id="f-edad" name="edad" value="${esc(p.edad)}" placeholder="Ej. 2 años"></div>
-      </div>
-      <div class="field"><label for="f-vac">Las vacunas vencen el</label><input id="f-vac" name="vacunas" type="date" value="${esc(p.vacunas)}"></div>
-      <button class="btn block" type="submit">Guardar</button>
-    </form>
-    <p class="note">Esta información se guarda solo en tu teléfono.</p>
-  </section>`;
+  <section class="sec"><h2 class="d" style="font-size:22px">Su perfil</h2>${dogForm(dog)}</section>
+  ${accountCard()}`;
 };
 
-V.daycare = () => `
+function dogForm(dog) {
+  const d = dog || { nombre: (OLD && OLD.perro && OLD.perro.nombre) || "", raza: (OLD && OLD.perro && OLD.perro.raza) || "", edad: (OLD && OLD.perro && OLD.perro.edad) || "", vacunas: (OLD && OLD.perro && OLD.perro.vacunas) || "" };
+  return `<form class="card" id="dogForm" data-id="${dog ? dog.id : ""}" style="display:flex;flex-direction:column;gap:14px">
+    <div class="field"><label for="f-nom">Nombre del perro</label><input id="f-nom" name="nombre" value="${esc(d.nombre)}" required maxlength="40"></div>
+    <div class="grid2">
+      <div class="field"><label for="f-raza">Raza</label><input id="f-raza" name="raza" value="${esc(d.raza)}" maxlength="40"></div>
+      <div class="field"><label for="f-edad">Edad</label><input id="f-edad" name="edad" value="${esc(d.edad)}" placeholder="Ej. 2 años" maxlength="20"></div>
+    </div>
+    <div class="field"><label for="f-vac">Las vacunas vencen el</label><input id="f-vac" name="vacunas" type="date" value="${esc(d.vacunas || "")}"></div>
+    <button class="btn block" type="submit">${dog ? "Guardar cambios" : "Añadir perro"}</button>
+  </form>`;
+}
+
+function accountCard() {
+  const p = A.profile || {};
+  return `<section class="sec"><h2 class="d" style="font-size:22px">Tu cuenta</h2>
+    <form class="card" id="profForm" style="display:flex;flex-direction:column;gap:14px">
+      <div class="field"><label for="p-nom">Tu nombre</label><input id="p-nom" name="nombre" value="${esc(p.nombre)}" autocomplete="name" maxlength="60"></div>
+      <div class="field"><label for="p-tel">Teléfono (WhatsApp)</label><input id="p-tel" name="telefono" value="${esc(p.telefono)}" type="tel" autocomplete="tel" maxlength="20"></div>
+      <span class="muted" style="font-size:13px">${esc(A.user && A.user.email)}</span>
+      <button class="btn ghost block" type="submit">Guardar</button>
+    </form>
+    <button class="btn ghost block" data-act="logout">Salir de mi cuenta</button>
+  </section>`;
+}
+
+V.daycare = () => {
+  const myIds = A.dogs.map((d) => d.id);
+  const feed = A.updates.filter((u) => !u.dog_id || myIds.includes(u.dog_id));
+  const dname = (id) => { const d = A.dogs.find((x) => x.id === id); return d ? d.nombre : ""; };
+  const reps = A.dogs.filter((d) => A.reports[d.id]);
+  return `
   <section class="hero">
     ${paw("right:-24px;top:20px;transform:rotate(16deg);opacity:.22", 140)}
-    <span class="eyebrow" style="position:relative">Daycare</span>
-    <h1 class="d" style="position:relative;margin-top:-6px">Un día de <em>juego</em> supervisado</h1>
-    <div class="grid2" style="grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;position:relative">
-      <div class="stat"><small>ENTRADA</small><b>8:00am</b></div>
-      <div class="stat"><small>RECOGIDO</small><b>5:30pm</b></div>
-      <div class="stat"><small>DÍAS</small><b>Lun–Vie</b></div>
-    </div>
+    <span class="eyebrow" style="position:relative">Daycare ${feed.length ? "· En vivo" : ""}</span>
+    <h1 class="d" style="position:relative;margin-top:-6px">${reps.length ? `El día de <em>${esc(reps[0].nombre)}</em>` : "Un día de <em>juego</em> supervisado"}</h1>
+    ${reps.length ? reps.map((d) => { const r = A.reports[d.id]; return `<div class="statgrid" style="position:relative">${reps.length > 1 ? "" : ""}<div class="stat"><small>LLEGÓ</small><b>${esc(r.llegada || "—")}</b></div><div class="stat"><small>COMIÓ</small><b>${esc(r.comio || "—")}</b></div><div class="stat"><small>ÁNIMO</small><b>${esc(r.animo || "—")}</b></div></div>`; }).join("") : `
+    <div class="statgrid" style="position:relative"><div class="stat"><small>ENTRADA</small><b style="font-size:18px">8:00am</b></div><div class="stat"><small>RECOGIDO</small><b style="font-size:18px">5:30pm</b></div><div class="stat"><small>DÍAS</small><b style="font-size:18px">Lun–Vie</b></div></div>`}
   </section>
   <section class="sec">
-    <div class="polaroid"><div class="ph"><span style="display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:700;font-size:14px"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#1F5C63" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg>Muy pronto: fotos en vivo</span></div>
-      <div style="padding:10px 4px 0"><span style="font-size:12px;font-weight:800;color:#1F5C63">EN VIVO · PRÓXIMAMENTE</span><p style="margin:2px 0 0;font-size:15px;line-height:1.45">Vas a ver aquí las fotos, videos y el reporte del día de tu perro mientras está con nosotros.</p></div></div>
-    <a class="btn ghost block" href="${IG}" target="_blank" rel="noopener">Mientras tanto, síguenos en Instagram @dogmorenos</a>
+    ${!A.user ? loginCard("Mira a tu perro mientras juega") : feed.length ? `<div class="feed">${feed.slice(0, 30).map((u, i) => `
+      <div class="polaroid ${i % 2 ? "r" : ""}">${mediaHtml(u)}<div class="meta"><small>${when(u.created_at)}${u.dog_id ? " · " + esc(dname(u.dog_id)) : " · Para todos"}</small>${u.texto ? `<p>${esc(u.texto)}</p>` : ""}</div></div>`).join("")}</div>` : `
+      <div class="polaroid"><div class="ph"><span style="display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:700;font-size:14px">${ic("cam", 34)}Aún no hay fotos</span></div>
+      <div class="meta"><small>Daycare en vivo</small><p>Cuando tu perro esté con nosotros, aquí vas a ver sus fotos, videos y el reporte del día.</p></div></div>`}
+    <a class="btn ghost block" href="${IG}" target="_blank" rel="noopener">Síguenos en Instagram @dogmorenos</a>
   </section>
   <section class="sec"><h2 class="d" style="font-size:22px">Reglas del daycare</h2>
     <div class="card" style="padding:4px 16px">${RULES.map((r) => `<div class="rule"><span class="ic">${CHECK}</span><div><b>${r[0]}</b><span>${r[1]}</span></div></div>`).join("")}</div>
   </section>
   <section class="sec"><button class="btn block" data-go="daycare">Reservar daycare</button>
     <a class="btn wa block" href="${waLink("Hola, quiero saber si hay espacio en el daycare.")}" target="_blank" rel="noopener">${ic("wa", 20)} Pregunta por espacio</a></section>`;
+};
 
 V.membresia = () => `
   <section class="hero">
@@ -476,46 +666,213 @@ V.membresia = () => `
     </div>
   </section>`;
 
-function ic(name, s = 30) {
-  const st = `width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"`;
-  return {
-    home: `<svg ${st}><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>`,
-    train: `<svg ${st}><path d="M4 20 20 4M14 4h6v6"/><circle cx="6" cy="8" r="2"/></svg>`,
-    group: `<svg ${st}><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M3 20c0-3 2.5-5 5-5s5 2 5 5M11 20c0-3 2.5-5 5-5s5 2 5 5"/></svg>`,
-    chat: `<svg ${st}><path d="M4 5h16v11H9l-5 4z"/><path d="M9 10h6"/></svg>`,
-    wa: `<svg ${st}><path d="M20 12a8 8 0 0 1-11.8 7L4 20l1.1-4A8 8 0 1 1 20 12z"/><path d="M9 9.5c.5 2 2 3.6 4 4.3l1.2-1.1 1.8.8-.4 1.7c-3.3.2-7-3.2-7.1-6.7l1.7-.5.8 1.8z"/></svg>`
-  }[name];
+/* ================= PANEL DE HECTOR ================= */
+function admTabs(cur) {
+  const t = [["admin", "Hoy"], ["admin-reservas", "Reservas"], ["admin-perros", "Perros"], ["admin-publicar", "Publicar"]];
+  return `<div class="tabs" role="group" aria-label="Secciones del panel">${t.map((x) => `<button type="button" data-nav="${x[0]}" aria-pressed="${cur === x[0]}">${x[1]}</button>`).join("")}</div>`;
 }
+const admHero = (cur, title) => `<section class="hero">${paw("right:-20px;top:24px;transform:rotate(18deg);opacity:.22", 120)}<span class="eyebrow" style="position:relative">Panel de Hector</span><h1 class="d" style="position:relative;font-size:34px;margin-top:-6px">${title}</h1>${admTabs(cur)}</section>`;
+function admBooking(b) {
+  const cli = b.profiles || {}, tel = waNum(cli.telefono);
+  return `<div class="adm"><div class="hd"><div style="min-width:0"><b style="display:block;font-size:16px">${esc(b.titulo)}</b>
+    <span class="muted" style="font-size:13px">${b.fecha ? nice(b.fecha) : "Lista de espera"}${b.hora ? " · " + esc(b.hora) : ""}</span></div>${estadoPill(b)}</div>
+    <div style="font-size:14px;line-height:1.6"><b>${esc((b.dogs && b.dogs.nombre) || "Sin perro")}</b> · ${esc(cli.nombre || "Cliente")}${cli.telefono ? " · " + esc(cli.telefono) : ""}<br>
+    <span class="muted">${money(b.total)}${b.plan === "dep" ? " · depósito " + money(b.pagar_hoy) : ""} · ${esc({ stripe: "Stripe", ath: "ATH Móvil", cash: "Efectivo", check: "Cheque" }[b.metodo] || b.metodo)} · </span>${b.pagado ? '<b style="color:#BFF0D4">Pagado</b>' : '<span class="muted">Sin pagar</span>'}</div>
+    <div class="acts">
+      ${b.estado === "pendiente" ? `<button class="btn" data-bk="${b.id}" data-set="confirmada">Confirmar</button>` : ""}
+      ${b.estado === "confirmada" ? `<button class="btn teal" data-bk="${b.id}" data-set="completada">Completada</button>` : ""}
+      <button class="btn ghost" data-bk="${b.id}" data-pay="${b.pagado ? "0" : "1"}">${b.pagado ? "Quitar pagado" : "Marcar pagado"}</button>
+      ${tel ? `<a class="btn wa" href="${waLink("Hola " + (cli.nombre || "") + ", te escribe Hector de Moreno's sobre tu reserva: " + b.titulo + (b.fecha ? " el " + nice(b.fecha) : "") + ".", tel)}" target="_blank" rel="noopener">${ic("wa", 18)}</a>` : ""}
+      ${b.estado !== "cancelada" && b.estado !== "completada" ? `<button class="btn ghost" data-bk="${b.id}" data-set="cancelada">Cancelar</button>` : ""}
+    </div></div>`;
+}
+const notAdmin = () => `<section class="hero"><h1 class="d">Panel</h1></section><section class="sec"><div class="card"><p class="note">Esta sección es solo para Hector.</p></div></section>`;
+
+V.admin = () => {
+  if (!A.admin) return notAdmin();
+  if (!ADM.loaded) return admHero("admin", "Hoy") + `<section class="sec">${loadingBox()}</section>`;
+  const t = today();
+  const hoy = ADM.bookings.filter((b) => b.fecha === t && b.estado !== "cancelada");
+  const pend = ADM.bookings.filter((b) => b.estado === "pendiente");
+  const sinPagar = ADM.bookings.filter((b) => !b.pagado && (b.estado === "confirmada" || b.estado === "completada"));
+  return admHero("admin", "Hoy, " + nice(t)) + `
+  <section class="sec"><div class="statgrid">
+    <div class="stat"><small>HOY</small><b>${hoy.length}</b></div><div class="stat"><small>PENDIENTES</small><b>${pend.length}</b></div><div class="stat"><small>SIN PAGAR</small><b>${sinPagar.length}</b></div></div></section>
+  <section class="sec"><h2 class="d" style="font-size:22px">Perros de hoy</h2>
+    ${hoy.length ? hoy.map((b) => `<a class="card row" href="#admin-perro-${b.dog_id || ""}" style="justify-content:space-between"><div><b>${esc((b.dogs && b.dogs.nombre) || "Sin perro")}</b><div class="muted" style="font-size:13px">${esc(b.titulo)}${b.hora ? " · " + esc(b.hora) : ""}</div></div>${estadoPill(b)}</a>`).join("") : '<div class="card empty">No hay reservas para hoy.</div>'}</section>
+  <section class="sec"><h2 class="d" style="font-size:22px">Por confirmar</h2>
+    ${pend.length ? pend.map(admBooking).join("") : '<div class="card empty">Todo confirmado.</div>'}</section>`;
+};
+
+V["admin-reservas"] = () => {
+  if (!A.admin) return notAdmin();
+  if (!ADM.loaded) return admHero("admin-reservas", "Reservas") + `<section class="sec">${loadingBox()}</section>`;
+  const f = ADM.filter, list = ADM.bookings.filter((b) => f === "todas" || b.estado === f);
+  const F = [["pendiente", "Pendientes"], ["confirmada", "Confirmadas"], ["completada", "Completadas"], ["cancelada", "Canceladas"], ["todas", "Todas"]];
+  return admHero("admin-reservas", "Reservas") + `
+  <section class="sec"><div class="chips" role="group" aria-label="Filtro">${F.map((x) => `<button class="chip" data-filter="${x[0]}" aria-pressed="${f === x[0]}">${x[1]} (${x[0] === "todas" ? ADM.bookings.length : ADM.bookings.filter((b) => b.estado === x[0]).length})</button>`).join("")}</div>
+  ${list.length ? list.map(admBooking).join("") : '<div class="card empty">No hay reservas aquí.</div>'}</section>`;
+};
+
+V["admin-perros"] = () => {
+  if (!A.admin) return notAdmin();
+  if (!ADM.loaded) return admHero("admin-perros", "Perros") + `<section class="sec">${loadingBox()}</section>`;
+  return admHero("admin-perros", "Perros (" + ADM.dogs.length + ")") + `
+  <section class="sec"><div class="field"><label for="dsearch">Buscar perro o dueño</label><input id="dsearch" type="search" placeholder="Rocky, María…"></div>
+  <div id="dlist" style="display:flex;flex-direction:column;gap:10px">${ADM.dogs.length ? ADM.dogs.map((d) => `<a class="card row" data-q="${esc((d.nombre + " " + ((d.profiles && d.profiles.nombre) || "")).toLowerCase())}" href="#admin-perro-${d.id}">${dogAvatar(d, 56)}<div style="min-width:0"><b class="d" style="font-size:19px">${esc(d.nombre)}</b><div class="muted" style="font-size:13px">${esc((d.profiles && d.profiles.nombre) || "Cliente")} · ${vacStatus(d).text}</div></div></a>`).join("") : '<div class="card empty">Cuando tus clientes añadan sus perros, salen aquí.</div>'}</div></section>`;
+};
+
+V["admin-publicar"] = () => {
+  if (!A.admin) return notAdmin();
+  return admHero("admin-publicar", "Publicar para todos") + `
+  <section class="sec"><p class="note">Esto lo ven todos tus clientes en la pestaña Daycare: anuncios, fotos del grupo, ofertas.</p>
+  ${uploadForm("")}</section>`;
+};
+
+function uploadForm(dogId) {
+  return `<form class="card" id="upForm" data-dog="${dogId}" style="display:flex;flex-direction:column;gap:12px">
+    <div class="field"><label for="u-txt">${dogId ? "¿Qué está haciendo?" : "Mensaje"}</label><textarea id="u-txt" name="texto" maxlength="500" placeholder="${dogId ? "Hora de juego con el grupo…" : "¡Este sábado hay clase grupal!"}"></textarea></div>
+    <button type="button" class="btn ghost block" data-act="pickMedia">${ic("cam", 20)} <span id="mediaLbl">Añadir foto o video</span></button>
+    <button class="btn block" type="submit" id="upBtn">Publicar</button>
+  </form>`;
+}
+
+V["admin-perro"] = (id) => {
+  if (!A.admin) return notAdmin();
+  const D = ADM.dog;
+  if (!D || D.id !== id) return `<section class="hero"><a href="#admin-perros" style="position:relative;font-weight:700">‹ Perros</a></section><section class="sec">${loadingBox()}</section>`;
+  if (!D.dog) return `<section class="hero"><a href="#admin-perros" style="position:relative;font-weight:700">‹ Perros</a><h1 class="d">No encontrado</h1></section>`;
+  const dog = D.dog, cli = dog.profiles || {}, tel = waNum(cli.telefono), rep = D.report || {};
+  return `
+  <section class="hero">
+    <a href="#admin-perros" style="position:relative;font-weight:700;text-decoration:none">‹ Perros</a>
+    <div class="row" style="position:relative">${dogAvatar(dog, 88)}<div style="min-width:0"><h1 class="d" style="font-size:36px;overflow-wrap:anywhere">${esc(dog.nombre)}</h1>
+      <span class="muted" style="font-size:14px">${[dog.raza, dog.edad].filter(Boolean).map(esc).join(" · ")}</span><div style="margin-top:4px"><span class="pill ${vacStatus(dog).cls}">${vacStatus(dog).text}</span></div></div></div>
+    <div class="row" style="position:relative;justify-content:space-between"><span style="font-size:14px">${esc(cli.nombre || "Cliente")}${cli.telefono ? " · " + esc(cli.telefono) : ""}</span>${tel ? `<a class="btn wa" style="min-height:42px" href="${waLink("Hola " + (cli.nombre || "") + ", te escribe Hector de Moreno's sobre " + dog.nombre + ".", tel)}" target="_blank" rel="noopener">${ic("wa", 18)} WhatsApp</a>` : ""}</div>
+  </section>
+  <section class="sec"><h2 class="d" style="font-size:22px">Comandos</h2><p class="note">Toca un comando para cambiarlo: pendiente → practicando → dominado.</p>
+    <div class="grid2">${CMDS.map((c) => { const s = CMD_ST[D.comandos[c[0]] || "pendiente"]; return `<button type="button" class="cmd ${s[0]}" data-cmd="${esc(c[0])}"><span class="st">${s[1]}</span><b>${c[0]}</b></button>`; }).join("")}</div></section>
+  <section class="sec"><h2 class="d" style="font-size:22px">Reporte de hoy</h2>
+    <form class="card" id="repForm" style="display:flex;flex-direction:column;gap:12px">
+      <div class="field"><label for="r-lleg">Llegó a las</label><input id="r-lleg" name="llegada" value="${esc(rep.llegada || "")}" placeholder="8:05am" maxlength="12"></div>
+      <div class="grid2">
+        <div class="field"><label for="r-com">Comió</label><select id="r-com" name="comio"><option value="">—</option>${COMIO.map((x) => `<option ${rep.comio === x ? "selected" : ""}>${x}</option>`).join("")}</select></div>
+        <div class="field"><label for="r-ani">Ánimo</label><select id="r-ani" name="animo"><option value="">—</option>${ANIMO.map((x) => `<option ${rep.animo === x ? "selected" : ""}>${x}</option>`).join("")}</select></div>
+      </div>
+      <button class="btn block" type="submit">Guardar reporte</button>
+    </form></section>
+  <section class="sec"><h2 class="d" style="font-size:22px">Subir foto o video</h2>${uploadForm(dog.id)}
+    ${D.updates.length ? `<div class="feed" style="margin-top:8px">${D.updates.slice(0, 8).map((u) => `<div class="polaroid">${mediaHtml(u)}<div class="meta"><small>${when(u.created_at)}</small>${u.texto ? `<p>${esc(u.texto)}</p>` : ""}<button class="linkbtn" data-delup="${u.id}" style="color:#B04A22">Borrar</button></div></div>`).join("")}</div>` : ""}</section>
+  <section class="sec"><h2 class="d" style="font-size:22px">Nota para el dueño</h2>
+    <form class="card" id="noteForm" style="display:flex;flex-direction:column;gap:12px">
+      <div class="field"><label for="n-txt">¿Cómo le fue? ¿Qué practicar en casa?</label><textarea id="n-txt" name="texto" required maxlength="1000"></textarea></div>
+      <button class="btn block" type="submit">Enviar nota</button></form>
+    ${D.notes.map((n) => `<div class="bubble"><div class="who">H</div><div class="txt"><small>${when(n.created_at)}</small><span>${esc(n.texto)}</span><button class="linkbtn" data-delnote="${n.id}" style="color:#B04A22;padding:0;min-height:28px">Borrar</button></div></div>`).join("")}
+  </section>`;
+};
 
 /* ---- Instalar ---- */
 let deferred = null;
 const standalone = () => window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferred = e; if (route() === "inicio") render(); });
+window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferred = e; if (route().name === "inicio") render(true); });
 function installCard() {
   if (standalone()) return "";
-  if (deferred) return `<section class="sec"><div class="card row" style="justify-content:space-between"><div><b>Instala la app</b><div class="muted" style="font-size:13px">Tenla en tu pantalla de inicio.</div></div><button class="btn" id="install">Instalar</button></div></section>`;
+  if (deferred) return `<section class="sec"><div class="card row" style="justify-content:space-between"><div><b>Instala la app</b><div class="muted" style="font-size:13px">Tenla en tu pantalla de inicio.</div></div><button class="btn" data-act="install">Instalar</button></div></section>`;
   if (isIOS) return `<section class="sec"><div class="card"><b>Instala la app en tu iPhone</b><p class="note" style="margin-top:4px">Toca el botón de Compartir (el cuadrito con la flecha) y luego <b style="color:var(--ink)">Añadir a pantalla de inicio</b>.</p></div></section>`;
   return "";
 }
 
-/* ---- Router ---- */
-const ROUTES = ["inicio", "reservar", "perro", "daycare", "membresia"];
-const route = () => { const h = location.hash.replace("#", ""); return ROUTES.includes(h) ? h : "inicio"; };
-function render(keepScroll) {
-  const r = route(), y = window.scrollY;
-  $("#view").innerHTML = `<div class="view">${V[r]()}</div>`;
-  document.querySelectorAll("nav.tabbar a").forEach((a) => { if (a.dataset.r === r) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
-  window.scrollTo(0, keepScroll ? y : 0);
+/* ---- Router y navegación ---- */
+const ROUTES = ["inicio", "reservar", "perro", "daycare", "membresia", "admin", "admin-reservas", "admin-perros", "admin-publicar"];
+function route() {
+  const h = location.hash.replace("#", "");
+  if (h.startsWith("admin-perro-")) return { name: "admin-perro", arg: h.slice(12) };
+  return { name: ROUTES.includes(h) ? h : "inicio", arg: null };
 }
-window.addEventListener("hashchange", () => render(false));
+function navHtml(cur) {
+  const items = [["inicio", "Inicio", "home"], ["reservar", "Reservar", "cal"], ["perro", "Mi perro", "paw"], ["daycare", "Daycare", "cam"], ["membresia", "Membresía", "star"]];
+  if (A.admin) items.push(["admin", "Panel", "key"]);
+  const active = cur.startsWith("admin") ? "admin" : cur;
+  return items.map((i) => `<a href="#${i[0]}" ${active === i[0] ? 'aria-current="page"' : ""} aria-label="${i[1]}">${ic(i[2], 22)}<span>${i[1]}</span></a>`).join("");
+}
+let lastRoute = "";
+function render(keep) {
+  const r = route(), key = r.name + (r.arg || "");
+  const y = window.scrollY;
+  const html = V[r.name](r.arg);
+  $("#view").innerHTML = `<div class="${keep && key === lastRoute ? "" : "view"}">${html}</div>`;
+  $("#tabbar").innerHTML = navHtml(r.name);
+  if (!(keep && key === lastRoute)) window.scrollTo(0, 0); else window.scrollTo(0, y);
+  lastRoute = key;
+  const s = $("#dsearch");
+  if (s) s.addEventListener("input", () => { const q = s.value.trim().toLowerCase(); document.querySelectorAll("#dlist [data-q]").forEach((a) => (a.style.display = a.dataset.q.includes(q) ? "" : "none")); });
+}
+window.addEventListener("hashchange", async () => {
+  const r = route();
+  render(false);
+  if (A.admin && r.name.startsWith("admin")) {
+    if (!ADM.loaded) { await loadAdmin(); render(true); }
+    if (r.name === "admin-perro" && (!ADM.dog || ADM.dog.id !== r.arg)) { await loadAdminDog(r.arg); render(true); }
+  }
+});
+
+/* ---- Cuentas ---- */
+function errMsg(e) {
+  const m = String((e && e.message) || e || "");
+  if (/invalid login/i.test(m)) return "Email o contraseña incorrectos.";
+  if (/already registered|already exists/i.test(m)) return "Ese email ya tiene cuenta. Entra con tu contraseña.";
+  if (/at least 6|password should/i.test(m)) return "La contraseña debe tener por lo menos 6 caracteres.";
+  if (/email not confirmed/i.test(m)) return "Confirma tu email primero (revisa tu correo).";
+  if (/rate limit|too many/i.test(m)) return "Demasiados intentos. Espera unos minutos y vuelve a intentar.";
+  if (/invalid.*email|valid email/i.test(m)) return "Revisa que el email esté bien escrito.";
+  if (/fetch|network/i.test(m)) return "No hay conexión. Revisa tu internet.";
+  return "Algo salió mal: " + m;
+}
+function authSheet(mode) {
+  const o = (OLD && OLD.perro) || {};
+  const head = `<img src="assets/logo-dog.png" alt="" width="56" height="54" style="align-self:flex-start">`;
+  if (mode === "signup") return openSheet(`${head}<h3 class="d">Crea tu cuenta</h3>
+    <form id="suForm" style="display:flex;flex-direction:column;gap:12px">
+      <div class="field"><label for="s-nom">Tu nombre</label><input id="s-nom" name="nombre" required autocomplete="name" value="${esc((OLD && OLD.cliente) || "")}"></div>
+      <div class="field"><label for="s-tel">Teléfono (WhatsApp)</label><input id="s-tel" name="telefono" type="tel" autocomplete="tel" placeholder="787-555-1234"></div>
+      <div class="field"><label for="s-dog">Nombre de tu perro</label><input id="s-dog" name="perro" value="${esc(o.nombre || "")}"></div>
+      <div class="field"><label for="s-em">Email</label><input id="s-em" name="email" type="email" required autocomplete="email" inputmode="email"></div>
+      <div class="field"><label for="s-pw">Contraseña (mínimo 6)</label><input id="s-pw" name="password" type="password" required minlength="6" autocomplete="new-password"></div>
+      <div id="authMsg"></div>
+      <button class="btn block" type="submit">Crear cuenta</button>
+    </form>
+    <button class="linkbtn" data-act="login">¿Ya tienes cuenta? Entra aquí</button>`);
+  if (mode === "forgot") return openSheet(`${head}<h3 class="d">Cambiar contraseña</h3>
+    <p class="note">Te enviamos un email con un enlace para poner una contraseña nueva.</p>
+    <form id="fgForm" style="display:flex;flex-direction:column;gap:12px">
+      <div class="field"><label for="g-em">Email</label><input id="g-em" name="email" type="email" required autocomplete="email"></div>
+      <div id="authMsg"></div><button class="btn block" type="submit">Enviar enlace</button></form>
+    <button class="linkbtn" data-act="login">Volver</button>`);
+  if (mode === "newpass") return openSheet(`<h3 class="d">Contraseña nueva</h3>
+    <form id="npForm" style="display:flex;flex-direction:column;gap:12px">
+      <div class="field"><label for="n-pw">Contraseña nueva (mínimo 6)</label><input id="n-pw" name="password" type="password" required minlength="6" autocomplete="new-password"></div>
+      <div id="authMsg"></div><button class="btn block" type="submit">Guardar</button></form>`);
+  return openSheet(`${head}<h3 class="d">Entra a tu cuenta</h3>
+    <form id="liForm" style="display:flex;flex-direction:column;gap:12px">
+      <div class="field"><label for="l-em">Email</label><input id="l-em" name="email" type="email" required autocomplete="email" inputmode="email"></div>
+      <div class="field"><label for="l-pw">Contraseña</label><input id="l-pw" name="password" type="password" required autocomplete="current-password"></div>
+      <div id="authMsg"></div>
+      <button class="btn block" type="submit">Entrar</button>
+    </form>
+    <button class="linkbtn" data-act="forgot">Olvidé mi contraseña</button>
+    <button class="linkbtn" data-act="signup">¿No tienes cuenta? Créala aquí</button>`);
+}
+const authMsg = (html, ok) => { const el = $("#authMsg"); if (el) el.innerHTML = html ? `<div class="${ok ? "okmsg" : "err"}" role="alert">${html}</div>` : ""; };
+function busy(form, on) { form.querySelectorAll("button,input,select,textarea").forEach((x) => (x.disabled = on)); }
 
 /* ---- Acciones ---- */
-document.addEventListener("click", (e) => {
+document.addEventListener("click", async (e) => {
   const t = e.target.closest("button, a");
   if (!t) return;
   const ds = t.dataset;
-  if (ds.go) { R.tab = ds.go; R.opt = 0; R.plan = "full"; R.method = "stripe"; if (location.hash !== "#reservar") location.hash = "reservar"; else render(); return; }
+  if (ds.go) { R.tab = ds.go; R.opt = 0; R.plan = "full"; R.method = "stripe"; R.time = ""; if (location.hash !== "#reservar") location.hash = "reservar"; else render(true); return; }
+  if (ds.nav) { location.hash = ds.nav; return; }
   if (ds.tab) { R.tab = ds.tab; R.opt = 0; R.plan = "full"; R.method = "stripe"; R.time = ""; render(true); return; }
   if (ds.mod) { R.mod = ds.mod; R.method = "stripe"; R.time = ""; render(true); return; }
   if (ds.opt) { R.opt = +ds.opt; R.method = "stripe"; render(true); return; }
@@ -523,67 +880,189 @@ document.addEventListener("click", (e) => {
   if (ds.time) { R.time = ds.time; render(true); return; }
   if (ds.plan) { R.plan = ds.plan; render(true); return; }
   if (ds.method) { R.method = ds.method; render(true); return; }
-  if (ds.del) { S.reservas = S.reservas.filter((r) => String(r.id) !== ds.del); save(); render(true); toast("Reserva quitada"); return; }
+  if (ds.dog) { PREF.cur = ds.dog; savePref(); render(true); return; }
+  if (ds.filter) { ADM.filter = ds.filter; render(true); return; }
+  if (ds.close != null) return closeSheet();
+  if (ds.del) {
+    const { error } = await sb.from("bookings").delete().eq("id", ds.del);
+    if (error) return toast(errMsg(error));
+    toast("Reserva quitada"); return refresh();
+  }
+  if (ds.bk) return adminBooking(ds.bk, ds.set, ds.pay);
+  if (ds.cmd) return adminCmd(ds.cmd);
+  if (ds.delnote) { if (!confirmDel()) return; await sb.from("notes").delete().eq("id", ds.delnote); await loadAdminDog(ADM.dog.id); return render(true); }
+  if (ds.delup) { if (!confirmDel()) return; await sb.from("updates").delete().eq("id", ds.delup); await loadAdminDog(ADM.dog.id); return render(true); }
   if (t.id === "confirm") return confirmBooking();
-  if (t.id === "pickPhoto") return $("#photo").click();
-  if (t.id === "install" && deferred) { deferred.prompt(); deferred.userChoice.finally(() => { deferred = null; render(true); }); return; }
-  if (t.dataset.close != null) return closeSheet();
-});
-
-document.addEventListener("submit", (e) => {
-  if (e.target.id === "dogForm") {
-    e.preventDefault();
-    const f = new FormData(e.target);
-    S.cliente = (f.get("cliente") || "").trim();
-    ["nombre", "raza", "edad", "vacunas"].forEach((k) => (S.perro[k] = (f.get(k) || "").trim()));
-    save(); render(true); toast("¡Guardado!");
-  }
-  if (e.target.id === "onb") {
-    e.preventDefault();
-    const f = new FormData(e.target);
-    S.cliente = (f.get("cliente") || "").trim(); S.perro.nombre = (f.get("perro") || "").trim(); S.onboarded = true;
-    save(); closeSheet(); render();
+  switch (ds.act) {
+    case "signup": case "login": case "forgot": return authSheet(ds.act);
+    case "logout": await sb.auth.signOut(); PREF.cur = null; savePref(); location.hash = "inicio"; toast("Saliste de tu cuenta"); return;
+    case "addDog": return openSheet(`<h3 class="d">Añadir perro</h3>${dogForm(null).replace('id="dogForm" data-id=""', 'id="dogForm" data-id="" data-new="1"')}`);
+    case "photo": return $("#photo").click();
+    case "pickMedia": return $("#media").click();
+    case "install": if (deferred) { deferred.prompt(); deferred.userChoice.finally(() => { deferred = null; render(true); }); } return;
   }
 });
+let delArmed = 0;
+function confirmDel() { const now = Date.now(); if (now - delArmed < 3000) { delArmed = 0; return true; } delArmed = now; toast("Toca Borrar otra vez para confirmar"); return false; }
 
-$("#photo").addEventListener("change", (e) => {
-  const file = e.target.files && e.target.files[0];
+document.addEventListener("submit", async (e) => {
+  const f = e.target, F = new FormData(f), v = (k) => String(F.get(k) || "").trim();
+  e.preventDefault();
+  if (!sb) return toast("No hay conexión. Revisa tu internet.");
+  busy(f, true);
+  try {
+    if (f.id === "liForm") {
+      const { error } = await sb.auth.signInWithPassword({ email: v("email"), password: String(F.get("password")) });
+      if (error) throw error;
+      closeSheet(false); toast("¡Bienvenido de vuelta!");
+    } else if (f.id === "suForm") {
+      const { data, error } = await sb.auth.signUp({ email: v("email"), password: String(F.get("password")), options: { data: { nombre: v("nombre"), telefono: v("telefono") }, emailRedirectTo: APP_URL } });
+      if (error) throw error;
+      if (!data.session) { authMsg("¡Cuenta creada! Te enviamos un email para confirmarla. Ábrelo y luego entra aquí.", true); busy(f, false); return; }
+      A.user = data.session.user;
+      if (v("perro")) await sb.from("dogs").insert({ nombre: v("perro"), owner_id: A.user.id, raza: (OLD && OLD.perro && OLD.perro.raza) || "", edad: (OLD && OLD.perro && OLD.perro.edad) || "", vacunas: (OLD && OLD.perro && OLD.perro.vacunas) || null });
+      PREF.seenWelcome = true; savePref();
+      closeSheet(false); await refresh(); toast("¡Cuenta creada!");
+    } else if (f.id === "fgForm") {
+      const { error } = await sb.auth.resetPasswordForEmail(v("email"), { redirectTo: APP_URL });
+      if (error) throw error;
+      authMsg("Listo. Revisa tu email (y la carpeta de spam).", true);
+    } else if (f.id === "npForm") {
+      const { error } = await sb.auth.updateUser({ password: String(F.get("password")) });
+      if (error) throw error;
+      closeSheet(false); toast("Contraseña cambiada");
+    } else if (f.id === "dogForm") {
+      const row = { nombre: v("nombre"), raza: v("raza"), edad: v("edad"), vacunas: v("vacunas") || null };
+      if (!row.nombre) throw new Error("Ponle nombre a tu perro.");
+      if (f.dataset.id) {
+        const { error } = await sb.from("dogs").update(row).eq("id", f.dataset.id); if (error) throw error;
+        toast("¡Guardado!");
+      } else {
+        row.owner_id = A.user.id;
+        const { data, error } = await sb.from("dogs").insert(row).select().single(); if (error) throw error;
+        PREF.cur = data.id; savePref(); closeSheet(false); toast("¡" + row.nombre + " añadido!");
+      }
+      await refresh();
+    } else if (f.id === "profForm") {
+      const { error } = await sb.from("profiles").update({ nombre: v("nombre"), telefono: v("telefono") }).eq("id", A.user.id); if (error) throw error;
+      toast("¡Guardado!"); await refresh();
+    } else if (f.id === "repForm") {
+      const { error } = await sb.from("day_reports").upsert({ dog_id: ADM.dog.id, fecha: today(), llegada: v("llegada"), comio: v("comio"), animo: v("animo"), updated_at: new Date().toISOString() }, { onConflict: "dog_id,fecha" });
+      if (error) throw error; toast("Reporte guardado"); await loadAdminDog(ADM.dog.id); render(true);
+    } else if (f.id === "noteForm") {
+      const { error } = await sb.from("notes").insert({ dog_id: ADM.dog.id, texto: v("texto") }); if (error) throw error;
+      toast("Nota enviada"); await loadAdminDog(ADM.dog.id); render(true);
+    } else if (f.id === "upForm") {
+      await publishUpdate(f.dataset.dog || null, v("texto"));
+    }
+  } catch (err) {
+    if ($("#authMsg") && f.closest(".sheet")) authMsg(esc(errMsg(err))); else toast(errMsg(err));
+  }
+  if (document.body.contains(f)) busy(f, false);
+});
+
+/* ---- Fotos ---- */
+function resizeImage(file, max) {
+  return new Promise((res, rej) => {
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      const s = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement("canvas");
+      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url); c.toBlob((b) => (b ? res(b) : rej(new Error("No se pudo leer la foto"))), "image/jpeg", 0.85);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error("No se pudo leer la foto. Prueba con otra.")); };
+    img.src = url;
+  });
+}
+async function upload(path, blob, type) {
+  const { error } = await sb.storage.from("fotos").upload(path, blob, { contentType: type, upsert: true, cacheControl: "31536000" });
+  if (error) throw error;
+  return sb.storage.from("fotos").getPublicUrl(path).data.publicUrl;
+}
+$("#photo").addEventListener("change", async (e) => {
+  const file = e.target.files && e.target.files[0]; e.target.value = "";
+  const dog = curDog(); if (!file || !dog || !A.user) return;
+  toast("Subiendo foto…");
+  try {
+    const blob = await resizeImage(file, 800);
+    const url = await upload(`perros/${A.user.id}/${dog.id}-${Date.now()}.jpg`, blob, "image/jpeg");
+    const { error } = await sb.from("dogs").update({ foto_url: url }).eq("id", dog.id); if (error) throw error;
+    toast("¡Foto lista!"); await refresh();
+  } catch (err) { toast(errMsg(err)); }
+});
+let pendingMedia = null;
+$("#media").addEventListener("change", (e) => {
+  const file = e.target.files && e.target.files[0]; e.target.value = "";
   if (!file) return;
-  const img = new Image(), url = URL.createObjectURL(file);
-  img.onload = () => {
-    const s = 360, c = document.createElement("canvas"); c.width = c.height = s;
-    const m = Math.min(img.width, img.height), ctx = c.getContext("2d");
-    ctx.drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, s, s);
-    S.perro.foto = c.toDataURL("image/jpeg", 0.82); URL.revokeObjectURL(url); save(); render(true);
-  };
-  img.src = url; e.target.value = "";
+  if (file.size > 50 * 1024 * 1024) return toast("El video es muy grande (máximo 50 MB). Grábalo más corto.");
+  pendingMedia = file;
+  const l = $("#mediaLbl"); if (l) l.textContent = (file.type.startsWith("video") ? "Video: " : "Foto: ") + file.name.slice(0, 28);
 });
+async function publishUpdate(dogId, texto) {
+  if (!texto && !pendingMedia) throw new Error("Escribe algo o añade una foto o video.");
+  let media_url = null, media_tipo = null;
+  if (pendingMedia) {
+    const isVid = pendingMedia.type.startsWith("video");
+    toast(isVid ? "Subiendo video… no cierres la app" : "Subiendo foto…");
+    const folder = `updates/${dogId || "todos"}/${Date.now()}`;
+    if (isVid) { const ext = (pendingMedia.name.split(".").pop() || "mp4").toLowerCase(); media_url = await upload(`${folder}.${ext}`, pendingMedia, pendingMedia.type || "video/mp4"); media_tipo = "video"; }
+    else { media_url = await upload(`${folder}.jpg`, await resizeImage(pendingMedia, 1600), "image/jpeg"); media_tipo = "foto"; }
+  }
+  const { error } = await sb.from("updates").insert({ dog_id: dogId, texto, media_url, media_tipo });
+  if (error) throw error;
+  pendingMedia = null; toast("¡Publicado!");
+  if (dogId) { await loadAdminDog(dogId); render(true); } else { const f = $("#upForm"); if (f) f.reset(); const l = $("#mediaLbl"); if (l) l.textContent = "Añadir foto o video"; await loadAll(); }
+}
 
-function confirmBooking() {
+/* ---- Panel: acciones ---- */
+async function adminBooking(id, estado, pay) {
+  const patch = {}; if (estado) patch.estado = estado; if (pay != null && pay !== undefined) patch.pagado = pay === "1";
+  const { error } = await sb.from("bookings").update(patch).eq("id", id);
+  if (error) return toast(errMsg(error));
+  toast(estado === "confirmada" ? "Reserva confirmada" : estado === "cancelada" ? "Reserva cancelada" : estado === "completada" ? "Marcada como completada" : "Pago actualizado");
+  await loadAdmin(); render(true);
+}
+async function adminCmd(name) {
+  const order = ["pendiente", "practicando", "dominado"], c = Object.assign({}, ADM.dog.comandos);
+  c[name] = order[(order.indexOf(c[name] || "pendiente") + 1) % 3];
+  ADM.dog.comandos = c; render(true);
+  const { error } = await sb.from("dog_progress").upsert({ dog_id: ADM.dog.id, comandos: c, updated_at: new Date().toISOString() }, { onConflict: "dog_id" });
+  if (error) toast(errMsg(error));
+}
+
+/* ---- Reservar: confirmar ---- */
+async function confirmBooking() {
   const o = options()[R.opt];
   if (!isGroup() && !R.day) return toast("Escoge el día");
   if (needsTime() && !R.time) return toast("Escoge la hora");
+  if (!A.user) { toast("Crea tu cuenta para reservar"); return authSheet("signup"); }
+  const dog = curDog();
+  if (!dog) { toast("Primero añade a tu perro"); return openSheet(`<h3 class="d">Añade a tu perro</h3>${dogForm(null).replace('id="dogForm" data-id=""', 'id="dogForm" data-id="" data-new="1"')}`); }
   const mod = R.tab === "train" ? MODS.find((m) => m[0] === R.mod)[1] : "";
-  const title = R.tab === "train" ? `Paquete ${o.name} · ${mod}` : R.tab === "daycare" ? `Daycare · ${o.name}` : o.name;
+  const titulo = R.tab === "train" ? `Paquete ${o.name} · ${mod}` : R.tab === "daycare" ? `Daycare · ${o.name}` : o.name;
   const payNow = R.plan === "dep" ? o.price / 2 : o.price;
   const methodName = { stripe: "Tarjeta o Klarna (Stripe)", ath: "ATH Móvil", cash: "Efectivo", check: "Cheque" }[R.method];
   const link = R.method === "stripe" && o.pay ? (R.plan === "dep" ? o.pay[1] : o.pay[0]) : "";
+  const btn = $("#confirm"); if (btn) btn.disabled = true;
+  const { error } = await sb.from("bookings").insert({ owner_id: A.user.id, dog_id: dog.id, servicio: R.tab, titulo, fecha: isGroup() ? null : R.day, hora: R.time || null, total: o.price, pagar_hoy: payNow, metodo: R.method, plan: R.plan });
+  if (btn) btn.disabled = false;
+  if (error) return toast(errMsg(error));
   const msg = [
-    "Hola Moreno's, quiero reservar:",
-    "Servicio: " + title,
+    "Hola Moreno's, acabo de reservar en la app:",
+    "Servicio: " + titulo,
     isGroup() ? "Fecha: apúntenme en la lista del próximo grupo" : "Día: " + nice(R.day) + (R.time ? " a las " + R.time : ""),
     "Pago: " + methodName + " · " + (R.plan === "dep" ? "Depósito 50% (" + money(payNow) + " de " + money(o.price) + ")" : "Completo (" + money(o.price) + ")"),
-    "Cliente: " + (S.cliente || "-"),
-    "Perro: " + (S.perro.nombre || "-") + (S.perro.raza ? " (" + S.perro.raza + ")" : ""),
-    "(Enviado desde la app)"
+    "Cliente: " + ((A.profile && A.profile.nombre) || "-"),
+    "Perro: " + dog.nombre + (dog.raza ? " (" + dog.raza + ")" : "")
   ].join("\n");
-  const r = { id: Date.now(), tab: R.tab, title, date: isGroup() ? "" : R.day, time: R.time, total: o.price, payNow, method: R.method, plan: R.plan, confirmed: false };
-  S.reservas.push(r); save();
+  refresh();
   openSheet(`
-    <h3 class="d">¡Casi listo${S.perro.nombre ? ", " + esc(S.perro.nombre) : ""}!</h3>
-    <div class="sum"><b>${esc(title)}</b><br>${isGroup() ? "Lista del próximo grupo" : nice(R.day) + (R.time ? " · " + esc(R.time) : "")}<br>${R.plan === "dep" ? "Depósito hoy: " + money(payNow) + " de " + money(o.price) : "Total: " + money(o.price)} · ${methodName}</div>
-    <div class="step"><span class="n">1</span><div style="flex:1;display:flex;flex-direction:column;gap:8px"><b>Envía tu reserva</b><a class="btn wa block" href="${waLink(msg)}" target="_blank" rel="noopener">${ic("wa", 20)} Enviar por WhatsApp</a></div></div>
-    <div class="step"><span class="n">2</span><div style="flex:1;display:flex;flex-direction:column;gap:8px"><b>Paga</b>${link ? `<a class="btn block" href="${link}" target="_blank" rel="noopener">Pagar ${money(payNow)} ahora</a><span class="note">Pagas seguro con Stripe. Klarna te deja pagar en cuotas.</span>` : `<span class="note">Te enviamos las instrucciones de pago por WhatsApp${R.method === "ath" ? " para ATH Móvil" : ""}.</span>`}</div></div>
+    <h3 class="d">¡Reserva enviada!</h3>
+    <div class="sum"><b>${esc(titulo)}</b> · ${esc(dog.nombre)}<br>${isGroup() ? "Lista del próximo grupo" : nice(R.day) + (R.time ? " · " + esc(R.time) : "")}<br>${R.plan === "dep" ? "Depósito hoy: " + money(payNow) + " de " + money(o.price) : "Total: " + money(o.price)} · ${methodName}</div>
+    <p class="note">Hector la revisa y la confirma. Vas a ver el cambio en <b style="color:var(--ink)">Mi perro</b>.</p>
+    <div class="step"><span class="n">1</span><div style="flex:1;display:flex;flex-direction:column;gap:8px"><b>Paga para apartar tu espacio</b>${link ? `<a class="btn block" href="${link}" target="_blank" rel="noopener">Pagar ${money(payNow)} ahora</a><span class="note">Pagas seguro con Stripe. Klarna te deja pagar en cuotas.</span>` : `<span class="note">Te enviamos las instrucciones de pago por WhatsApp${R.method === "ath" ? " para ATH Móvil" : ""}.</span>`}</div></div>
+    <div class="step"><span class="n">2</span><div style="flex:1;display:flex;flex-direction:column;gap:8px"><b>¿Quieres avisarle ya?</b><a class="btn wa block" href="${waLink(msg)}" target="_blank" rel="noopener">${ic("wa", 20)} Avisar por WhatsApp</a></div></div>
     <button class="btn ghost block" data-close>Listo</button>`);
 }
 
@@ -591,30 +1070,46 @@ function confirmBooking() {
 function openSheet(html) {
   $("#layer").innerHTML = `<div class="scrim" data-scrim><div class="sheet" role="dialog" aria-modal="true">${html}</div></div>`;
   $("#layer .scrim").addEventListener("click", (e) => { if (e.target.dataset.scrim != null) closeSheet(); });
-  const f = $("#layer .sheet input, #layer .sheet a, #layer .sheet button"); if (f) f.focus();
+  const f = $("#layer .sheet input"); if (f && !isIOS) f.focus();
 }
-function closeSheet() { $("#layer").innerHTML = ""; render(true); }
+function closeSheet(rerender = true) { $("#layer").innerHTML = ""; if (rerender) render(true); }
 document.addEventListener("keydown", (e) => { if (e.key === "Escape" && $("#layer").innerHTML) closeSheet(); });
 let tt;
 function toast(m) {
   clearTimeout(tt); let el = $(".toast");
   if (!el) { el = document.createElement("div"); el.className = "toast"; el.setAttribute("role", "status"); document.body.appendChild(el); }
-  el.textContent = m; tt = setTimeout(() => el.remove(), 2200);
+  el.textContent = m; tt = setTimeout(() => el.remove(), 2600);
 }
 
 /* ---- Arranque ---- */
-render();
-if (!S.onboarded) {
-  openSheet(`
-    <img src="assets/logo-dog.png" alt="" width="64" height="62" style="align-self:flex-start">
-    <h3 class="d">¡Bienvenido a Moreno's!</h3>
-    <p class="note" style="font-size:15px">Daycare, entrenamiento y clases para tu perro. Reserva y paga desde aquí.</p>
-    <form id="onb" style="display:flex;flex-direction:column;gap:14px">
-      <div class="field"><label for="o-cli">¿Cómo te llamas?</label><input id="o-cli" name="cliente" autocomplete="given-name"></div>
-      <div class="field"><label for="o-dog">¿Cómo se llama tu perro?</label><input id="o-dog" name="perro"></div>
-      <button class="btn block" type="submit">¡Vamos!</button>
-    </form>`);
-}
+(async function boot() {
+  render(false);
+  if (!sb) { document.body.insertAdjacentHTML("afterbegin", '<div class="offline">Sin conexión: algunas cosas no van a funcionar hasta que vuelva el internet.</div>'); A.ready = true; render(true); return; }
+  const isRecovery = /type=recovery/.test(location.hash + location.search);
+  sb.auth.onAuthStateChange((ev, session) => {
+    const before = A.user && A.user.id;
+    A.user = session ? session.user : null;
+    if (ev === "PASSWORD_RECOVERY") setTimeout(() => authSheet("newpass"), 0);
+    if (ev === "INITIAL_SESSION") return;
+    if ((A.user && A.user.id) !== before || ev === "SIGNED_OUT") setTimeout(() => { ADM.loaded = false; refresh(); }, 0);
+  });
+  const { data } = await sb.auth.getSession();
+  A.user = data.session ? data.session.user : null;
+  if (location.hash.includes("access_token") || isRecovery) history.replaceState(null, "", location.pathname + "#inicio");
+  await refresh();
+  if (!A.user && !PREF.seenWelcome && !isRecovery) {
+    PREF.seenWelcome = true; savePref();
+    openSheet(`
+      <img src="assets/logo-dog.png" alt="" width="64" height="62" style="align-self:flex-start">
+      <h3 class="d">¡Bienvenido a Moreno's!</h3>
+      <p class="note" style="font-size:15px">Daycare, entrenamiento y clases para tu perro. Reserva, paga y mira cómo le va, todo desde aquí.</p>
+      <button class="btn block" data-act="signup">Crear mi cuenta</button>
+      <button class="btn ghost block" data-act="login">Ya tengo cuenta</button>
+      <button class="linkbtn" data-close style="text-align:center">Mirar primero</button>`);
+  }
+  let lastRefresh = Date.now();
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && Date.now() - lastRefresh > 20000) { lastRefresh = Date.now(); refresh(); } });
+})();
 if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
 </script>
 </body>
