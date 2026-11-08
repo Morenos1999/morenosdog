@@ -375,7 +375,6 @@ body.orl-mode #membresias,body.orl-mode #tienda,body.orl-mode #reglas,body.orl-m
 <section class="alt" id="servicios"><div class="wrap">
   <h2>Servicios y precios</h2>
   <p class="lead">Escoge la ubicación para ver los precios y las ofertas de cada una.</p>
-  <div class="xmas-banner" role="note"><div class="mega">🎄 MEGA OFERTA DE NAVIDAD 🎄</div><div class="sub">Entrenamiento en Orlando a precio especial: ¡no se repite siempre!</div><span class="pill">Cupos limitados · 2 al 7 de noviembre</span></div>
   <div class="tabs" role="group" aria-label="Ubicación">
     <button data-loc="pr" aria-pressed="true">Puerto Rico</button>
     <button data-loc="orl" aria-pressed="false">Orlando</button>
@@ -487,9 +486,9 @@ body.orl-mode #membresias,body.orl-mode #tienda,body.orl-mode #reglas,body.orl-m
 const WA="17874722230";
 const SVC={
  pr:[["Daycare","Día completo con juego supervisado.",30,"/ día","daycare"],["Clase grupal","Socialización y obediencia con otros perros, para perros que ya saben algunos comandos. Los sábados, de 8:00 am a 1:00 pm. Grupos de 6 a 10 perros: la fecha se fija cuando se llena el grupo.",60,"/ perro"],["Clase de un comando","Para aprender una sola destreza (sentado, ven, caminar con correa). Unos 30 min.",40,"/ sesión"],["Consulta de conducta","Para trabajar un problema de conducta específico: ansiedad, ladridos, reactividad. 45 a 60 min.",65,"/ consulta","consulta"],["Paquete Básico","Obedece en casa: ven, siéntate, échate, caminar sin jalar y quieto, en un área cerrada. 8 clases.",600,"/ paquete","basico"],["Paquete Intensivo","Los mismos 5 comandos, confiables fuera de casa y con distracciones. 12 clases.",800,"/ paquete","intensivo"],["Paquete Acceso Público","Los 5 comandos más conducta tranquila en tiendas, restaurantes y viajes. Incluye evaluación de temperamento. 14 clases.",1200,"/ paquete","servicio"]],
- orl:[["Entrenamiento Básico con introducción a Intensivo","Sit, stay y heel (caminar a tu lado). También trabajamos mordidas, saltarle a la gente y control del baño (potty training), según el tiempo de la clase. 6 clases de 1 hora, de lunes a sábado, del 2 al 7 de noviembre. En Cypress Grove Park, de 8:00 am a 8:00 pm: llegas a la hora que mejor te sirva.",750,"/ programa"]]
+ orl:[["Entrenamiento Súper Intensivo","Aprende 4 comandos: sit, down, stay y heel (caminar a tu lado). Trabajamos también en tiendas y lugares públicos, y si se puede, en Disney Springs. 9 clases con tu entrenador. Fechas por coordinar contigo.",1000,"/ programa"]]
 };
-const OFFER={pr:"Oferta de apertura: daycare a $25 por día durante el primer mes.",orl:"Orlando: próximo programa del 2 al 7 de noviembre, en Cypress Grove Park. Cupos limitados. Aceptamos Klarna y plan de pago (depósito de $200 para apartar)."};
+const OFFER={pr:"Oferta de apertura: daycare a $25 por día durante el primer mes.",orl:"Orlando: Entrenamiento Súper Intensivo, 4 comandos y 9 clases. Aceptamos Klarna y plan de pago. Sin el depósito de $200 no se aparta ningún espacio."};
 const PAY={
  dc1:"https://buy.stripe.com/9B6fZi8IH990eMudS1fAc1k",
  consulta:"https://buy.stripe.com/dRmdRa1gf3OG7k2bJTfAc11",dc05:"https://buy.stripe.com/28E5kEf75clceMu7tDfAc13",dc5:"https://buy.stripe.com/5kQ9AU7ED84WawebJTfAc14",dc10:"https://buy.stripe.com/fZu7sMcYXetk6fY3dnfAc15",
@@ -537,7 +536,7 @@ function modal(){$("#dtw").hidden=grp()||orl();$("#send").textContent=grp()?"Apu
 function mod(){return $("#bmw").hidden?"":" ("+$("#bm").value+")";}
 function payUpd(){
  const s=SVC[st.loc].find(x=>x[0]===$("#bs").value);let b=null,m="Para este servicio, reserva por WhatsApp y te enviamos el enlace de pago.";
- if(st.loc==="orl"){b=[["Pagar $750 completo",ORLPAY.full],["Pagar depósito de $200",ORLPAY.dep]];m="Para apartar tu espacio paga ahora el depósito de $200 o el pago completo de $750 (puedes usar Klarna). El resto del plan se paga antes de la mitad del programa. Confirmamos los detalles por WhatsApp.";}
+ if(st.loc==="orl"){b=[["Pagar depósito de $200",ORLPAY.dep]];m="Para apartar tu espacio paga el depósito de $200 (sin depósito no se separa nada). Si prefieres pagar los $1,000 completos o usar Klarna, escríbenos por WhatsApp y te enviamos el enlace. Confirmamos los detalles por WhatsApp.";}
  else if(s){
   if(s[0]==="Daycare"){b=[["Día completo $25 (apertura)",PAY.dc1],["Medio día $18",PAY.dc05],["5 días $135",PAY.dc5],["10 días $250",PAY.dc10]];m="Paga un día, un medio día o un paquete de daycare.";}
   else if(s[0]==="Consulta de conducta")b=[["Pagar $65",PAY.consulta]];
@@ -550,12 +549,12 @@ function payUpd(){
  $("#paybtns").innerHTML=b?b.map(x=>`<a class="btn" target="_blank" rel="noopener" href="${x[1]}">${x[0]}</a>`).join(""):"";
 }
 function sum(){
- $("#sum").textContent=orl()?"Programa del 2 al 7 de noviembre (lunes a sábado), en Cypress Grove Park. Dinos a qué hora llegas: entre 8:00 am y 8:00 pm.":grp()?"Te apuntas a la próxima clase grupal. Te avisamos la fecha cuando se llene el grupo (mínimo 6 perros).":(st.day&&st.time)?`${$("#bs").value}${mod()} · ${st.day} · ${st.time}`:"Escoge un día y una hora.";payUpd();
+ $("#sum").textContent=orl()?"Entrenamiento Súper Intensivo en Orlando (4 comandos, 9 clases). Las fechas y la hora las coordinamos contigo por WhatsApp.":grp()?"Te apuntas a la próxima clase grupal. Te avisamos la fecha cuando se llene el grupo (mínimo 6 perros).":(st.day&&st.time)?`${$("#bs").value}${mod()} · ${st.day} · ${st.time}`:"Escoge un día y una hora.";payUpd();
 }
 function flakes(){document.querySelectorAll(".flake").forEach(f=>f.remove());
  if(st.loc!=="orl")return;
  ["#servicios","#reservar"].forEach(id=>{const sec=$(id);for(let i=0;i<18;i++){const f=document.createElement("span");f.className="flake";f.textContent=i%3?"❄":"✦";f.style.left=(i*5.7+Math.random()*4)+"%";f.style.fontSize=(12+Math.random()*16)+"px";f.style.animationDuration=(7+Math.random()*8)+"s";f.style.animationDelay=(-Math.random()*10)+"s";sec.appendChild(f);}});}
-function setLoc(l){st.loc=l;setTimeout(()=>window.__tag&&window.__tag(),0);document.body.classList.toggle("orl-mode",l==="orl");["#servicios","#reservar"].forEach(id=>$(id).classList.toggle("xmas",l==="orl"));flakes();$("#bl").value=l;cards();form();}
+function setLoc(l){st.loc=l;setTimeout(()=>window.__tag&&window.__tag(),0);document.body.classList.toggle("orl-mode",l==="orl");$("#bl").value=l;cards();form();}
 $("#svc").onclick=e=>{const b=e.target.closest("[data-pk]");if(!b)return;const k=PK[b.dataset.pk],P=$("#pk");
  if(!P.hidden&&P.dataset.k===b.dataset.pk){P.hidden=true;b.setAttribute("aria-expanded","false");return;}
  P.dataset.k=b.dataset.pk;b.setAttribute("aria-expanded","true");
@@ -570,7 +569,7 @@ $("#days").onclick=e=>{const b=e.target.closest("[data-d]");if(!b)return;st.day=
 $("#slots").onclick=e=>{const b=e.target.closest("[data-t]");if(!b)return;st.time=b.dataset.t;document.querySelectorAll("#slots .chip").forEach(c=>c.setAttribute("aria-pressed",c===b));sum();};
 $("#send").onclick=()=>{
  if(!grp()&&!orl()&&(!st.day||!st.time)){$("#sum").textContent="Escoge un día y una hora antes de enviar.";return;}
- const m=`Hola, quiero reservar en Moreno's Dog Training.\nUbicación: ${st.loc==="pr"?"Puerto Rico":"Orlando"}\nServicio: ${$("#bs").value}\n${$("#bmw").hidden?"":"Modalidad: "+$("#bm").value+"\n"}${orl()?"Fechas: 2 al 7 de noviembre (lunes a sábado)\nHora de llegada preferida: (indicar entre 8am y 8pm)":grp()?"Me apunto a la lista de la próxima clase grupal (avísenme la fecha cuando se llene el grupo)":"Día: "+st.day+"\nHora: "+st.time}\nNombre: ${$("#bn").value}\nPerro: ${$("#bd").value}\nPago: ${$("#bpm").value}${$("#bplw").hidden?"":"\nPlan: "+$("#bpl").value}`;
+ const m=`Hola, quiero reservar en Moreno's Dog Training.\nUbicación: ${st.loc==="pr"?"Puerto Rico":"Orlando"}\nServicio: ${$("#bs").value}\n${$("#bmw").hidden?"":"Modalidad: "+$("#bm").value+"\n"}${orl()?"Fechas: por coordinar":grp()?"Me apunto a la lista de la próxima clase grupal (avísenme la fecha cuando se llene el grupo)":"Día: "+st.day+"\nHora: "+st.time}\nNombre: ${$("#bn").value}\nPerro: ${$("#bd").value}\nPago: ${$("#bpm").value}${$("#bplw").hidden?"":"\nPlan: "+$("#bpl").value}`;
  window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(m),"_blank");
 };
 document.querySelectorAll("[data-wa]").forEach(a=>a.href="https://wa.me/"+WA+"?text="+encodeURIComponent(a.dataset.wa));
