@@ -200,9 +200,40 @@ button.cmd{text-align:left;color:var(--ink);font:inherit;min-height:84px}
 .dogchips::-webkit-scrollbar{display:none}
 .dogchips .chip{flex-shrink:0;display:inline-flex;align-items:center;gap:8px;padding:0 14px 0 6px}
 .dogchips .chip i{width:32px;height:32px;border-radius:16px;background:rgba(255,255,255,.1) center/cover;display:inline-block;flex-shrink:0}
+/* ---- v3: oferta, ficha, avisos ---- */
+.oferta{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:10px;border-radius:26px;padding:20px 18px 18px;text-decoration:none;color:var(--dark);text-align:left;width:100%;border:2px solid var(--gold);
+  background:radial-gradient(120% 90% at 100% 0%,#FFD76A 0%,rgba(255,215,106,0) 55%),linear-gradient(150deg,#F59468,#DE6A3E);box-shadow:0 18px 40px rgba(222,106,62,.38)}
+.oferta .ribbon{align-self:flex-start;background:var(--dark);color:var(--gold);font-size:12px;font-weight:800;letter-spacing:.12em;padding:5px 10px;border-radius:10px;text-transform:uppercase}
+.oferta h3{margin:0;font-size:30px;line-height:1}
+.oferta .pr{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.oferta .pr b{font-family:"Baloo 2";font-size:46px;line-height:.9}
+.oferta .pr s{font-size:18px;font-weight:700;color:#5A2A14}
+.oferta p{margin:0;font-size:14px;font-weight:600;color:#3A2016;line-height:1.45}
+.oferta .go{min-height:50px;border-radius:16px;background:var(--dark);color:var(--gold);font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center}
+.oferta .big{position:absolute;right:-8px;top:-18px;font-family:"Baloo 2";font-weight:800;font-size:110px;line-height:1;color:rgba(255,255,255,.14);pointer-events:none}
+.was{text-decoration:line-through;color:var(--muted);font-size:14px;margin-right:4px}
+.fs{display:flex;flex-direction:column;gap:12px;border:0;margin:0;padding:0}
+.fs legend{font-family:"Baloo 2";font-weight:800;font-size:19px;color:var(--peach);padding:0;margin-bottom:2px}
+.fs + .fs{border-top:1px solid rgba(255,255,255,.1);padding-top:16px}
+.vacrow{background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.vacrow b{font-size:14px}
+.vacrow .req{font-size:11px;font-weight:800;color:var(--gold);margin-left:6px}
+.vacrow .field label{font-size:12px}
+.vacrow .field input{min-height:44px;font-size:15px}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap}
+.thumbs a,.thumbs span{position:relative;width:76px;height:76px;border-radius:14px;overflow:hidden;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--soft);text-decoration:none;border:1px solid rgba(255,255,255,.16)}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.thumbs button{position:absolute;top:2px;right:2px;width:24px;height:24px;border-radius:12px;border:0;background:rgba(0,0,0,.7);color:#fff;font-size:13px;padding:0}
+.ckrow{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.45;font-weight:600;cursor:pointer}
+.ckrow input{width:22px;height:22px;flex-shrink:0;accent-color:var(--orange);margin:0}
+.missing{background:rgba(255,215,106,.12);border:1px solid rgba(255,215,106,.4);border-radius:14px;padding:10px 14px;font-size:13px;line-height:1.5;color:var(--gold)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px;line-height:1.45}
+.kv dt{color:var(--muted);font-weight:700}
+.kv dd{margin:0;overflow-wrap:anywhere}
 .offline{position:fixed;left:0;right:0;top:0;z-index:60;background:#5A1209;color:#FFD9D2;text-align:center;font-size:13px;font-weight:700;padding:calc(6px + var(--safeT)) 12px 6px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+<script src="contratos.js"></script>
 </head>
 <body>
 <div class="app"><main id="view" tabindex="-1"></main></div>
@@ -212,6 +243,7 @@ button.cmd{text-align:left;color:var(--ink);font:inherit;min-height:84px}
 <div id="layer"></div>
 <input type="file" id="photo" accept="image/*" hidden>
 <input type="file" id="media" accept="image/*,video/*" hidden>
+<input type="file" id="vacfile" accept="image/*,application/pdf" multiple hidden>
 
 <script>
 /* ====== CONFIG: precios, links y horarios. Edita aquí. ====== */
@@ -230,8 +262,16 @@ const PAY = {
   intensivo: { clases: ["https://buy.stripe.com/5kQ28s0cb1GyeMu15ffAc1a", "https://buy.stripe.com/aFa6oIcYXad4bAi4hrfAc1b"] },
   servicio: { clases: ["https://buy.stripe.com/7sY28s2kj0CugUC8xHfAc1e", "https://buy.stripe.com/bJefZi3on1Gyawe29jfAc1f"] },
   miembro: "https://buy.stripe.com/3cI00k0cbad47k29BLfAc1i",
-  plus: "https://buy.stripe.com/aFa3cw5wvfxo47Q5lvfAc1j"
+  plus: "https://buy.stripe.com/aFa3cw5wvfxo47Q5lvfAc1j",
+  // Oferta de pre-apertura: [pago completo $800, depósito $200]. Pega aquí los enlaces de Stripe.
+  pre: ["", ""]
 };
+/* Oferta de pre-apertura. Pon on: false para quitarla de la app. */
+const OFERTA = { on: true, titulo: "Intensivo + Daycare", valor: 1100, precio: 800, deposito: 200 };
+/* Llave pública de las notificaciones (la privada está solo en Supabase). */
+const VAPID_PUBLIC = "BDalEDHJW-fHZB_iDA00KcmDK-esyK0pOYEBRq6BrzKzzN9FlGsZAn9dBQHSaWUW3703eel3GmvgemB8ti8LPvU";
+/* Vacunas: las 3 primeras son obligatorias para entrar al local. */
+const VACS = [["rabia", "Rabia", true], ["dhpp", "DHPP (moquillo y parvo)", true], ["bordetella", "Bordetella (tos de perrera)", true], ["lepto", "Leptospirosis", false], ["influenza", "Influenza canina", false]];
 const TIMES = ["9:00 am", "11:00 am", "2:00 pm", "4:00 pm"];
 const PKG = {
   basico: { name: "Básico", sub: "8 clases · obedece en casa", prices: { clases: 600, daycare: 800, parque: 1050, domicilio: 1300 } },
@@ -297,21 +337,23 @@ const daysUntil = (s) => { const t = new Date(); t.setHours(0, 0, 0, 0); return 
 let sb = null;
 try { sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }); } catch (e) { sb = null; }
 
-const A = { ready: false, user: null, profile: null, admin: false, dogs: [], bookings: [], progress: {}, notes: [], updates: [], reports: {} };
+const A = { ready: false, user: null, profile: null, admin: false, dogs: [], bookings: [], progress: {}, notes: [], updates: [], reports: {}, contracts: [] };
 const ADM = { loaded: false, bookings: [], dogs: [], filter: "pendiente", dog: null, busy: false };
 const curDog = () => A.dogs.find((d) => d.id === PREF.cur) || A.dogs[0] || null;
 const firstName = () => ((A.profile && A.profile.nombre) || "").split(" ")[0];
 
 async function loadAll() {
-  if (!sb || !A.user) { Object.assign(A, { profile: null, admin: false, dogs: [], bookings: [], progress: {}, notes: [], updates: [], reports: {} }); return; }
+  if (!sb || !A.user) { Object.assign(A, { profile: null, admin: false, dogs: [], bookings: [], progress: {}, notes: [], updates: [], reports: {}, contracts: [] }); return; }
   const uid = A.user.id;
-  const [p, ad, d, b, gen] = await Promise.all([
+  const [p, ad, d, b, gen, ct] = await Promise.all([
     sb.from("profiles").select("*").eq("id", uid).maybeSingle(),
     sb.rpc("is_admin"),
     sb.from("dogs").select("*").eq("owner_id", uid).order("created_at"),
     sb.from("bookings").select("*").eq("owner_id", uid).order("created_at", { ascending: false }),
-    sb.from("updates").select("*").is("dog_id", null).order("created_at", { ascending: false }).limit(20)
+    sb.from("updates").select("*").is("dog_id", null).order("created_at", { ascending: false }).limit(20),
+    sb.from("contracts").select("id,titulo,total,plan,created_at,dog_id").eq("owner_id", uid).order("created_at", { ascending: false }).limit(50)
   ]);
+  A.contracts = ct.data || [];
   A.profile = p.data || { id: uid, nombre: "", telefono: "" };
   A.admin = ad.data === true;
   A.dogs = d.data || [];
@@ -336,22 +378,25 @@ async function loadAll() {
 
 async function loadAdmin() {
   if (!A.admin) return;
-  const [b, d] = await Promise.all([
+  const [b, d, c] = await Promise.all([
     sb.from("bookings").select("*, dogs(nombre), profiles(nombre,telefono)").order("created_at", { ascending: false }).limit(300),
-    sb.from("dogs").select("*, profiles(nombre,telefono)").order("nombre")
+    sb.from("dogs").select("*, profiles(nombre,telefono)").order("nombre"),
+    sb.from("contracts").select("id,titulo,total,plan,created_at,cliente_nombre,cliente_tel,perro,origen").order("created_at", { ascending: false }).limit(200)
   ]);
-  ADM.bookings = b.data || []; ADM.dogs = d.data || []; ADM.loaded = true;
+  ADM.bookings = b.data || []; ADM.dogs = d.data || []; ADM.contracts = c.data || []; ADM.loaded = true;
 }
 
 async function loadAdminDog(id) {
-  const [dg, pr, n, u, r] = await Promise.all([
-    sb.from("dogs").select("*, profiles(nombre,telefono)").eq("id", id).maybeSingle(),
+  const [dg, pr, n, u, r, ct] = await Promise.all([
+    sb.from("dogs").select("*, profiles(*)").eq("id", id).maybeSingle(),
     sb.from("dog_progress").select("*").eq("dog_id", id).maybeSingle(),
     sb.from("notes").select("*").eq("dog_id", id).order("created_at", { ascending: false }).limit(30),
     sb.from("updates").select("*").eq("dog_id", id).order("created_at", { ascending: false }).limit(30),
-    sb.from("day_reports").select("*").eq("dog_id", id).eq("fecha", today()).maybeSingle()
+    sb.from("day_reports").select("*").eq("dog_id", id).eq("fecha", today()).maybeSingle(),
+    sb.from("contracts").select("id,titulo,total,plan,created_at").eq("dog_id", id).order("created_at", { ascending: false }).limit(20)
   ]);
-  ADM.dog = { id, dog: dg.data, comandos: (pr.data && pr.data.comandos) || {}, notes: n.data || [], updates: u.data || [], report: r.data || null };
+  ADM.dog = { id, dog: dg.data, comandos: (pr.data && pr.data.comandos) || {}, notes: n.data || [], updates: u.data || [], report: r.data || null, contracts: ct.data || [] };
+  if (dg.data) ADM.dog.vacUrls = await signedUrls(dg.data.vac_fotos);
 }
 
 let refreshing = null, again = false;
@@ -362,6 +407,7 @@ async function refresh() {
       again = false;
       try {
         await loadAll();
+        await pushCheck();
         const r = route();
         if (A.admin && r.name.startsWith("admin")) {
           await loadAdmin();
@@ -376,20 +422,23 @@ async function refresh() {
 
 /* ---- Reservar ---- */
 const R = { tab: "daycare", opt: 0, mod: "clases", day: "", time: "", method: "stripe", plan: "full" };
+const links = (a) => (a && a.some(Boolean) ? a : null);
 function options() {
+  if (R.tab === "oferta") return [{ name: OFERTA.titulo, sub: "12 clases · daycare + entrenamiento lunes a viernes · aparta con $" + OFERTA.deposito + " antes de la apertura", price: OFERTA.precio, was: OFERTA.valor, pay: links(PAY.pre), deposit: true, depAmt: OFERTA.deposito, noDay: true, tipo: "preapertura", paquete: "intensivo", modalidad: "daycare" }];
   if (R.tab === "daycare") return [
-    { name: "Día completo", sub: "Oferta de apertura · regular $30", price: 25, pay: [PAY.dc1] },
-    { name: "Medio día", sub: "Hasta 5 horas", price: 18, pay: [PAY.dc05] },
-    { name: "Paquete de 5 días", sub: "$27 por día · úsalos cuando quieras", price: 135, pay: [PAY.dc5] },
-    { name: "Paquete de 10 días", sub: "$25 por día · el mejor precio", price: 250, pay: [PAY.dc10] }
+    { name: "Día completo", sub: "Oferta de apertura · regular $30", price: 25, pay: [PAY.dc1], tipo: "daycare" },
+    { name: "Medio día", sub: "Hasta 5 horas", price: 18, pay: [PAY.dc05], tipo: "daycare" },
+    { name: "Paquete de 5 días", sub: "$27 por día · úsalos cuando quieras", price: 135, pay: [PAY.dc5], tipo: "daycare" },
+    { name: "Paquete de 10 días", sub: "$25 por día · el mejor precio", price: 250, pay: [PAY.dc10], tipo: "daycare" }
   ];
-  if (R.tab === "train") return Object.keys(PKG).map((k) => ({ name: PKG[k].name, sub: PKG[k].sub, price: PKG[k].prices[R.mod], pay: PAY[k][R.mod] || null, deposit: true }));
+  if (R.tab === "train") return Object.keys(PKG).map((k) => ({ name: PKG[k].name, sub: PKG[k].sub, price: PKG[k].prices[R.mod], pay: PAY[k][R.mod] || null, deposit: true, tipo: "train", paquete: k, modalidad: R.mod }));
   if (R.tab === "clase") return [
-    { name: "Consulta de conducta", sub: "Ansiedad, ladridos, reactividad · 45 a 60 min", price: 65, pay: [PAY.consulta] },
-    { name: "Clase de un comando", sub: "Una sola destreza · unos 30 min", price: 40, pay: null }
+    { name: "Consulta de conducta", sub: "Ansiedad, ladridos, reactividad · 45 a 60 min", price: 65, pay: [PAY.consulta], tipo: "consulta" },
+    { name: "Clase de un comando", sub: "Una sola destreza · unos 30 min", price: 40, pay: null, tipo: "uncomando" }
   ];
-  return [{ name: "Clase grupal", sub: "Socialización y obediencia · sábados 8:00 am a 1:00 pm · 6 a 10 perros", price: 60, pay: null }];
+  return [{ name: "Clase grupal", sub: "Socialización y obediencia · sábados 8:00 am a 1:00 pm · 6 a 10 perros", price: 60, pay: null, tipo: "grupal" }];
 }
+const depOf = (o) => o.depAmt || o.price / 2;
 const needsTime = () => R.tab === "clase" || (R.tab === "train" && R.mod !== "daycare");
 const isGroup = () => R.tab === "grupal";
 
@@ -412,6 +461,7 @@ function ic(name, s = 30) {
 
 /* ---- Piezas compartidas ---- */
 function vacStatus(dog) {
+  if (dog && !dog.vacunas && (dog.vac_fotos || []).length && dog.vac_certifica) return { text: "Récord de vacunas enviado", cls: "p-gold" };
   if (!dog || !dog.vacunas) return { text: "Falta el récord de vacunas", cls: "p-glass" };
   const d = daysUntil(dog.vacunas);
   if (d < 0) return { text: "Vacunas vencidas", cls: "p-red" };
@@ -481,6 +531,9 @@ V.inicio = () => {
     </div>
   </section>
   ${ticket}
+  ${A.user && dog && !dog.ficha_ok ? `<section class="sec"><button class="card row" data-ficha="${dog.id}" style="width:100%;text-align:left;border-color:var(--gold)"><span class="rule" style="padding:0;border:0"><span class="ic" style="color:var(--gold)">${ic("paw", 20)}</span></span><div><b>Completa la ficha de ${dn}</b><div class="muted" style="font-size:13px">Vacunas, salud y conducta. La necesitas para reservar.</div></div></button></section>` : ""}
+  ${ofertaCard()}
+  ${pushCard()}
   ${installCard()}
   ${A.admin ? `<section class="sec"><a class="card row" href="#admin" style="justify-content:space-between;border-color:var(--orange)"><div><b class="d" style="font-size:20px">Panel de Hector</b><div class="muted" style="font-size:13px">Reservas, perros, notas y fotos</div></div><span class="btn" style="min-height:42px">Abrir</span></a></section>` : ""}
   ${news && A.user ? `<section class="sec"><a href="#daycare" class="card row" style="gap:12px">${news.media_url && news.media_tipo !== "video" ? `<img src="${esc(news.media_url)}" alt="" style="width:64px;height:64px;border-radius:16px;object-fit:cover;flex-shrink:0">` : `<span class="rule" style="padding:0;border:0"><span class="ic">${ic("cam", 20)}</span></span>`}<div style="min-width:0"><span class="eyebrow" style="font-size:11px">Nuevo en el daycare</span><div style="font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(news.texto || "Foto nueva")}</div><div class="muted" style="font-size:12px">${when(news.created_at)}</div></div></a></section>` : ""}
@@ -510,14 +563,14 @@ V.reservar = () => {
   const opts = options();
   if (R.opt >= opts.length) R.opt = 0;
   const o = opts[R.opt];
-  const tabs = [["daycare", "Daycare"], ["train", "Entrenar"], ["clase", "Clases"], ["grupal", "Grupal"]];
+  const tabs = (OFERTA.on ? [["oferta", "Oferta"]] : []).concat([["daycare", "Daycare"], ["train", "Entrenar"], ["clase", "Clases"], ["grupal", "Grupal"]]);
   const days = nextDays(15);
   if (R.day && !days.includes(R.day)) R.day = "";
   const hasStripe = !!(o.pay && o.pay[0]);
   if (!hasStripe && R.method === "stripe") R.method = "ath";
   if (!o.deposit) R.plan = "full";
-  const amount = R.plan === "dep" ? o.price / 2 : o.price;
-  const titleFor = { daycare: "Elige el plan", train: "Elige el paquete", clase: "Elige la clase", grupal: "Clase grupal" }[R.tab];
+  const amount = R.plan === "dep" ? depOf(o) : o.price;
+  const titleFor = { oferta: "Oferta de pre-apertura", daycare: "Elige el plan", train: "Elige el paquete", clase: "Elige la clase", grupal: "Clase grupal" }[R.tab];
   return `
   <section class="hero">
     ${paw("right:-20px;top:24px;transform:rotate(18deg);opacity:.22", 130)}
@@ -530,29 +583,29 @@ V.reservar = () => {
     <div class="chips" role="group" aria-label="Modalidad">${MODS.map((m) => `<button type="button" class="chip" data-mod="${m[0]}" aria-pressed="${R.mod === m[0]}">${m[1]}</button>`).join("")}</div>
     <p class="note">${MODS.find((m) => m[0] === R.mod)[2]}</p></section>` : ""}
   <section class="sec"><h2 class="d" style="font-size:22px">${titleFor}</h2>
-    ${opts.map((x, i) => `<button type="button" class="opt" data-opt="${i}" aria-pressed="${i === R.opt}"><span><b>${esc(x.name)}</b><small>${esc(x.sub)}</small></span><span class="price">${money(x.price)}</span></button>`).join("")}
+    ${opts.map((x, i) => `<button type="button" class="opt" data-opt="${i}" aria-pressed="${i === R.opt}"><span><b>${esc(x.name)}</b><small>${esc(x.sub)}</small></span><span style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">${x.was ? `<span class="was">${money(x.was)}</span>` : ""}<span class="price">${money(x.price)}</span></span></button>`).join("")}
     ${R.tab === "train" ? '<p class="note">Los mismos 5 comandos en los tres paquetes: ven, siéntate, échate, caminar sin halar y quieto. Lo que cambia es dónde y con cuántas distracciones los obedece.</p>' : ""}
   </section>
-  ${isGroup() ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona?</b><p class="note" style="margin-top:6px">Te apuntamos en la lista y, cuando se llenan los cupos (6 a 10 perros), fijamos el sábado y te avisamos por WhatsApp. Es para perros que ya saben algunos comandos.</p></div></section>` : `
-  <section class="sec"><h2 class="d" style="font-size:22px">${R.tab === "clase" ? "¿Qué día?" : "¿Qué día empezamos?"}</h2>
+  ${R.tab === "oferta" ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona la oferta?</b><p class="note" style="margin-top:6px">El Paquete Intensivo en daycare vale ${money(OFERTA.valor)}. Si apartas tu espacio con un depósito de ${money(OFERTA.deposito)} <b style="color:var(--ink)">antes de la apertura</b> de Moreno's, te lo dejamos en ${money(OFERTA.precio)}. El balance de ${money(OFERTA.precio - OFERTA.deposito)} lo pagas antes de la mitad del paquete, con tarjeta, Klarna, ATH Móvil, efectivo o cheque. Cuando abramos coordinamos contigo el día de comienzo.</p></div></section>` : isGroup() ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona?</b><p class="note" style="margin-top:6px">Te apuntamos en la lista y, cuando se llenan los cupos (6 a 10 perros), fijamos el sábado y te avisamos por WhatsApp. Es para perros que ya saben algunos comandos.</p></div></section>` : `
+  ${o.noDay ? "" : `<section class="sec"><h2 class="d" style="font-size:22px">${R.tab === "clase" ? "¿Qué día?" : "¿Qué día empezamos?"}</h2>
     <div class="days" role="group" aria-label="Día">${days.map((d) => { const x = parse(d); return `<button type="button" class="day" data-day="${d}" aria-pressed="${R.day === d}" aria-label="${nice(d)}"><small>${DOW[x.getDay()]}</small><b>${x.getDate()}</b></button>`; }).join("")}</div>
     ${needsTime() ? `<div class="chips" role="group" aria-label="Hora">${TIMES.map((t) => `<button type="button" class="chip" data-time="${t}" aria-pressed="${R.time === t}">${t}</button>`).join("")}</div>` : '<p class="note">Entrada desde las 8:00 am · recogido antes de las 5:30 pm.</p>'}
-  </section>`}
+  </section>`}`}
   <section class="sec"><h2 class="d" style="font-size:22px">¿Cómo pagas?</h2>
-    ${o.deposit ? `<div class="chips" role="group" aria-label="Plan">${[["full", "Pago completo"], ["dep", "Depósito 50%"]].map((p) => `<button type="button" class="chip" data-plan="${p[0]}" aria-pressed="${R.plan === p[0]}">${p[1]}</button>`).join("")}</div>` : ""}
+    ${o.deposit ? `<div class="chips" role="group" aria-label="Plan">${[["full", "Pago completo"], ["dep", o.depAmt ? "Depósito " + money(o.depAmt) : "Depósito 50%"]].map((p) => `<button type="button" class="chip" data-plan="${p[0]}" aria-pressed="${R.plan === p[0]}">${p[1]}</button>`).join("")}</div>` : ""}
     <div class="chips" role="group" aria-label="Forma de pago">${[["stripe", "Tarjeta o Klarna"], ["ath", "ATH Móvil"], ["cash", "Efectivo"], ["check", "Cheque"]].map((m) => `<button type="button" class="chip" data-method="${m[0]}" aria-pressed="${R.method === m[0]}" ${m[0] === "stripe" && !hasStripe ? 'disabled style="opacity:.4"' : ""}>${m[1]}</button>`).join("")}</div>
-    <p class="note">${R.plan === "dep" ? "Depositas el 50% para apartar tu espacio y pagas el resto antes de la mitad del paquete." : !hasStripe ? "Este servicio se paga por ATH Móvil, efectivo o cheque. Te damos las instrucciones por WhatsApp." : R.method === "stripe" ? "Pagas seguro con Stripe. Con Klarna lo divides en cuotas." : "Te damos las instrucciones de pago por WhatsApp."}</p>
+    <p class="note">${R.plan === "dep" ? "Depositas " + (o.depAmt ? money(o.depAmt) : "el 50%") + " para apartar tu espacio y pagas el resto antes de la mitad del paquete. El depósito no es reembolsable." : !hasStripe ? "Este servicio se paga por ATH Móvil, efectivo o cheque. Te damos las instrucciones por WhatsApp." : R.method === "stripe" ? "Pagas seguro con Stripe. Con Klarna lo divides en cuotas." : "Te damos las instrucciones de pago por WhatsApp."}</p>
   </section>
   <div style="height:90px"></div>
   <div class="paybar"><div><small>${R.plan === "dep" ? "Pagas hoy" : "Total"}</small><b>${money(amount)}</b></div>
-    <button type="button" class="btn" id="confirm">${isGroup() ? "¡Apúntame!" : "¡Reservar!"}</button></div>`;
+    <button type="button" class="btn" id="confirm">${isGroup() ? "¡Apúntame!" : R.tab === "oferta" ? "¡Quiero la oferta!" : "¡Reservar!"}</button></div>`;
 };
 
 V.perro = () => {
   if (!A.user) return `<section class="hero"><span class="eyebrow" style="position:relative">Mi perro</span><h1 class="d" style="position:relative;margin-top:-6px">Todo sobre <em>tu perro</em></h1><p style="position:relative">Su progreso, las notas de Hector y sus reservas.</p></section><section class="sec">${loginCard("Entra para ver a tu perro")}</section>`;
   if (!A.ready) return `<section class="hero"><h1 class="d">Mi perro</h1></section><section class="sec">${loadingBox()}</section>`;
   const dog = curDog();
-  if (!dog) return `<section class="hero"><span class="eyebrow" style="position:relative">Mi perro</span><h1 class="d" style="position:relative;margin-top:-6px">Añade a <em>tu perro</em></h1></section><section class="sec">${dogForm(null)}</section>${accountCard()}`;
+  if (!dog) return `<section class="hero"><span class="eyebrow" style="position:relative">Mi perro</span><h1 class="d" style="position:relative;margin-top:-6px">Añade a <em>tu perro</em></h1></section><section class="sec"><button class="card row" data-act="addDog" style="width:100%;text-align:left">${dogAvatar(null)}<div><b class="d" style="font-size:20px">Llena la ficha de tu perro</b><div class="muted" style="font-size:13px">Datos, vacunas, salud y conducta. La necesitas para reservar.</div></div></button></section>${accountCard()}`;
   const vs = vacStatus(dog), pr = A.progress[dog.id] || {}, rep = A.reports[dog.id];
   const notes = A.notes.filter((n) => n.dog_id === dog.id);
   const res = A.bookings.filter((b) => b.dog_id === dog.id || (!b.dog_id && A.dogs.length === 1));
@@ -565,7 +618,7 @@ V.perro = () => {
       <button type="button" class="dogpic" data-act="photo" aria-label="${dog.foto_url ? "Cambiar foto" : "Añadir foto"}">${dog.foto_url ? `<img src="${esc(dog.foto_url)}" alt="Foto de ${esc(dog.nombre)}">` : `<span style="display:flex;flex-direction:column;align-items:center;gap:4px">${ic("cam", 26).replace('stroke="currentColor"', 'stroke="#FFB08F"')}Añadir foto</span>`}</button>
       <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
         <h1 class="d" style="font-size:42px;line-height:.95;overflow-wrap:anywhere">${esc(dog.nombre)}</h1>
-        <span class="muted" style="font-size:14px;font-weight:600">${[dog.raza, dog.edad].filter(Boolean).map(esc).join(" · ") || "Completa su perfil abajo"}</span>
+        <span class="muted" style="font-size:14px;font-weight:600">${[dog.raza, dog.nacimiento ? edadDe(dog.nacimiento) : dog.edad].filter(Boolean).map(esc).join(" · ") || "Completa su ficha abajo"}</span>
         <div><span class="pill ${vs.cls}" style="transform:rotate(-2deg)">${vs.text}</span></div>
       </div>
     </div>
@@ -580,26 +633,120 @@ V.perro = () => {
   </section>
   <section class="sec"><h2 class="d" style="font-size:22px">Sus reservas</h2>
     <div class="card">${res.length ? res.map((r) => `
-      <div class="res"><div style="min-width:0"><b style="display:block">${esc(r.titulo)}</b><span class="muted" style="font-size:13px">${r.fecha ? nice(r.fecha) : "Lista de espera"}${r.hora ? " · " + esc(r.hora) : ""} · ${money(r.total)}${r.pagado ? " · Pagado" : ""}</span></div>
+      <div class="res"><div style="min-width:0"><b style="display:block">${esc(r.titulo)}</b><span class="muted" style="font-size:13px">${r.fecha ? nice(r.fecha) : r.servicio === "oferta" ? "Comienzo por coordinar" : "Lista de espera"}${r.hora ? " · " + esc(r.hora) : ""} · ${money(r.total)}${r.pagado ? " · Pagado" : ""}</span></div>
       <span style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${estadoPill(r)}${r.estado === "pendiente" ? `<button type="button" data-del="${r.id}" style="min-height:32px;background:none;border:0;color:var(--peach);font-size:13px;font-weight:700;padding:0">Quitar</button>` : ""}</span></div>`).join("") : '<p class="note">Aún no hay reservas. <a href="#reservar">Haz la primera</a>.</p>'}
     </div>
     ${res.some((r) => r.estado === "pendiente") ? '<p class="note">Las reservas pendientes se confirman cuando Hector las revisa.</p>' : ""}
   </section>
-  <section class="sec"><h2 class="d" style="font-size:22px">Su perfil</h2>${dogForm(dog)}</section>
+  <section class="sec"><h2 class="d" style="font-size:22px">Su ficha</h2>${fichaCard(dog)}</section>
+  ${A.contracts.length ? `<section class="sec"><h2 class="d" style="font-size:22px">Mis contratos</h2><div class="card">${A.contracts.map((c) => `<div class="res"><div style="min-width:0"><b style="display:block">${esc(c.titulo)}</b><span class="muted" style="font-size:13px">Firmado ${when(c.created_at)} · núm. ${MDTContrato.numero(c.id)}</span></div><button class="linkbtn" data-copy="${c.id}">Ver</button></div>`).join("")}</div></section>` : ""}
   ${accountCard()}`;
 };
 
-function dogForm(dog) {
-  const d = dog || { nombre: (OLD && OLD.perro && OLD.perro.nombre) || "", raza: (OLD && OLD.perro && OLD.perro.raza) || "", edad: (OLD && OLD.perro && OLD.perro.edad) || "", vacunas: (OLD && OLD.perro && OLD.perro.vacunas) || "" };
-  return `<form class="card" id="dogForm" data-id="${dog ? dog.id : ""}" style="display:flex;flex-direction:column;gap:14px">
-    <div class="field"><label for="f-nom">Nombre del perro</label><input id="f-nom" name="nombre" value="${esc(d.nombre)}" required maxlength="40"></div>
-    <div class="grid2">
-      <div class="field"><label for="f-raza">Raza</label><input id="f-raza" name="raza" value="${esc(d.raza)}" maxlength="40"></div>
-      <div class="field"><label for="f-edad">Edad</label><input id="f-edad" name="edad" value="${esc(d.edad)}" placeholder="Ej. 2 años" maxlength="20"></div>
-    </div>
-    <div class="field"><label for="f-vac">Las vacunas vencen el</label><input id="f-vac" name="vacunas" type="date" value="${esc(d.vacunas || "")}"></div>
-    <button class="btn block" type="submit">${dog ? "Guardar cambios" : "Añadir perro"}</button>
+/* ---- Ficha completa del perro ---- */
+const VF = { dogId: null, fotos: [], urls: {} };
+const mesesDe = (n) => { if (!n) return null; const d = parse(n), t = new Date(); let m = (t.getFullYear() - d.getFullYear()) * 12 + t.getMonth() - d.getMonth(); if (t.getDate() < d.getDate()) m--; return m; };
+function edadDe(n) { const m = mesesDe(n); if (m == null || m < 0) return ""; if (m < 12) return m + (m === 1 ? " mes" : " meses"); const y = Math.floor(m / 12); return y + (y === 1 ? " año" : " años"); }
+function fichaFaltan(d, p) {
+  const f = [], vac = d.vac || {}, fotos = (d.vac_fotos || []).length;
+  if (!d.nombre) f.push("nombre");
+  if (!d.sexo) f.push("sexo");
+  if (!d.castrado) f.push("si está esterilizado");
+  if (!d.nacimiento && !d.edad) f.push("fecha de nacimiento o edad");
+  const sinFecha = VACS.filter((v) => v[2] && !(vac[v[0]] && vac[v[0]].vence));
+  if (sinFecha.length && !fotos) f.push("vacunas: pon las fechas o sube fotos del récord");
+  VACS.filter((v) => v[2] && vac[v[0]] && vac[v[0]].vence && daysUntil(vac[v[0]].vence) < 0).forEach((v) => f.push("la vacuna de " + v[1] + " está vencida"));
+  if (!d.vac_certifica) f.push("certificar que sus vacunas están al día");
+  if (!d.conducta || !d.conducta.mordido) f.push("si ha mordido");
+  if (!p || !p.emergencia_nombre || !p.emergencia_tel) f.push("contacto de emergencia");
+  return f;
+}
+const sel = (name, opts, v, id) => `<select id="${id}" name="${name}"><option value="">Escoge…</option>${opts.map((o) => `<option ${v === o ? "selected" : ""}>${o}</option>`).join("")}</select>`;
+function thumbsHtml() {
+  return VF.fotos.map((pth) => { const u = VF.urls[pth], pdf = /\.pdf$/i.test(pth); return `<span>${u && !pdf ? `<img src="${esc(u)}" alt="Récord de vacunas">` : pdf ? "PDF" : "Foto"}<button type="button" data-vacdel="${esc(pth)}" aria-label="Quitar">✕</button></span>`; }).join("") || '<span style="width:auto;padding:0 12px;border-style:dashed">Sin fotos todavía</span>';
+}
+function fichaForm(dog) {
+  const o = (!dog && OLD && OLD.perro) || {};
+  const d = dog || { nombre: o.nombre || "", raza: o.raza || "", edad: o.edad || "" };
+  const vac = d.vac || {}, c = d.conducta || {}, p = A.profile || {};
+  const faltan = dog ? fichaFaltan(dog, p) : [];
+  return `<form id="dogForm" data-id="${dog ? dog.id : ""}" style="display:flex;flex-direction:column;gap:16px">
+    ${dog && faltan.length ? `<div class="missing" role="status"><b>Para reservar falta:</b> ${faltan.map(esc).join(", ")}.</div>` : ""}
+    <fieldset class="fs"><legend>Tu perro</legend>
+      <div class="field"><label for="f-nom">Nombre del perro</label><input id="f-nom" name="nombre" value="${esc(d.nombre)}" required maxlength="40"></div>
+      <div class="grid2">
+        <div class="field"><label for="f-raza">Raza</label><input id="f-raza" name="raza" value="${esc(d.raza)}" maxlength="40" placeholder="Mezcla, Pitbull…"></div>
+        <div class="field"><label for="f-color">Color</label><input id="f-color" name="color" value="${esc(d.color)}" maxlength="30"></div>
+        <div class="field"><label for="f-nac">Fecha de nacimiento</label><input id="f-nac" name="nacimiento" type="date" value="${esc(d.nacimiento || "")}" max="${today()}"></div>
+        <div class="field"><label for="f-edad">O su edad aproximada</label><input id="f-edad" name="edad" value="${esc(d.nacimiento ? "" : d.edad)}" placeholder="Ej. 2 años" maxlength="20"></div>
+        <div class="field"><label for="f-sexo">Sexo</label>${sel("sexo", ["Macho", "Hembra"], d.sexo, "f-sexo")}</div>
+        <div class="field"><label for="f-cas">¿Esterilizado?</label>${sel("castrado", ["Sí", "No"], d.castrado, "f-cas")}</div>
+        <div class="field"><label for="f-peso">Peso (libras)</label><input id="f-peso" name="peso" value="${esc(d.peso)}" inputmode="decimal" maxlength="10"></div>
+      </div>
+      <p class="note">Aceptamos perros desde los 4 meses de edad.</p>
+    </fieldset>
+    <fieldset class="fs"><legend>Vacunas</legend>
+      <p class="note">Rabia, DHPP y Bordetella son obligatorias para entrar al local. Pon las fechas que salen en el récord del veterinario, o sube fotos del récord, o las dos cosas.</p>
+      ${VACS.map((v) => `<div class="vacrow"><b>${v[1]}${v[2] ? '<span class="req">OBLIGATORIA</span>' : ""}</b><div class="grid2">
+        <div class="field"><label for="v-${v[0]}-p">Se la pusieron</label><input id="v-${v[0]}-p" name="v-${v[0]}-p" type="date" value="${esc((vac[v[0]] || {}).puesta || "")}" max="${today()}"></div>
+        <div class="field"><label for="v-${v[0]}-v">Vence</label><input id="v-${v[0]}-v" name="v-${v[0]}-v" type="date" value="${esc((vac[v[0]] || {}).vence || "")}"></div></div></div>`).join("")}
+      <div class="field"><label for="f-pul">Última dosis de prevención de pulgas y garrapatas</label><input id="f-pul" name="pulgas" type="date" value="${esc(d.pulgas || "")}" max="${today()}"></div>
+      <b style="font-size:14px">Fotos del récord de vacunas</b>
+      <div class="thumbs" id="vacThumbs">${thumbsHtml()}</div>
+      <button type="button" class="btn ghost block" data-act="vacPick">${ic("cam", 20)} Subir fotos del récord</button>
+      <label class="ckrow"><input type="checkbox" name="vac_certifica" ${d.vac_certifica ? "checked" : ""}><span>Certifico que ${esc(d.nombre || "mi perro")} tiene todas sus vacunas al día y que la información de esta ficha es cierta.</span></label>
+    </fieldset>
+    <fieldset class="fs"><legend>Salud</legend>
+      <div class="grid2">
+        <div class="field"><label for="f-vet">Veterinario</label><input id="f-vet" name="veterinario" value="${esc(d.veterinario)}" maxlength="60"></div>
+        <div class="field"><label for="f-vtel">Teléfono del vet</label><input id="f-vtel" name="vet_tel" type="tel" value="${esc(d.vet_tel)}" maxlength="20"></div>
+      </div>
+      <div class="field"><label for="f-sal">Condiciones de salud o alergias</label><textarea id="f-sal" name="salud" maxlength="600" placeholder="Ninguna">${esc(d.salud)}</textarea></div>
+      <div class="field"><label for="f-med">Medicinas y cómo se le dan</label><textarea id="f-med" name="medicinas" maxlength="600" placeholder="Ninguna">${esc(d.medicinas)}</textarea></div>
+    </fieldset>
+    <fieldset class="fs"><legend>Conducta</legend>
+      <div class="field"><label for="f-mor">¿Ha mordido a una persona o a otro perro?</label>${sel("mordido", ["No", "Sí"], c.mordido, "f-mor")}</div>
+      <div class="field"><label for="f-mord">Si dijiste que sí, cuéntanos qué pasó</label><textarea id="f-mord" name="mordido_det" maxlength="600">${esc(c.mordido_det)}</textarea></div>
+      <div class="grid2">
+        <div class="field"><label for="f-cp">Con otros perros</label>${sel("perros", ["Se lleva bien", "A veces", "No se lleva bien", "No sé"], c.perros, "f-cp")}</div>
+        <div class="field"><label for="f-cg">Con personas</label>${sel("personas", ["Amigable", "Tímido", "Desconfiado o reactivo"], c.personas, "f-cg")}</div>
+      </div>
+      <div class="field"><label for="f-cn">Miedos, mañas o algo que debamos saber</label><textarea id="f-cn" name="notas" maxlength="600" placeholder="Truenos, se escapa, no le gustan los gatos…">${esc(c.notas)}</textarea></div>
+    </fieldset>
+    <fieldset class="fs"><legend>Contacto de emergencia</legend>
+      <p class="note">Una persona que no seas tú, por si no te podemos localizar.</p>
+      <div class="grid2">
+        <div class="field"><label for="f-en">Nombre</label><input id="f-en" name="emergencia_nombre" value="${esc(p.emergencia_nombre)}" maxlength="60" autocomplete="off"></div>
+        <div class="field"><label for="f-et">Teléfono</label><input id="f-et" name="emergencia_tel" type="tel" value="${esc(p.emergencia_tel)}" maxlength="20" autocomplete="off"></div>
+      </div>
+    </fieldset>
+    <button class="btn block" type="submit">${dog ? "Guardar ficha" : "Guardar a mi perro"}</button>
   </form>`;
+}
+async function signedUrls(paths) {
+  const out = {};
+  if (!sb || !paths || !paths.length) return out;
+  try { const { data } = await sb.storage.from("records").createSignedUrls(paths, 3600); (data || []).forEach((x) => { if (x.signedUrl) out[x.path] = x.signedUrl; }); } catch (e) {}
+  return out;
+}
+async function openFicha(dog) {
+  VF.dogId = dog ? dog.id : (crypto.randomUUID ? crypto.randomUUID() : null);
+  VF.fotos = dog ? [...(dog.vac_fotos || [])] : [];
+  VF.urls = dog ? await signedUrls(VF.fotos) : {};
+  openSheet(`<h3 class="d">${dog ? "Ficha de " + esc(dog.nombre) : "La ficha de tu perro"}</h3>
+    <p class="note">${dog ? "Mantén su información al día." : "Llénala completa para poder reservar. Es lo que necesitamos para recibir a tu perro en el local."}</p>
+    ${fichaForm(dog)}<button class="linkbtn" data-close style="text-align:center">Terminar después</button>`);
+}
+function fichaCard(dog) {
+  const vac = dog.vac || {}, faltan = fichaFaltan(dog, A.profile);
+  return `<div class="card" style="display:flex;flex-direction:column;gap:12px">
+    <div class="row" style="justify-content:space-between"><b class="d" style="font-size:19px">Ficha</b><span class="pill ${dog.ficha_ok && !faltan.length ? "p-green" : "p-orange"}">${dog.ficha_ok && !faltan.length ? "Completa" : "Incompleta"}</span></div>
+    ${faltan.length ? `<div class="missing">Falta: ${faltan.map(esc).join(", ")}.</div>` : ""}
+    <dl class="kv">${[["Edad", dog.nacimiento ? edadDe(dog.nacimiento) : dog.edad], ["Sexo", [dog.sexo, dog.castrado === "Sí" ? "esterilizado" : dog.castrado === "No" ? "sin esterilizar" : ""].filter(Boolean).join(", ")], ["Peso", dog.peso ? dog.peso + " lb" : ""]]
+      .concat(VACS.filter((v) => vac[v[0]] && vac[v[0]].vence).map((v) => [v[1].split(" (")[0], "vence " + nice(vac[v[0]].vence) + (daysUntil(vac[v[0]].vence) < 0 ? " · VENCIDA" : "")]))
+      .concat([["Récord", (dog.vac_fotos || []).length ? (dog.vac_fotos.length + " foto" + (dog.vac_fotos.length > 1 ? "s" : "")) : ""]])
+      .filter((x) => x[1]).map((x) => `<dt>${esc(x[0])}</dt><dd>${esc(x[1])}</dd>`).join("")}</dl>
+    <button class="btn ${faltan.length ? "" : "ghost"} block" data-ficha="${dog.id}">${faltan.length ? "Completar ficha" : "Editar ficha"}</button></div>`;
 }
 
 function accountCard() {
@@ -654,7 +801,7 @@ V.membresia = () => `
       <span class="sticker" style="top:-14px;right:18px;transform:rotate(4deg)">¡La más popular!</span>
       <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:8px"><b class="d" style="font-size:28px">Miembro Plus</b><span><b class="d" style="font-size:34px">$99</b><span style="font-size:13px;font-weight:600;color:#3A2016">/mes</span></span></div>
       <ul>${["2 días de daycare incluidos al mes", "Daycare a $25 el día", "Clase grupal a $45 y primero en la lista", "1 clase de un comando al mes", "20% de descuento en la tienda"].map((x) => `<li>${CHECK}${x}</li>`).join("")}</ul>
-      <a class="btn dark" style="color:var(--gold)" href="${PAY.plus}" target="_blank" rel="noopener">¡Quiero ser Plus!</a>
+      <button class="btn dark" style="color:var(--gold)" data-memb="plus">¡Quiero ser Plus!</button>
       <span style="font-size:12px;font-weight:600;color:#3A2016">Los días incluidos no se acumulan de un mes a otro. Cancelas cuando quieras.</span>
     </div>
   </section>
@@ -662,20 +809,20 @@ V.membresia = () => `
     <div class="tier basic">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:8px"><b class="d" style="font-size:26px">Miembro</b><span><b class="d" style="font-size:30px;color:var(--peach)">$39</b><span class="muted" style="font-size:13px">/mes</span></span></div>
       <div class="chips">${["Daycare $27", "Grupal $50", "10% en tienda", "Prioridad al reservar"].map((x) => `<span class="pill p-glass" style="font-size:13px;padding:6px 12px">${x}</span>`).join("")}</div>
-      <a class="btn ghost" href="${PAY.miembro}" target="_blank" rel="noopener">Elegir Miembro</a>
+      <button class="btn ghost" data-memb="miembro">Elegir Miembro</button>
     </div>
   </section>`;
 
 /* ================= PANEL DE HECTOR ================= */
 function admTabs(cur) {
-  const t = [["admin", "Hoy"], ["admin-reservas", "Reservas"], ["admin-perros", "Perros"], ["admin-publicar", "Publicar"]];
+  const t = [["admin", "Hoy"], ["admin-reservas", "Reservas"], ["admin-perros", "Perros"], ["admin-contratos", "Contratos"], ["admin-publicar", "Publicar"]];
   return `<div class="tabs" role="group" aria-label="Secciones del panel">${t.map((x) => `<button type="button" data-nav="${x[0]}" aria-pressed="${cur === x[0]}">${x[1]}</button>`).join("")}</div>`;
 }
 const admHero = (cur, title) => `<section class="hero">${paw("right:-20px;top:24px;transform:rotate(18deg);opacity:.22", 120)}<span class="eyebrow" style="position:relative">Panel de Hector</span><h1 class="d" style="position:relative;font-size:34px;margin-top:-6px">${title}</h1>${admTabs(cur)}</section>`;
 function admBooking(b) {
   const cli = b.profiles || {}, tel = waNum(cli.telefono);
   return `<div class="adm"><div class="hd"><div style="min-width:0"><b style="display:block;font-size:16px">${esc(b.titulo)}</b>
-    <span class="muted" style="font-size:13px">${b.fecha ? nice(b.fecha) : "Lista de espera"}${b.hora ? " · " + esc(b.hora) : ""}</span></div>${estadoPill(b)}</div>
+    <span class="muted" style="font-size:13px">${b.fecha ? nice(b.fecha) : b.servicio === "oferta" ? "Pre-apertura · comienzo por coordinar" : "Lista de espera"}${b.hora ? " · " + esc(b.hora) : ""}</span></div>${estadoPill(b)}</div>
     <div style="font-size:14px;line-height:1.6"><b>${esc((b.dogs && b.dogs.nombre) || "Sin perro")}</b> · ${esc(cli.nombre || "Cliente")}${cli.telefono ? " · " + esc(cli.telefono) : ""}<br>
     <span class="muted">${money(b.total)}${b.plan === "dep" ? " · depósito " + money(b.pagar_hoy) : ""} · ${esc({ stripe: "Stripe", ath: "ATH Móvil", cash: "Efectivo", check: "Cheque" }[b.metodo] || b.metodo)} · </span>${b.pagado ? '<b style="color:#BFF0D4">Pagado</b>' : '<span class="muted">Sin pagar</span>'}</div>
     <div class="acts">
@@ -683,6 +830,7 @@ function admBooking(b) {
       ${b.estado === "confirmada" ? `<button class="btn teal" data-bk="${b.id}" data-set="completada">Completada</button>` : ""}
       <button class="btn ghost" data-bk="${b.id}" data-pay="${b.pagado ? "0" : "1"}">${b.pagado ? "Quitar pagado" : "Marcar pagado"}</button>
       ${tel ? `<a class="btn wa" href="${waLink("Hola " + (cli.nombre || "") + ", te escribe Hector de Moreno's sobre tu reserva: " + b.titulo + (b.fecha ? " el " + nice(b.fecha) : "") + ".", tel)}" target="_blank" rel="noopener">${ic("wa", 18)}</a>` : ""}
+      ${b.contract_id ? `<button class="btn ghost" data-copy="${b.contract_id}">Contrato</button>` : ""}
       ${b.estado !== "cancelada" && b.estado !== "completada" ? `<button class="btn ghost" data-bk="${b.id}" data-set="cancelada">Cancelar</button>` : ""}
     </div></div>`;
 }
@@ -719,7 +867,18 @@ V["admin-perros"] = () => {
   if (!ADM.loaded) return admHero("admin-perros", "Perros") + `<section class="sec">${loadingBox()}</section>`;
   return admHero("admin-perros", "Perros (" + ADM.dogs.length + ")") + `
   <section class="sec"><div class="field"><label for="dsearch">Buscar perro o dueño</label><input id="dsearch" type="search" placeholder="Rocky, María…"></div>
-  <div id="dlist" style="display:flex;flex-direction:column;gap:10px">${ADM.dogs.length ? ADM.dogs.map((d) => `<a class="card row" data-q="${esc((d.nombre + " " + ((d.profiles && d.profiles.nombre) || "")).toLowerCase())}" href="#admin-perro-${d.id}">${dogAvatar(d, 56)}<div style="min-width:0"><b class="d" style="font-size:19px">${esc(d.nombre)}</b><div class="muted" style="font-size:13px">${esc((d.profiles && d.profiles.nombre) || "Cliente")} · ${vacStatus(d).text}</div></div></a>`).join("") : '<div class="card empty">Cuando tus clientes añadan sus perros, salen aquí.</div>'}</div></section>`;
+  <div id="dlist" style="display:flex;flex-direction:column;gap:10px">${ADM.dogs.length ? ADM.dogs.map((d) => `<a class="card row" data-q="${esc((d.nombre + " " + ((d.profiles && d.profiles.nombre) || "")).toLowerCase())}" href="#admin-perro-${d.id}">${dogAvatar(d, 56)}<div style="min-width:0"><b class="d" style="font-size:19px">${esc(d.nombre)}</b><div class="muted" style="font-size:13px">${esc((d.profiles && d.profiles.nombre) || "Cliente")} · ${d.ficha_ok ? "Ficha completa" : "Ficha incompleta"} · ${vacStatus(d).text}</div></div></a>`).join("") : '<div class="card empty">Cuando tus clientes añadan sus perros, salen aquí.</div>'}</div></section>`;
+};
+
+V["admin-contratos"] = () => {
+  if (!A.admin) return notAdmin();
+  if (!ADM.loaded) return admHero("admin-contratos", "Contratos") + `<section class="sec">${loadingBox()}</section>`;
+  const L = ADM.contracts || [];
+  return admHero("admin-contratos", "Contratos (" + L.length + ")") + `
+  <section class="sec"><p class="note">Cada contrato que firman tus clientes antes de pagar, en la app o en la web. El número del contrato también sale en el pago de Stripe (referencia del cliente).</p>
+  ${L.length ? L.map((k) => { const tel = waNum(k.cliente_tel); return `<div class="adm"><div class="hd"><div style="min-width:0"><b style="display:block;font-size:16px">${esc(k.titulo)}</b><span class="muted" style="font-size:13px">${when(k.created_at)} · núm. ${MDTContrato.numero(k.id)} · ${k.origen === "web" ? "Web" : "App"}</span></div><span class="pill p-glass">${money(k.total)}</span></div>
+    <div style="font-size:14px">${esc(k.cliente_nombre)}${k.cliente_tel ? " · " + esc(k.cliente_tel) : ""}${k.perro ? " · " + esc(k.perro) : ""}</div>
+    <div class="acts"><button class="btn ghost" data-copy="${k.id}">Ver contrato</button>${tel ? `<a class="btn wa" href="${waLink("Hola " + k.cliente_nombre + ", te escribe Hector de Moreno's sobre tu " + k.titulo + ".", tel)}" target="_blank" rel="noopener">${ic("wa", 18)}</a>` : ""}</div></div>`; }).join("") : '<div class="card empty">Todavía no hay contratos firmados.</div>'}</section>`;
 };
 
 V["admin-publicar"] = () => {
@@ -737,6 +896,20 @@ function uploadForm(dogId) {
   </form>`;
 }
 
+function admFicha(dog, D) {
+  const vac = dog.vac || {}, c = dog.conducta || {}, cli = dog.profiles || {}, urls = D.vacUrls || {};
+  const rows = [["Sexo", [dog.sexo, dog.castrado === "Sí" ? "esterilizado" : dog.castrado === "No" ? "sin esterilizar" : ""].filter(Boolean).join(", ")], ["Nació", dog.nacimiento ? nice(dog.nacimiento) + " (" + edadDe(dog.nacimiento) + ")" : ""], ["Peso", dog.peso ? dog.peso + " lb" : ""], ["Color", dog.color]]
+    .concat(VACS.map((v) => [v[1].split(" (")[0], vac[v[0]] ? [vac[v[0]].puesta && "puesta " + nice(vac[v[0]].puesta), vac[v[0]].vence && "vence " + nice(vac[v[0]].vence) + (daysUntil(vac[v[0]].vence) < 0 ? " · VENCIDA" : "")].filter(Boolean).join(" · ") : v[2] ? "— sin fecha" : ""]))
+    .concat([["Pulgas", dog.pulgas ? "última dosis " + nice(dog.pulgas) : ""], ["Certificó", dog.vac_certifica ? "Sí, vacunas al día" : "No"], ["Veterinario", [dog.veterinario, dog.vet_tel].filter(Boolean).join(" · ")], ["Salud", dog.salud], ["Medicinas", dog.medicinas],
+      ["Ha mordido", c.mordido ? c.mordido + (c.mordido_det ? ": " + c.mordido_det : "") : ""], ["Con perros", c.perros], ["Con personas", c.personas], ["Notas", c.notas],
+      ["Emergencia", [cli.emergencia_nombre, cli.emergencia_tel].filter(Boolean).join(" · ")]]).filter((x) => x[1]);
+  return `<div class="card" style="display:flex;flex-direction:column;gap:12px">
+    ${c.mordido === "Sí" ? '<div class="err">Ha mordido antes. Lee los detalles antes de meterlo al grupo.</div>' : ""}
+    <dl class="kv">${rows.map((x) => `<dt>${esc(x[0])}</dt><dd>${esc(x[1])}</dd>`).join("")}</dl>
+    ${(dog.vac_fotos || []).length ? `<b style="font-size:14px">Récord de vacunas</b><div class="thumbs">${dog.vac_fotos.map((pth) => urls[pth] ? `<a href="${esc(urls[pth])}" target="_blank" rel="noopener">${/\.pdf$/i.test(pth) ? "PDF" : `<img src="${esc(urls[pth])}" alt="Récord de vacunas">`}</a>` : "<span>Foto</span>").join("")}</div>` : '<p class="note">No ha subido fotos del récord.</p>'}
+    ${(D.contracts || []).length ? `<b style="font-size:14px">Contratos firmados</b>${D.contracts.map((k) => `<div class="res"><div><b style="display:block;font-size:14px">${esc(k.titulo)}</b><span class="muted" style="font-size:12px">${when(k.created_at)} · núm. ${MDTContrato.numero(k.id)}</span></div><button class="linkbtn" data-copy="${k.id}">Ver</button></div>`).join("")}` : ""}
+  </div>`;
+}
 V["admin-perro"] = (id) => {
   if (!A.admin) return notAdmin();
   const D = ADM.dog;
@@ -747,9 +920,10 @@ V["admin-perro"] = (id) => {
   <section class="hero">
     <a href="#admin-perros" style="position:relative;font-weight:700;text-decoration:none">‹ Perros</a>
     <div class="row" style="position:relative">${dogAvatar(dog, 88)}<div style="min-width:0"><h1 class="d" style="font-size:36px;overflow-wrap:anywhere">${esc(dog.nombre)}</h1>
-      <span class="muted" style="font-size:14px">${[dog.raza, dog.edad].filter(Boolean).map(esc).join(" · ")}</span><div style="margin-top:4px"><span class="pill ${vacStatus(dog).cls}">${vacStatus(dog).text}</span></div></div></div>
+      <span class="muted" style="font-size:14px">${[dog.raza, dog.nacimiento ? edadDe(dog.nacimiento) : dog.edad].filter(Boolean).map(esc).join(" · ")}</span><div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap"><span class="pill ${vacStatus(dog).cls}">${vacStatus(dog).text}</span><span class="pill ${dog.ficha_ok ? "p-green" : "p-orange"}">${dog.ficha_ok ? "Ficha completa" : "Ficha incompleta"}</span></div></div></div>
     <div class="row" style="position:relative;justify-content:space-between"><span style="font-size:14px">${esc(cli.nombre || "Cliente")}${cli.telefono ? " · " + esc(cli.telefono) : ""}</span>${tel ? `<a class="btn wa" style="min-height:42px" href="${waLink("Hola " + (cli.nombre || "") + ", te escribe Hector de Moreno's sobre " + dog.nombre + ".", tel)}" target="_blank" rel="noopener">${ic("wa", 18)} WhatsApp</a>` : ""}</div>
   </section>
+  <section class="sec"><h2 class="d" style="font-size:22px">Ficha</h2>${admFicha(dog, D)}</section>
   <section class="sec"><h2 class="d" style="font-size:22px">Comandos</h2><p class="note">Toca un comando para cambiarlo: pendiente → practicando → dominado.</p>
     <div class="grid2">${CMDS.map((c) => { const s = CMD_ST[D.comandos[c[0]] || "pendiente"]; return `<button type="button" class="cmd ${s[0]}" data-cmd="${esc(c[0])}"><span class="st">${s[1]}</span><b>${c[0]}</b></button>`; }).join("")}</div></section>
   <section class="sec"><h2 class="d" style="font-size:22px">Reporte de hoy</h2>
@@ -783,8 +957,64 @@ function installCard() {
   return "";
 }
 
+function installSheet() {
+  if (standalone()) return toast("¡Ya tienes la app instalada!");
+  if (deferred) { deferred.prompt(); deferred.userChoice.finally(() => { deferred = null; render(true); }); return; }
+  openSheet(`<img src="assets/logo-dog.png" alt="" width="56" height="54" style="align-self:flex-start"><h3 class="d">Instala la app</h3>
+    ${isIOS ? `<div class="step"><span class="n">1</span><div>Toca el botón de <b>Compartir</b> abajo en Safari (el cuadrito con la flecha hacia arriba).</div></div>
+      <div class="step"><span class="n">2</span><div>Baja y toca <b>Añadir a pantalla de inicio</b>.</div></div>
+      <div class="step"><span class="n">3</span><div>Toca <b>Añadir</b>. La app de Moreno's queda con su ícono en tu teléfono.</div></div>
+      <p class="note">Si abriste este enlace desde Instagram, WhatsApp o Facebook, primero toca los tres puntitos y escoge <b style="color:var(--ink)">Abrir en Safari</b>.</p>`
+    : `<div class="step"><span class="n">1</span><div>Toca el menú de Chrome (los tres puntitos arriba a la derecha).</div></div>
+      <div class="step"><span class="n">2</span><div>Toca <b>Instalar app</b> o <b>Añadir a pantalla de inicio</b>.</div></div>
+      <p class="note">Si abriste este enlace desde Instagram, WhatsApp o Facebook, primero escoge <b style="color:var(--ink)">Abrir en Chrome</b>.</p>`}
+    <button class="btn block" data-close>Entendido</button>`);
+}
+function ofertaCard() {
+  if (!OFERTA.on) return "";
+  return `<section class="sec"><button class="oferta" data-go="oferta"><span class="big" aria-hidden="true">$${OFERTA.precio}</span>
+    <span class="ribbon">Solo antes de la apertura</span>
+    <h3 class="d">${esc(OFERTA.titulo)}</h3>
+    <span class="pr"><b>${money(OFERTA.precio)}</b><s>${money(OFERTA.valor)}</s></span>
+    <p>Paquete Intensivo de 12 clases con daycare incluido. Aparta tu espacio con un depósito de ${money(OFERTA.deposito)} antes de que abramos. Todos los planes de pago.</p>
+    <span class="go">¡Quiero la oferta!</span></button></section>`;
+}
+
+/* ---- Notificaciones ---- */
+const pushOK = () => "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+let PUSH_ON = false;
+async function pushCheck() {
+  if (!pushOK() || !A.user || Notification.permission !== "granted") { PUSH_ON = false; return; }
+  try { const reg = await navigator.serviceWorker.ready; const s = await reg.pushManager.getSubscription(); PUSH_ON = !!s; if (s) saveSub(s); } catch (e) { PUSH_ON = false; }
+}
+function pushCard() {
+  if (!A.user || PUSH_ON || PREF.noPush) return "";
+  if (!pushOK()) return isIOS && !standalone() ? `<section class="sec"><div class="card"><b>Recibe avisos de tu perro</b><p class="note" style="margin-top:4px">En iPhone, primero instala la app en tu pantalla de inicio y ábrela desde el ícono. Ahí te salen los avisos.</p><button class="linkbtn" data-act="instalar">Cómo instalarla</button></div></section>` : "";
+  if (Notification.permission === "denied") return "";
+  return `<section class="sec"><div class="card row" style="justify-content:space-between"><div><b>Activa los avisos</b><div class="muted" style="font-size:13px">Te avisamos cuando confirmemos tu cita o haya fotos de tu perro.</div></div><button class="btn" data-act="push">Activar</button></div></section>`;
+}
+const b64u = (s) => { const p = "=".repeat((4 - (s.length % 4)) % 4), b = atob((s + p).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from(b, (c) => c.charCodeAt(0)); };
+async function saveSub(sub) { try { await sb.from("push_subs").upsert({ endpoint: sub.endpoint, user_id: A.user.id, sub: sub.toJSON() }, { onConflict: "endpoint" }); } catch (e) {} }
+async function enablePush() {
+  if (!pushOK()) return installSheet();
+  try {
+    const perm = await Notification.requestPermission();
+    if (perm !== "granted") { PREF.noPush = true; savePref(); render(true); return toast("Puedes activarlos luego en los ajustes del teléfono"); }
+    const reg = await navigator.serviceWorker.ready;
+    const sub = (await reg.pushManager.getSubscription()) || (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(VAPID_PUBLIC) }));
+    const { error } = await sb.from("push_subs").upsert({ endpoint: sub.endpoint, user_id: A.user.id, sub: sub.toJSON() }, { onConflict: "endpoint" });
+    if (error) throw error;
+    PUSH_ON = true; render(true); toast("¡Avisos activados!");
+  } catch (err) { toast("No se pudieron activar los avisos: " + errMsg(err)); }
+}
+/* Hector le manda un aviso a un cliente (user_id) o a todos (all: true). Si falla, no pasa nada. */
+function notify(target, title, body, url) {
+  if (!sb || !A.admin || !target) return;
+  sb.functions.invoke("notify", { body: Object.assign({ title, body, url: APP_URL + (url || "") }, target) }).catch(() => {});
+}
+
 /* ---- Router y navegación ---- */
-const ROUTES = ["inicio", "reservar", "perro", "daycare", "membresia", "admin", "admin-reservas", "admin-perros", "admin-publicar"];
+const ROUTES = ["inicio", "reservar", "perro", "daycare", "membresia", "admin", "admin-reservas", "admin-perros", "admin-contratos", "admin-publicar"];
 function route() {
   const h = location.hash.replace("#", "");
   if (h.startsWith("admin-perro-")) return { name: "admin-perro", arg: h.slice(12) };
@@ -808,7 +1038,15 @@ function render(keep) {
   const s = $("#dsearch");
   if (s) s.addEventListener("input", () => { const q = s.value.trim().toLowerCase(); document.querySelectorAll("#dlist [data-q]").forEach((a) => (a.style.display = a.dataset.q.includes(q) ? "" : "none")); });
 }
+let SPECIAL = false;
+function specialHash() {
+  const h = location.hash.replace("#", "");
+  if (h === "oferta" || h === "instalar") SPECIAL = true;
+  if (h === "oferta") { R.tab = OFERTA.on ? "oferta" : "train"; R.opt = 0; R.plan = "dep"; history.replaceState(null, "", location.pathname + "#reservar"); }
+  if (h === "instalar") { history.replaceState(null, "", location.pathname + "#inicio"); setTimeout(installSheet, 400); }
+}
 window.addEventListener("hashchange", async () => {
+  specialHash();
   const r = route();
   render(false);
   if (A.admin && r.name.startsWith("admin")) {
@@ -836,7 +1074,6 @@ function authSheet(mode) {
     <form id="suForm" style="display:flex;flex-direction:column;gap:12px">
       <div class="field"><label for="s-nom">Tu nombre</label><input id="s-nom" name="nombre" required autocomplete="name" value="${esc((OLD && OLD.cliente) || "")}"></div>
       <div class="field"><label for="s-tel">Teléfono (WhatsApp)</label><input id="s-tel" name="telefono" type="tel" autocomplete="tel" placeholder="787-555-1234"></div>
-      <div class="field"><label for="s-dog">Nombre de tu perro</label><input id="s-dog" name="perro" value="${esc(o.nombre || "")}"></div>
       <div class="field"><label for="s-em">Email</label><input id="s-em" name="email" type="email" required autocomplete="email" inputmode="email"></div>
       <div class="field"><label for="s-pw">Contraseña (mínimo 6)</label><input id="s-pw" name="password" type="password" required minlength="6" autocomplete="new-password"></div>
       <div id="authMsg"></div>
@@ -871,7 +1108,7 @@ document.addEventListener("click", async (e) => {
   const t = e.target.closest("button, a");
   if (!t) return;
   const ds = t.dataset;
-  if (ds.go) { R.tab = ds.go; R.opt = 0; R.plan = "full"; R.method = "stripe"; R.time = ""; if (location.hash !== "#reservar") location.hash = "reservar"; else render(true); return; }
+  if (ds.go) { R.tab = ds.go; R.opt = 0; R.plan = ds.go === "oferta" ? "dep" : "full"; R.method = "stripe"; R.time = ""; if (location.hash !== "#reservar") location.hash = "reservar"; else render(true); return; }
   if (ds.nav) { location.hash = ds.nav; return; }
   if (ds.tab) { R.tab = ds.tab; R.opt = 0; R.plan = "full"; R.method = "stripe"; R.time = ""; render(true); return; }
   if (ds.mod) { R.mod = ds.mod; R.method = "stripe"; R.time = ""; render(true); return; }
@@ -882,6 +1119,9 @@ document.addEventListener("click", async (e) => {
   if (ds.method) { R.method = ds.method; render(true); return; }
   if (ds.dog) { PREF.cur = ds.dog; savePref(); render(true); return; }
   if (ds.filter) { ADM.filter = ds.filter; render(true); return; }
+  if (ds.copy) return verContrato(ds.copy);
+  if (ds.ficha) { const d = A.dogs.find((x) => x.id === ds.ficha); return openFicha(d || null); }
+  if (ds.memb) return membresia(ds.memb);
   if (ds.close != null) return closeSheet();
   if (ds.del) {
     const { error } = await sb.from("bookings").delete().eq("id", ds.del);
@@ -896,7 +1136,10 @@ document.addEventListener("click", async (e) => {
   switch (ds.act) {
     case "signup": case "login": case "forgot": return authSheet(ds.act);
     case "logout": await sb.auth.signOut(); PREF.cur = null; savePref(); location.hash = "inicio"; toast("Saliste de tu cuenta"); return;
-    case "addDog": return openSheet(`<h3 class="d">Añadir perro</h3>${dogForm(null).replace('id="dogForm" data-id=""', 'id="dogForm" data-id="" data-new="1"')}`);
+    case "addDog": return openFicha(null);
+    case "vacPick": return $("#vacfile").click();
+    case "push": return enablePush();
+    case "instalar": return installSheet();
     case "photo": return $("#photo").click();
     case "pickMedia": return $("#media").click();
     case "install": if (deferred) { deferred.prompt(); deferred.userChoice.finally(() => { deferred = null; render(true); }); } return;
@@ -920,9 +1163,9 @@ document.addEventListener("submit", async (e) => {
       if (error) throw error;
       if (!data.session) { authMsg("¡Cuenta creada! Te enviamos un email para confirmarla. Ábrelo y luego entra aquí.", true); busy(f, false); return; }
       A.user = data.session.user;
-      if (v("perro")) await sb.from("dogs").insert({ nombre: v("perro"), owner_id: A.user.id, raza: (OLD && OLD.perro && OLD.perro.raza) || "", edad: (OLD && OLD.perro && OLD.perro.edad) || "", vacunas: (OLD && OLD.perro && OLD.perro.vacunas) || null });
       PREF.seenWelcome = true; savePref();
-      closeSheet(false); await refresh(); toast("¡Cuenta creada!");
+      closeSheet(false); await refresh(); toast("¡Cuenta creada! Ahora la ficha de tu perro");
+      openFicha(null);
     } else if (f.id === "fgForm") {
       const { error } = await sb.auth.resetPasswordForEmail(v("email"), { redirectTo: APP_URL });
       if (error) throw error;
@@ -932,25 +1175,45 @@ document.addEventListener("submit", async (e) => {
       if (error) throw error;
       closeSheet(false); toast("Contraseña cambiada");
     } else if (f.id === "dogForm") {
-      const row = { nombre: v("nombre"), raza: v("raza"), edad: v("edad"), vacunas: v("vacunas") || null };
+      const vac = {};
+      VACS.forEach((x) => { const pu = v("v-" + x[0] + "-p"), ve = v("v-" + x[0] + "-v"); if (pu || ve) vac[x[0]] = { puesta: pu || null, vence: ve || null }; });
+      const req = VACS.filter((x) => x[2]).map((x) => vac[x[0]] && vac[x[0]].vence).filter(Boolean).sort();
+      const nac = v("nacimiento") || null;
+      const row = {
+        nombre: v("nombre"), raza: v("raza"), color: v("color"), nacimiento: nac, edad: nac ? edadDe(nac) : v("edad"),
+        sexo: v("sexo"), castrado: v("castrado"), peso: v("peso"), veterinario: v("veterinario"), vet_tel: v("vet_tel"),
+        salud: v("salud"), medicinas: v("medicinas"), pulgas: v("pulgas") || null, vac, vac_fotos: VF.fotos.slice(),
+        vac_certifica: F.get("vac_certifica") === "on",
+        vacunas: req.length === VACS.filter((x) => x[2]).length ? req[0] : null,
+        conducta: { mordido: v("mordido"), mordido_det: v("mordido_det"), perros: v("perros"), personas: v("personas"), notas: v("notas") }
+      };
       if (!row.nombre) throw new Error("Ponle nombre a tu perro.");
+      if (nac && mesesDe(nac) < 4) throw new Error("Aceptamos perros desde los 4 meses de edad.");
+      const prof = { emergencia_nombre: v("emergencia_nombre"), emergencia_tel: v("emergencia_tel") };
+      const pr = await sb.from("profiles").update(prof).eq("id", A.user.id); if (pr.error) throw pr.error;
+      A.profile = Object.assign({}, A.profile, prof);
+      const faltan = fichaFaltan(row, A.profile);
+      row.ficha_ok = !faltan.length; row.ficha_at = row.ficha_ok ? new Date().toISOString() : null;
       if (f.dataset.id) {
         const { error } = await sb.from("dogs").update(row).eq("id", f.dataset.id); if (error) throw error;
-        toast("¡Guardado!");
       } else {
-        row.owner_id = A.user.id;
+        row.owner_id = A.user.id; if (VF.dogId) row.id = VF.dogId;
         const { data, error } = await sb.from("dogs").insert(row).select().single(); if (error) throw error;
-        PREF.cur = data.id; savePref(); closeSheet(false); toast("¡" + row.nombre + " añadido!");
+        PREF.cur = data.id; savePref();
       }
+      closeSheet(false);
+      toast(row.ficha_ok ? "¡Ficha completa! Ya puedes reservar" : "Guardado. Falta: " + faltan.slice(0, 2).join(", ") + (faltan.length > 2 ? "…" : ""));
       await refresh();
     } else if (f.id === "profForm") {
       const { error } = await sb.from("profiles").update({ nombre: v("nombre"), telefono: v("telefono") }).eq("id", A.user.id); if (error) throw error;
       toast("¡Guardado!"); await refresh();
     } else if (f.id === "repForm") {
       const { error } = await sb.from("day_reports").upsert({ dog_id: ADM.dog.id, fecha: today(), llegada: v("llegada"), comio: v("comio"), animo: v("animo"), updated_at: new Date().toISOString() }, { onConflict: "dog_id,fecha" });
-      if (error) throw error; toast("Reporte guardado"); await loadAdminDog(ADM.dog.id); render(true);
+      if (error) throw error; toast("Reporte guardado");
+      notify({ user_id: ADM.dog.dog.owner_id }, "El día de " + ADM.dog.dog.nombre, [v("llegada") && "Llegó " + v("llegada"), v("comio") && "Comió: " + v("comio"), v("animo") && "Ánimo: " + v("animo")].filter(Boolean).join(" · ") || "Hector actualizó su reporte del día", "#daycare"); await loadAdminDog(ADM.dog.id); render(true);
     } else if (f.id === "noteForm") {
       const { error } = await sb.from("notes").insert({ dog_id: ADM.dog.id, texto: v("texto") }); if (error) throw error;
+      notify({ user_id: ADM.dog.dog.owner_id }, "Nota de Hector sobre " + ADM.dog.dog.nombre, v("texto").slice(0, 140), "#perro");
       toast("Nota enviada"); await loadAdminDog(ADM.dog.id); render(true);
     } else if (f.id === "upForm") {
       await publishUpdate(f.dataset.dog || null, v("texto"));
@@ -991,6 +1254,31 @@ $("#photo").addEventListener("change", async (e) => {
     toast("¡Foto lista!"); await refresh();
   } catch (err) { toast(errMsg(err)); }
 });
+/* Récord de vacunas: carpeta privada "records" */
+$("#vacfile").addEventListener("change", async (e) => {
+  const files = [...(e.target.files || [])]; e.target.value = "";
+  if (!files.length || !A.user) return;
+  if (!VF.dogId) return toast("Guarda la ficha primero y luego sube las fotos.");
+  toast(files.length > 1 ? "Subiendo " + files.length + " fotos…" : "Subiendo foto…");
+  try {
+    for (const [i, file] of files.entries()) {
+      const pdf = file.type === "application/pdf";
+      if (pdf && file.size > 10 * 1024 * 1024) throw new Error("El PDF es muy grande (máximo 10 MB).");
+      const blob = pdf ? file : await resizeImage(file, 1600);
+      const path = `${A.user.id}/${VF.dogId}/vacunas-${Date.now()}-${i}.${pdf ? "pdf" : "jpg"}`;
+      const { error } = await sb.storage.from("records").upload(path, blob, { contentType: pdf ? "application/pdf" : "image/jpeg", upsert: true });
+      if (error) throw error;
+      VF.fotos.push(path); VF.urls[path] = URL.createObjectURL(blob);
+    }
+    const t = $("#vacThumbs"); if (t) t.innerHTML = thumbsHtml();
+    toast("¡Listo! Dale Guardar para terminar");
+  } catch (err) { toast(errMsg(err)); }
+});
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-vacdel]"); if (!b) return;
+  VF.fotos = VF.fotos.filter((x) => x !== b.dataset.vacdel);
+  const t = $("#vacThumbs"); if (t) t.innerHTML = thumbsHtml();
+});
 let pendingMedia = null;
 $("#media").addEventListener("change", (e) => {
   const file = e.target.files && e.target.files[0]; e.target.value = "";
@@ -1011,6 +1299,8 @@ async function publishUpdate(dogId, texto) {
   }
   const { error } = await sb.from("updates").insert({ dog_id: dogId, texto, media_url, media_tipo });
   if (error) throw error;
+  if (dogId) notify({ user_id: ADM.dog && ADM.dog.dog && ADM.dog.dog.owner_id }, media_tipo === "video" ? "Video nuevo de " + ADM.dog.dog.nombre : media_tipo ? "Foto nueva de " + ADM.dog.dog.nombre : "Novedad de " + ADM.dog.dog.nombre, texto || "Mírala en la app", "#daycare");
+  else notify({ all: true }, "Moreno's Dog Training", texto || "Hay fotos nuevas en el daycare", "#daycare");
   pendingMedia = null; toast("¡Publicado!");
   if (dogId) { await loadAdminDog(dogId); render(true); } else { const f = $("#upForm"); if (f) f.reset(); const l = $("#mediaLbl"); if (l) l.textContent = "Añadir foto o video"; await loadAll(); }
 }
@@ -1020,6 +1310,9 @@ async function adminBooking(id, estado, pay) {
   const patch = {}; if (estado) patch.estado = estado; if (pay != null && pay !== undefined) patch.pagado = pay === "1";
   const { error } = await sb.from("bookings").update(patch).eq("id", id);
   if (error) return toast(errMsg(error));
+  const bk = ADM.bookings.find((x) => x.id === id);
+  if (bk && estado === "confirmada") notify({ user_id: bk.owner_id }, "¡Tu reserva está confirmada!", bk.titulo + (bk.fecha ? " · " + nice(bk.fecha) + (bk.hora ? " " + bk.hora : "") : ""), "#perro");
+  if (bk && estado === "cancelada") notify({ user_id: bk.owner_id }, "Reserva cancelada", bk.titulo + ". Escríbenos por WhatsApp si tienes preguntas.", "#perro");
   toast(estado === "confirmada" ? "Reserva confirmada" : estado === "cancelada" ? "Reserva cancelada" : estado === "completada" ? "Marcada como completada" : "Pago actualizado");
   await loadAdmin(); render(true);
 }
@@ -1034,36 +1327,74 @@ async function adminCmd(name) {
 /* ---- Reservar: confirmar ---- */
 async function confirmBooking() {
   const o = options()[R.opt];
-  if (!isGroup() && !R.day) return toast("Escoge el día");
+  if (!isGroup() && !o.noDay && !R.day) return toast("Escoge el día");
   if (needsTime() && !R.time) return toast("Escoge la hora");
   if (!A.user) { toast("Crea tu cuenta para reservar"); return authSheet("signup"); }
   const dog = curDog();
-  if (!dog) { toast("Primero añade a tu perro"); return openSheet(`<h3 class="d">Añade a tu perro</h3>${dogForm(null).replace('id="dogForm" data-id=""', 'id="dogForm" data-id="" data-new="1"')}`); }
+  if (!dog) { toast("Primero añade a tu perro"); return openFicha(null); }
+  if (!dog.ficha_ok) { toast("Completa la ficha de " + dog.nombre + " antes de reservar"); return openFicha(dog); }
   const mod = R.tab === "train" ? MODS.find((m) => m[0] === R.mod)[1] : "";
-  const titulo = R.tab === "train" ? `Paquete ${o.name} · ${mod}` : R.tab === "daycare" ? `Daycare · ${o.name}` : o.name;
-  const payNow = R.plan === "dep" ? o.price / 2 : o.price;
+  const titulo = R.tab === "oferta" ? `Oferta Pre-Apertura · ${o.name}` : R.tab === "train" ? `Paquete ${o.name} · ${mod}` : R.tab === "daycare" ? `Daycare · ${o.name}` : o.name;
+  const payNow = R.plan === "dep" ? depOf(o) : o.price;
   const methodName = { stripe: "Tarjeta o Klarna (Stripe)", ath: "ATH Móvil", cash: "Efectivo", check: "Cheque" }[R.method];
-  const link = R.method === "stripe" && o.pay ? (R.plan === "dep" ? o.pay[1] : o.pay[0]) : "";
+  // 1) Contrato firmado antes de cualquier pago
+  const ct = await firmar({ tipo: o.tipo, titulo, total: o.price, plan: R.plan, deposito: R.plan === "dep" ? depOf(o) : 0, paquete: o.paquete, modalidad: o.modalidad }, dog);
+  if (!ct) return toast("Necesitas firmar el contrato para reservar");
+  const link0 = R.method === "stripe" && o.pay ? (R.plan === "dep" ? o.pay[1] : o.pay[0]) : "";
+  const link = MDTContrato.payUrl(link0, ct);
   const btn = $("#confirm"); if (btn) btn.disabled = true;
-  const { error } = await sb.from("bookings").insert({ owner_id: A.user.id, dog_id: dog.id, servicio: R.tab, titulo, fecha: isGroup() ? null : R.day, hora: R.time || null, total: o.price, pagar_hoy: payNow, metodo: R.method, plan: R.plan });
+  const fecha = isGroup() || o.noDay ? null : R.day;
+  const { error } = await sb.from("bookings").insert({ owner_id: A.user.id, dog_id: dog.id, servicio: R.tab, titulo, fecha, hora: R.time || null, total: o.price, pagar_hoy: payNow, metodo: R.method, plan: R.plan, contract_id: ct.id });
   if (btn) btn.disabled = false;
   if (error) return toast(errMsg(error));
   const msg = [
     "Hola Moreno's, acabo de reservar en la app:",
     "Servicio: " + titulo,
-    isGroup() ? "Fecha: apúntenme en la lista del próximo grupo" : "Día: " + nice(R.day) + (R.time ? " a las " + R.time : ""),
-    "Pago: " + methodName + " · " + (R.plan === "dep" ? "Depósito 50% (" + money(payNow) + " de " + money(o.price) + ")" : "Completo (" + money(o.price) + ")"),
+    isGroup() ? "Fecha: apúntenme en la lista del próximo grupo" : o.noDay ? "Fecha: por coordinar después de la apertura" : "Día: " + nice(R.day) + (R.time ? " a las " + R.time : ""),
+    "Pago: " + methodName + " · " + (R.plan === "dep" ? "Depósito (" + money(payNow) + " de " + money(o.price) + ")" : "Completo (" + money(o.price) + ")"),
     "Cliente: " + ((A.profile && A.profile.nombre) || "-"),
-    "Perro: " + dog.nombre + (dog.raza ? " (" + dog.raza + ")" : "")
+    "Perro: " + dog.nombre + (dog.raza ? " (" + dog.raza + ")" : ""),
+    "Contrato firmado núm. " + MDTContrato.numero(ct.id)
   ].join("\n");
   refresh();
   openSheet(`
     <h3 class="d">¡Reserva enviada!</h3>
-    <div class="sum"><b>${esc(titulo)}</b> · ${esc(dog.nombre)}<br>${isGroup() ? "Lista del próximo grupo" : nice(R.day) + (R.time ? " · " + esc(R.time) : "")}<br>${R.plan === "dep" ? "Depósito hoy: " + money(payNow) + " de " + money(o.price) : "Total: " + money(o.price)} · ${methodName}</div>
+    <div class="sum"><b>${esc(titulo)}</b> · ${esc(dog.nombre)}<br>${isGroup() ? "Lista del próximo grupo" : o.noDay ? "Comienzo: lo coordinamos contigo al abrir" : nice(R.day) + (R.time ? " · " + esc(R.time) : "")}<br>${R.plan === "dep" ? "Depósito hoy: " + money(payNow) + " de " + money(o.price) : "Total: " + money(o.price)} · ${methodName}<br>Contrato firmado núm. ${MDTContrato.numero(ct.id)}</div>
     <p class="note">Hector la revisa y la confirma. Vas a ver el cambio en <b style="color:var(--ink)">Mi perro</b>.</p>
-    <div class="step"><span class="n">1</span><div style="flex:1;display:flex;flex-direction:column;gap:8px"><b>Paga para apartar tu espacio</b>${link ? `<a class="btn block" href="${link}" target="_blank" rel="noopener">Pagar ${money(payNow)} ahora</a><span class="note">Pagas seguro con Stripe. Klarna te deja pagar en cuotas.</span>` : `<span class="note">Te enviamos las instrucciones de pago por WhatsApp${R.method === "ath" ? " para ATH Móvil" : ""}.</span>`}</div></div>
+    <div class="step"><span class="n">1</span><div style="flex:1;display:flex;flex-direction:column;gap:8px"><b>Paga para apartar tu espacio</b>${link ? `<a class="btn block" href="${esc(link)}" target="_blank" rel="noopener">Pagar ${money(payNow)} ahora</a><span class="note">Pagas seguro con Stripe. Klarna te deja pagar en cuotas.</span>` : `<span class="note">Te enviamos las instrucciones de pago por WhatsApp${R.method === "ath" ? " para ATH Móvil" : ""}.</span>`}</div></div>
     <div class="step"><span class="n">2</span><div style="flex:1;display:flex;flex-direction:column;gap:8px"><b>¿Quieres avisarle ya?</b><a class="btn wa block" href="${waLink(msg)}" target="_blank" rel="noopener">${ic("wa", 20)} Avisar por WhatsApp</a></div></div>
+    <button class="btn ghost block" data-copy="${ct.id}">Ver mi copia del contrato</button>
     <button class="btn ghost block" data-close>Listo</button>`);
+  LAST_CT[ct.id] = ct;
+}
+
+/* ---- Contratos ---- */
+const LAST_CT = {};
+function firmar(o, dog) {
+  const p = A.profile || {};
+  return MDTContrato.abrir(Object.assign(o, {
+    sb, origen: "app", ownerId: A.user ? A.user.id : null, dogId: dog ? dog.id : null,
+    cliente: { nombre: p.nombre || "", tel: p.telefono || "", email: (A.user && A.user.email) || "" },
+    perro: dog ? dog.nombre + (dog.raza ? " (" + dog.raza + ")" : "") : ""
+  }));
+}
+async function verContrato(id) {
+  if (LAST_CT[id]) return MDTContrato.copia(LAST_CT[id]) || toast("Permite ventanas emergentes para ver la copia");
+  const w = window.open("", "_blank");
+  if (w) w.document.write("<p style='font-family:sans-serif;padding:24px'>Cargando tu contrato…</p>");
+  const { data, error } = await sb.from("contracts").select("*").eq("id", id).maybeSingle();
+  if (error || !data) { if (w) w.close(); return toast("No se encontró el contrato"); }
+  if (!MDTContrato.copia(data, w)) toast("Permite ventanas emergentes para ver la copia");
+}
+async function membresia(tipo) {
+  const plus = tipo === "plus";
+  if (!A.user) { toast("Crea tu cuenta para hacerte miembro"); return authSheet("signup"); }
+  const ct = await firmar({ tipo: "membresia", titulo: plus ? "Membresía Miembro Plus" : "Membresía Miembro", total: plus ? 99 : 39, plan: "mensual" }, null);
+  if (!ct) return toast("Necesitas firmar el contrato para hacerte miembro");
+  LAST_CT[ct.id] = ct; refresh();
+  openSheet(`<h3 class="d">¡Contrato firmado!</h3><div class="sum"><b>${esc(ct.titulo)}</b><br>${money(ct.total)} al mes · Contrato núm. ${MDTContrato.numero(ct.id)}</div>
+    <a class="btn block" href="${esc(MDTContrato.payUrl(plus ? PAY.plus : PAY.miembro, ct))}" target="_blank" rel="noopener">Pagar mi membresía</a>
+    <button class="btn ghost block" data-copy="${ct.id}">Ver mi copia del contrato</button><button class="btn ghost block" data-close>Listo</button>`);
 }
 
 /* ---- Sheet y toast ---- */
@@ -1083,6 +1414,7 @@ function toast(m) {
 
 /* ---- Arranque ---- */
 (async function boot() {
+  specialHash();
   render(false);
   if (!sb) { document.body.insertAdjacentHTML("afterbegin", '<div class="offline">Sin conexión: algunas cosas no van a funcionar hasta que vuelva el internet.</div>'); A.ready = true; render(true); return; }
   const isRecovery = /type=recovery/.test(location.hash + location.search);
@@ -1097,7 +1429,7 @@ function toast(m) {
   A.user = data.session ? data.session.user : null;
   if (location.hash.includes("access_token") || isRecovery) history.replaceState(null, "", location.pathname + "#inicio");
   await refresh();
-  if (!A.user && !PREF.seenWelcome && !isRecovery) {
+  if (!A.user && !PREF.seenWelcome && !isRecovery && !SPECIAL) {
     PREF.seenWelcome = true; savePref();
     openSheet(`
       <img src="assets/logo-dog.png" alt="" width="64" height="62" style="align-self:flex-start">
