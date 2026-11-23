@@ -268,8 +268,8 @@ const PAY = {
   // Orlando diciembre: [pago completo $800, depósito $200].
   orl: ["https://buy.stripe.com/8x2fZie31fxodIqg09fAc1v", "https://buy.stripe.com/8x228s4sr70S1ZI01bfAc1w"]
 };
-/* Orlando: pon on: false para quitarlo de la app. */
-const ORLANDO = { on: true, titulo: "Orlando · Intensivo", fechas: "11 al 19 de diciembre", valor: 1000, precio: 800, deposito: 200 };
+/* Orlando: la app es solo para clientes de Puerto Rico. Orlando se vende en la página web. */
+const ORLANDO = { on: false, titulo: "Orlando · Intensivo", fechas: "11 al 19 de diciembre", valor: 1000, precio: 800, deposito: 200 };
 /* Oferta de pre-apertura. Pon on: false para quitarla de la app. */
 const OFERTA = { on: true, titulo: "Intensivo + Daycare", valor: 1100, precio: 800, deposito: 200 };
 /* Llave pública de las notificaciones (la privada está solo en Supabase). */

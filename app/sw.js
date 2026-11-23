@@ -1,5 +1,5 @@
 // Moreno's Dog Training app: works offline, always picks up the newest version when online.
-const VERSION = 'mdt-v5';
+const VERSION = 'mdt-v6';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './assets/logo-dog.png', './contratos.js'];
 
 self.addEventListener('install', (e) => {
