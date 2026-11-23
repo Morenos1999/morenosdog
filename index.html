@@ -549,7 +549,7 @@ const PAY={
  pre:["",""],
  miembro:"https://buy.stripe.com/3cI00k0cbad47k29BLfAc1i",plus:"https://buy.stripe.com/aFa3cw5wvfxo47Q5lvfAc1j"
 };
-const ORLPAY={full:"https://buy.stripe.com/5kQaEY7EDdpgeMu15ffAc1l",dep:"https://buy.stripe.com/fZu28s9ML5WOeMug09fAc1m"};
+const ORLPAY={full:"https://buy.stripe.com/8x2fZie31fxodIqg09fAc1v",dep:"https://buy.stripe.com/8x228s4sr70S1ZI01bfAc1w"};
 const PRICES={basico:{clases:600,daycare:800,parque:1050,domicilio:1300},intensivo:{clases:800,daycare:1100,parque:1350,domicilio:1600},servicio:{clases:1200,daycare:1550,parque:1800,domicilio:2050}};
 const MDS=["clases","daycare","parque","domicilio"];
 const PAYWA="Te enviamos el enlace de pago por WhatsApp al confirmar tu reserva.";
@@ -589,7 +589,7 @@ function modal(){$("#dtw").hidden=grp()||orl();$("#send").textContent=grp()?"Apu
 function mod(){return $("#bmw").hidden?"":" ("+$("#bm").value+")";}
 function payUpd(){
  const s=SVC[st.loc].find(x=>x[0]===$("#bs").value);let b=null,m="Para este servicio, reserva por WhatsApp y te enviamos el enlace de pago.";
- if(st.loc==="orl"){b=[["Pagar depósito de $200",ORLPAY.dep]];m="Para apartar tu espacio paga el depósito de $200 antes del viernes 5 de diciembre (sin depósito no se separa nada). El balance de $600 se paga antes de la mitad del programa. Si prefieres pagar con Klarna o Afterpay, escríbenos por WhatsApp y te enviamos el enlace.";}
+ if(st.loc==="orl"){b=[["Pagar $800 completo",ORLPAY.full],["Pagar depósito de $200",ORLPAY.dep]];m="Para apartar tu espacio paga el depósito de $200 antes del viernes 5 de diciembre (sin depósito no se separa nada). O paga los $800 completos. Con tarjeta puedes escoger Klarna para pagar en cuotas. El balance de $600 se paga antes de la mitad del programa.";}
  else if(s){
   if(s[0]==="Daycare"){b=[["Día completo $25 (apertura)",PAY.dc1],["Medio día $18",PAY.dc05],["5 días $135",PAY.dc5],["10 días $250",PAY.dc10]];m="Paga un día, un medio día o un paquete de daycare.";}
   else if(s[0]==="Consulta de conducta")b=[["Pagar $65",PAY.consulta]];
