@@ -6,7 +6,7 @@
    ===================================================================== */
 (function () {
   "use strict";
-  const VERSION = "2026-11-v1";
+  const VERSION = "2026-11-v2";
   const SB_URL = "https://izxrwlfppyhmixzgtszi.supabase.co";
   const SB_KEY = "sb_publishable_zlagmwExxroomeqSBvWAWA_OT2nouon";
   const NEGOCIO = "Moreno's Dog Training and More";
@@ -50,7 +50,8 @@
     if (o.tipo === "preapertura") serv.push(
       `Oferta de pre-apertura: Paquete Intensivo en daycare (12 clases, daycare + entrenamiento de lunes a viernes, más 2 clases con el Cliente al final). Valor regular ${money(1100)}; precio de oferta ${money(800)}.`,
       `La oferta es solo para quien paga un depósito de ${money(200)} antes de la apertura del local de Moreno's. La fecha de comienzo se coordina con el Cliente después de la apertura. Si la apertura se atrasa, el espacio y el precio de oferta se mantienen.`);
-    if (o.tipo === "orlando") serv.push(`Entrenamiento Súper Intensivo en Orlando: 9 clases para aprender 4 comandos (sit, down, stay y heel), con práctica en tiendas y lugares públicos. Las fechas y lugares se coordinan con el Cliente.`);
+    if (o.tipo === "orlando") serv.push(`Entrenamiento Intensivo en Orlando: 9 clases de 45 a 60 minutos, una por día, del sábado 12 al domingo 20 de diciembre de 2026 en Cypress Grove Park, con práctica en Vineland Premium Outlets. Enseña 4 comandos (sit, down, stay y heel) más entrenamiento para hacer sus necesidades. Valor regular ${money(1000)}; precio de oferta ${money(800)}.`,
+      `El viaje a Orlando se confirma solo si se llega al mínimo de clientes. Moreno's confirmará o moverá la fecha a más tardar el viernes 5 de diciembre de 2026. Las clases que el Cliente no tome dentro de esas fechas se pierden y no se reembolsan.`);
     if (o.tipo === "daycare") serv.push(`Daycare: juego supervisado en grupo, de lunes a viernes de 8:00 am a 5:30 pm. Los días de un paquete se usan según disponibilidad de espacio.`);
     if (o.tipo === "consulta") serv.push(`Consulta de conducta de 45 a 60 minutos para trabajar un problema de conducta específico.`);
     if (o.tipo === "uncomando") serv.push(`Clase de un comando de unos 30 minutos para trabajar una sola destreza.`);
@@ -62,11 +63,13 @@
     if (o.plan === "dep") pago.push(`El Cliente paga hoy un depósito de ${money(o.deposito)} para apartar su espacio. El balance de ${money(balance)} se paga antes de la mitad del ${orl ? "programa" : "paquete"}. El perro se gradúa cuando el pago está completo.`);
     else if (o.tipo === "membresia") pago.push(`El Cliente autoriza el cobro de ${money(o.total)} cada mes al método de pago que use. Puede cancelar en cualquier momento antes del próximo cobro; lo ya cobrado del mes en curso no se reembolsa.`);
     else pago.push(`El Cliente paga ${money(pagoHoy)} para reservar el servicio.`);
-    if (o.tipo !== "membresia") pago.push(`EL DEPÓSITO NO ES REEMBOLSABLE bajo ninguna circunstancia que dependa del Cliente: cambio de planes, cancelación, ausencias, mudanza, que el perro no pueda seguir por su conducta o su salud, o cualquier otra razón del Cliente. Lo mismo aplica a los paquetes una vez comienzan.`);
+    if (o.tipo !== "membresia") pago.push(
+      `EL DEPÓSITO Y LOS PAGOS NO SON REEMBOLSABLES. Si el Cliente cancela, se arrepiente, cambia de planes, no puede asistir en las fechas, falta a clases, se muda, o el perro no puede seguir por su conducta o su salud, NO se devuelve dinero, sin importar la razón ni cuánto tiempo falte para comenzar. Lo mismo aplica a los paquetes una vez comienzan.`,
+      `LA ÚNICA EXCEPCIÓN: solo se devuelve dinero si es MORENO'S quien cancela el servicio o mueve la fecha anunciada. En ese caso, y únicamente en ese caso, el Cliente escoge entre (a) quedarse con la nueva fecha, con su depósito y su precio intactos, o (b) recibir el reembolso completo de lo que pagó por la parte del servicio que no se prestó. Ninguna otra situación da derecho a reembolso.`);
     pago.push(
       `Si el Cliente paga con Klarna, Afterpay u otra compañía de financiamiento, ese acuerdo es entre el Cliente y esa compañía. Moreno's recibe el pago completo y el Cliente sigue obligado con la compañía aunque cancele el servicio.`,
       `El Cliente se compromete a comunicarse primero con Moreno's ante cualquier problema con un cobro, en lugar de hacer una disputa o contracargo con su banco por servicios que se prestaron o se apartaron conforme a este contrato.`,
-      `Si Moreno's cancela el servicio por causas propias y no puede reprogramarlo, devuelve lo pagado por la parte del servicio que no se prestó.`);
+      `Los cambios de una clase individual por mal tiempo, emergencias o seguridad (sección 4) se reponen con otra clase y no cuentan como cambio de fecha del servicio.`);
     S.push(["3. Pagos y depósito no reembolsable", pago]);
 
     S.push(["4. Cancelaciones, ausencias y vencimiento", [
@@ -146,7 +149,7 @@
   }
   const ACEPTO = (o) => [
     "Leí todo el contrato y estoy de acuerdo con sus términos.",
-    o.tipo === "membresia" ? "Entiendo que la membresía se cobra cada mes hasta que la cancele." : "Entiendo que el depósito NO es reembolsable.",
+    o.tipo === "membresia" ? "Entiendo que la membresía se cobra cada mes hasta que la cancele." : "Entiendo que NO se devuelve dinero si yo cancelo o no puedo asistir. Solo se devuelve si Moreno's cancela o mueve la fecha.",
     "Acepto los riesgos y el relevo de responsabilidad (sección 7).",
     "La información que di sobre mi perro, sus vacunas y su conducta es cierta."
   ];
@@ -259,7 +262,7 @@
       el.innerHTML = `<div class="mdtc-p">
         <div class="mdtc-h"><div><b>Firma tu contrato</b><small>Antes de pagar, lee y firma el contrato de este servicio. Te toma un minuto.</small></div><button class="mdtc-x" type="button" aria-label="Cerrar" data-x>✕</button></div>
         <div class="mdtc-b">
-          <div class="mdtc-sum"><b>${esc(o.titulo)}</b><br>Total ${money(o.total)}${o.tipo === "membresia" ? " al mes" : ""}${o.plan === "dep" ? ` · Depósito hoy ${money(o.deposito)} (no reembolsable)` : ""}</div>
+          <div class="mdtc-sum"><b>${esc(o.titulo)}</b><br>Total ${money(o.total)}${o.tipo === "membresia" ? " al mes" : ""}${o.plan === "dep" ? ` · Depósito hoy ${money(o.deposito)} (no reembolsable, salvo que Moreno's cancele o mueva la fecha)` : ""}</div>
           ${docHtml(o)}
           <form class="mdtc-f" novalidate>
             ${pide ? `<div><label class="t" for="mdtc-n">Tu nombre completo</label><input type="text" id="mdtc-n" autocomplete="name" value="${esc(o.cliente.nombre)}" maxlength="80"></div>

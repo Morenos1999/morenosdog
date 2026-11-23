@@ -264,8 +264,12 @@ const PAY = {
   miembro: "https://buy.stripe.com/3cI00k0cbad47k29BLfAc1i",
   plus: "https://buy.stripe.com/aFa3cw5wvfxo47Q5lvfAc1j",
   // Oferta de pre-apertura: [pago completo $800, depósito $200]. Pega aquí los enlaces de Stripe.
-  pre: ["", ""]
+  pre: ["", ""],
+  // Orlando diciembre: [pago completo $800, depósito $200]. El de $800 completo se manda por WhatsApp.
+  orl: ["", "https://buy.stripe.com/fZu28s9ML5WOeMug09fAc1m"]
 };
+/* Orlando: pon on: false para quitarlo de la app. */
+const ORLANDO = { on: true, titulo: "Orlando · Intensivo", fechas: "12 al 20 de diciembre", valor: 1000, precio: 800, deposito: 200 };
 /* Oferta de pre-apertura. Pon on: false para quitarla de la app. */
 const OFERTA = { on: true, titulo: "Intensivo + Daycare", valor: 1100, precio: 800, deposito: 200 };
 /* Llave pública de las notificaciones (la privada está solo en Supabase). */
@@ -425,6 +429,7 @@ const R = { tab: "daycare", opt: 0, mod: "clases", day: "", time: "", method: "s
 const links = (a) => (a && a.some(Boolean) ? a : null);
 function options() {
   if (R.tab === "oferta") return [{ name: OFERTA.titulo, sub: "12 clases · daycare + entrenamiento lunes a viernes · aparta con $" + OFERTA.deposito + " antes de la apertura", price: OFERTA.precio, was: OFERTA.valor, pay: links(PAY.pre), deposit: true, depAmt: OFERTA.deposito, noDay: true, tipo: "preapertura", paquete: "intensivo", modalidad: "daycare" }];
+  if (R.tab === "orlando") return [{ name: ORLANDO.titulo, sub: ORLANDO.fechas + " · 9 clases en Cypress Grove Park · aparta con $" + ORLANDO.deposito + " antes del 5 de diciembre", price: ORLANDO.precio, was: ORLANDO.valor, pay: links(PAY.orl), deposit: true, depAmt: ORLANDO.deposito, noDay: true, tipo: "orlando" }];
   if (R.tab === "daycare") return [
     { name: "Día completo", sub: "Oferta de apertura · regular $30", price: 25, pay: [PAY.dc1], tipo: "daycare" },
     { name: "Medio día", sub: "Hasta 5 horas", price: 18, pay: [PAY.dc05], tipo: "daycare" },
@@ -533,6 +538,7 @@ V.inicio = () => {
   ${ticket}
   ${A.user && dog && !dog.ficha_ok ? `<section class="sec"><button class="card row" data-ficha="${dog.id}" style="width:100%;text-align:left;border-color:var(--gold)"><span class="rule" style="padding:0;border:0"><span class="ic" style="color:var(--gold)">${ic("paw", 20)}</span></span><div><b>Completa la ficha de ${dn}</b><div class="muted" style="font-size:13px">Vacunas, salud y conducta. La necesitas para reservar.</div></div></button></section>` : ""}
   ${ofertaCard()}
+  ${orlandoCard()}
   ${pushCard()}
   ${installCard()}
   ${A.admin ? `<section class="sec"><a class="card row" href="#admin" style="justify-content:space-between;border-color:var(--orange)"><div><b class="d" style="font-size:20px">Panel de Hector</b><div class="muted" style="font-size:13px">Reservas, perros, notas y fotos</div></div><span class="btn" style="min-height:42px">Abrir</span></a></section>` : ""}
@@ -563,14 +569,14 @@ V.reservar = () => {
   const opts = options();
   if (R.opt >= opts.length) R.opt = 0;
   const o = opts[R.opt];
-  const tabs = (OFERTA.on ? [["oferta", "Oferta"]] : []).concat([["daycare", "Daycare"], ["train", "Entrenar"], ["clase", "Clases"], ["grupal", "Grupal"]]);
+  const tabs = (OFERTA.on ? [["oferta", "Oferta"]] : []).concat(ORLANDO.on ? [["orlando", "Orlando"]] : []).concat([["daycare", "Daycare"], ["train", "Entrenar"], ["clase", "Clases"], ["grupal", "Grupal"]]);
   const days = nextDays(15);
   if (R.day && !days.includes(R.day)) R.day = "";
   const hasStripe = !!(o.pay && o.pay[0]);
   if (!hasStripe && R.method === "stripe") R.method = "ath";
   if (!o.deposit) R.plan = "full";
   const amount = R.plan === "dep" ? depOf(o) : o.price;
-  const titleFor = { oferta: "Oferta de pre-apertura", daycare: "Elige el plan", train: "Elige el paquete", clase: "Elige la clase", grupal: "Clase grupal" }[R.tab];
+  const titleFor = { oferta: "Oferta de pre-apertura", orlando: "Orlando · 12 al 20 de diciembre", daycare: "Elige el plan", train: "Elige el paquete", clase: "Elige la clase", grupal: "Clase grupal" }[R.tab];
   return `
   <section class="hero">
     ${paw("right:-20px;top:24px;transform:rotate(18deg);opacity:.22", 130)}
@@ -586,7 +592,7 @@ V.reservar = () => {
     ${opts.map((x, i) => `<button type="button" class="opt" data-opt="${i}" aria-pressed="${i === R.opt}"><span><b>${esc(x.name)}</b><small>${esc(x.sub)}</small></span><span style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">${x.was ? `<span class="was">${money(x.was)}</span>` : ""}<span class="price">${money(x.price)}</span></span></button>`).join("")}
     ${R.tab === "train" ? '<p class="note">Los mismos 5 comandos en los tres paquetes: ven, siéntate, échate, caminar sin halar y quieto. Lo que cambia es dónde y con cuántas distracciones los obedece.</p>' : ""}
   </section>
-  ${R.tab === "oferta" ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona la oferta?</b><p class="note" style="margin-top:6px">El Paquete Intensivo en daycare vale ${money(OFERTA.valor)}. Si apartas tu espacio con un depósito de ${money(OFERTA.deposito)} <b style="color:var(--ink)">antes de la apertura</b> de Moreno's, te lo dejamos en ${money(OFERTA.precio)}. El balance de ${money(OFERTA.precio - OFERTA.deposito)} lo pagas antes de la mitad del paquete, con tarjeta, Klarna, ATH Móvil, efectivo o cheque. Cuando abramos coordinamos contigo el día de comienzo.</p></div></section>` : isGroup() ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona?</b><p class="note" style="margin-top:6px">Te apuntamos en la lista y, cuando se llenan los cupos (6 a 10 perros), fijamos el sábado y te avisamos por WhatsApp. Es para perros que ya saben algunos comandos.</p></div></section>` : `
+  ${R.tab === "oferta" ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona la oferta?</b><p class="note" style="margin-top:6px">El Paquete Intensivo en daycare vale ${money(OFERTA.valor)}. Si apartas tu espacio con un depósito de ${money(OFERTA.deposito)} <b style="color:var(--ink)">antes de la apertura</b> de Moreno's, te lo dejamos en ${money(OFERTA.precio)}. El balance de ${money(OFERTA.precio - OFERTA.deposito)} lo pagas antes de la mitad del paquete, con tarjeta, Klarna, ATH Móvil, efectivo o cheque. Cuando abramos coordinamos contigo el día de comienzo.</p></div></section>` : R.tab === "orlando" ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona?</b><p class="note" style="margin-top:6px">Del sábado 12 al domingo 20 de diciembre en Cypress Grove Park: 9 clases, una por día. Aprende sit, down, stay y heel más entrenamiento para hacer sus necesidades, con práctica en Vineland Premium Outlets. Vale ${money(ORLANDO.valor)}; te lo dejamos en ${money(ORLANDO.precio)}. Aparta con ${money(ORLANDO.deposito)} <b style="color:var(--ink)">antes del viernes 5 de diciembre</b> y paga el resto antes de la mitad del programa, con tarjeta, Klarna, Afterpay, ATH Móvil, efectivo o cheque. Si nosotros movemos la fecha, escoges entre la devolución del depósito o la nueva fecha.</p></div></section>` : isGroup() ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona?</b><p class="note" style="margin-top:6px">Te apuntamos en la lista y, cuando se llenan los cupos (6 a 10 perros), fijamos el sábado y te avisamos por WhatsApp. Es para perros que ya saben algunos comandos.</p></div></section>` : `
   ${o.noDay ? "" : `<section class="sec"><h2 class="d" style="font-size:22px">${R.tab === "clase" ? "¿Qué día?" : "¿Qué día empezamos?"}</h2>
     <div class="days" role="group" aria-label="Día">${days.map((d) => { const x = parse(d); return `<button type="button" class="day" data-day="${d}" aria-pressed="${R.day === d}" aria-label="${nice(d)}"><small>${DOW[x.getDay()]}</small><b>${x.getDate()}</b></button>`; }).join("")}</div>
     ${needsTime() ? `<div class="chips" role="group" aria-label="Hora">${TIMES.map((t) => `<button type="button" class="chip" data-time="${t}" aria-pressed="${R.time === t}">${t}</button>`).join("")}</div>` : '<p class="note">Entrada desde las 8:00 am · recogido antes de las 5:30 pm.</p>'}
@@ -594,11 +600,11 @@ V.reservar = () => {
   <section class="sec"><h2 class="d" style="font-size:22px">¿Cómo pagas?</h2>
     ${o.deposit ? `<div class="chips" role="group" aria-label="Plan">${[["full", "Pago completo"], ["dep", o.depAmt ? "Depósito " + money(o.depAmt) : "Depósito 50%"]].map((p) => `<button type="button" class="chip" data-plan="${p[0]}" aria-pressed="${R.plan === p[0]}">${p[1]}</button>`).join("")}</div>` : ""}
     <div class="chips" role="group" aria-label="Forma de pago">${[["stripe", "Tarjeta o Klarna"], ["ath", "ATH Móvil"], ["cash", "Efectivo"], ["check", "Cheque"]].map((m) => `<button type="button" class="chip" data-method="${m[0]}" aria-pressed="${R.method === m[0]}" ${m[0] === "stripe" && !hasStripe ? 'disabled style="opacity:.4"' : ""}>${m[1]}</button>`).join("")}</div>
-    <p class="note">${R.plan === "dep" ? "Depositas " + (o.depAmt ? money(o.depAmt) : "el 50%") + " para apartar tu espacio y pagas el resto antes de la mitad del paquete. El depósito no es reembolsable." : !hasStripe ? "Este servicio se paga por ATH Móvil, efectivo o cheque. Te damos las instrucciones por WhatsApp." : R.method === "stripe" ? "Pagas seguro con Stripe. Con Klarna lo divides en cuotas." : "Te damos las instrucciones de pago por WhatsApp."}</p>
+    <p class="note">${R.plan === "dep" ? "Depositas " + (o.depAmt ? money(o.depAmt) : "el 50%") + " para apartar tu espacio y pagas el resto antes de la mitad del paquete. El depósito no se devuelve si cancelas tú; solo se devuelve si Moreno's cancela o mueve la fecha." : !hasStripe ? "Este servicio se paga por ATH Móvil, efectivo o cheque. Te damos las instrucciones por WhatsApp." : R.method === "stripe" ? "Pagas seguro con Stripe. Con Klarna lo divides en cuotas." : "Te damos las instrucciones de pago por WhatsApp."}</p>
   </section>
   <div style="height:90px"></div>
   <div class="paybar"><div><small>${R.plan === "dep" ? "Pagas hoy" : "Total"}</small><b>${money(amount)}</b></div>
-    <button type="button" class="btn" id="confirm">${isGroup() ? "¡Apúntame!" : R.tab === "oferta" ? "¡Quiero la oferta!" : "¡Reservar!"}</button></div>`;
+    <button type="button" class="btn" id="confirm">${isGroup() ? "¡Apúntame!" : R.tab === "oferta" || R.tab === "orlando" ? "¡Quiero mi espacio!" : "¡Reservar!"}</button></div>`;
 };
 
 V.perro = () => {
@@ -633,7 +639,7 @@ V.perro = () => {
   </section>
   <section class="sec"><h2 class="d" style="font-size:22px">Sus reservas</h2>
     <div class="card">${res.length ? res.map((r) => `
-      <div class="res"><div style="min-width:0"><b style="display:block">${esc(r.titulo)}</b><span class="muted" style="font-size:13px">${r.fecha ? nice(r.fecha) : r.servicio === "oferta" ? "Comienzo por coordinar" : "Lista de espera"}${r.hora ? " · " + esc(r.hora) : ""} · ${money(r.total)}${r.pagado ? " · Pagado" : ""}</span></div>
+      <div class="res"><div style="min-width:0"><b style="display:block">${esc(r.titulo)}</b><span class="muted" style="font-size:13px">${r.fecha ? nice(r.fecha) : r.servicio === "orlando" ? "Orlando · " + ORLANDO.fechas : r.servicio === "oferta" ? "Comienzo por coordinar" : "Lista de espera"}${r.hora ? " · " + esc(r.hora) : ""} · ${money(r.total)}${r.pagado ? " · Pagado" : ""}</span></div>
       <span style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${estadoPill(r)}${r.estado === "pendiente" ? `<button type="button" data-del="${r.id}" style="min-height:32px;background:none;border:0;color:var(--peach);font-size:13px;font-weight:700;padding:0">Quitar</button>` : ""}</span></div>`).join("") : '<p class="note">Aún no hay reservas. <a href="#reservar">Haz la primera</a>.</p>'}
     </div>
     ${res.some((r) => r.estado === "pendiente") ? '<p class="note">Las reservas pendientes se confirman cuando Hector las revisa.</p>' : ""}
@@ -822,7 +828,7 @@ const admHero = (cur, title) => `<section class="hero">${paw("right:-20px;top:24
 function admBooking(b) {
   const cli = b.profiles || {}, tel = waNum(cli.telefono);
   return `<div class="adm"><div class="hd"><div style="min-width:0"><b style="display:block;font-size:16px">${esc(b.titulo)}</b>
-    <span class="muted" style="font-size:13px">${b.fecha ? nice(b.fecha) : b.servicio === "oferta" ? "Pre-apertura · comienzo por coordinar" : "Lista de espera"}${b.hora ? " · " + esc(b.hora) : ""}</span></div>${estadoPill(b)}</div>
+    <span class="muted" style="font-size:13px">${b.fecha ? nice(b.fecha) : b.servicio === "orlando" ? "Orlando · " + ORLANDO.fechas : b.servicio === "oferta" ? "Pre-apertura · comienzo por coordinar" : "Lista de espera"}${b.hora ? " · " + esc(b.hora) : ""}</span></div>${estadoPill(b)}</div>
     <div style="font-size:14px;line-height:1.6"><b>${esc((b.dogs && b.dogs.nombre) || "Sin perro")}</b> · ${esc(cli.nombre || "Cliente")}${cli.telefono ? " · " + esc(cli.telefono) : ""}<br>
     <span class="muted">${money(b.total)}${b.plan === "dep" ? " · depósito " + money(b.pagar_hoy) : ""} · ${esc({ stripe: "Stripe", ath: "ATH Móvil", cash: "Efectivo", check: "Cheque" }[b.metodo] || b.metodo)} · </span>${b.pagado ? '<b style="color:#BFF0D4">Pagado</b>' : '<span class="muted">Sin pagar</span>'}</div>
     <div class="acts">
@@ -980,6 +986,16 @@ function ofertaCard() {
     <span class="go">¡Quiero la oferta!</span></button></section>`;
 }
 
+function orlandoCard() {
+  if (!ORLANDO.on) return "";
+  return `<section class="sec"><button class="oferta" data-go="orlando"><span class="big" aria-hidden="true">$${ORLANDO.precio}</span>
+    <span class="ribbon">Orlando · ${esc(ORLANDO.fechas)}</span>
+    <h3 class="d">Entrenamiento Intensivo en Orlando</h3>
+    <span class="pr"><b>${money(ORLANDO.precio)}</b><s>${money(ORLANDO.valor)}</s></span>
+    <p>9 clases en Cypress Grove Park, con práctica en Vineland Premium Outlets. Aparta con ${money(ORLANDO.deposito)} antes del viernes 5 de diciembre. Todos los planes de pago.</p>
+    <span class="go">¡Quiero mi espacio!</span></button></section>`;
+}
+
 /* ---- Notificaciones ---- */
 const pushOK = () => "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
 let PUSH_ON = false;
@@ -1041,7 +1057,8 @@ function render(keep) {
 let SPECIAL = false;
 function specialHash() {
   const h = location.hash.replace("#", "");
-  if (h === "oferta" || h === "instalar") SPECIAL = true;
+  if (h === "oferta" || h === "orlando" || h === "instalar") SPECIAL = true;
+  if (h === "orlando") { R.tab = ORLANDO.on ? "orlando" : "train"; R.opt = 0; R.plan = "dep"; history.replaceState(null, "", location.pathname + "#reservar"); }
   if (h === "oferta") { R.tab = OFERTA.on ? "oferta" : "train"; R.opt = 0; R.plan = "dep"; history.replaceState(null, "", location.pathname + "#reservar"); }
   if (h === "instalar") { history.replaceState(null, "", location.pathname + "#inicio"); setTimeout(installSheet, 400); }
 }
@@ -1108,7 +1125,7 @@ document.addEventListener("click", async (e) => {
   const t = e.target.closest("button, a");
   if (!t) return;
   const ds = t.dataset;
-  if (ds.go) { R.tab = ds.go; R.opt = 0; R.plan = ds.go === "oferta" ? "dep" : "full"; R.method = "stripe"; R.time = ""; if (location.hash !== "#reservar") location.hash = "reservar"; else render(true); return; }
+  if (ds.go) { R.tab = ds.go; R.opt = 0; R.plan = ds.go === "oferta" || ds.go === "orlando" ? "dep" : "full"; R.method = "stripe"; R.time = ""; if (location.hash !== "#reservar") location.hash = "reservar"; else render(true); return; }
   if (ds.nav) { location.hash = ds.nav; return; }
   if (ds.tab) { R.tab = ds.tab; R.opt = 0; R.plan = "full"; R.method = "stripe"; R.time = ""; render(true); return; }
   if (ds.mod) { R.mod = ds.mod; R.method = "stripe"; R.time = ""; render(true); return; }
@@ -1334,7 +1351,7 @@ async function confirmBooking() {
   if (!dog) { toast("Primero añade a tu perro"); return openFicha(null); }
   if (!dog.ficha_ok) { toast("Completa la ficha de " + dog.nombre + " antes de reservar"); return openFicha(dog); }
   const mod = R.tab === "train" ? MODS.find((m) => m[0] === R.mod)[1] : "";
-  const titulo = R.tab === "oferta" ? `Oferta Pre-Apertura · ${o.name}` : R.tab === "train" ? `Paquete ${o.name} · ${mod}` : R.tab === "daycare" ? `Daycare · ${o.name}` : o.name;
+  const titulo = R.tab === "oferta" ? `Oferta Pre-Apertura · ${o.name}` : R.tab === "orlando" ? `Orlando · Entrenamiento Intensivo (${ORLANDO.fechas})` : R.tab === "train" ? `Paquete ${o.name} · ${mod}` : R.tab === "daycare" ? `Daycare · ${o.name}` : o.name;
   const payNow = R.plan === "dep" ? depOf(o) : o.price;
   const methodName = { stripe: "Tarjeta o Klarna (Stripe)", ath: "ATH Móvil", cash: "Efectivo", check: "Cheque" }[R.method];
   // 1) Contrato firmado antes de cualquier pago
@@ -1350,7 +1367,7 @@ async function confirmBooking() {
   const msg = [
     "Hola Moreno's, acabo de reservar en la app:",
     "Servicio: " + titulo,
-    isGroup() ? "Fecha: apúntenme en la lista del próximo grupo" : o.noDay ? "Fecha: por coordinar después de la apertura" : "Día: " + nice(R.day) + (R.time ? " a las " + R.time : ""),
+    isGroup() ? "Fecha: apúntenme en la lista del próximo grupo" : R.tab === "orlando" ? "Fechas: " + ORLANDO.fechas + " en Orlando" : o.noDay ? "Fecha: por coordinar después de la apertura" : "Día: " + nice(R.day) + (R.time ? " a las " + R.time : ""),
     "Pago: " + methodName + " · " + (R.plan === "dep" ? "Depósito (" + money(payNow) + " de " + money(o.price) + ")" : "Completo (" + money(o.price) + ")"),
     "Cliente: " + ((A.profile && A.profile.nombre) || "-"),
     "Perro: " + dog.nombre + (dog.raza ? " (" + dog.raza + ")" : ""),
@@ -1359,7 +1376,7 @@ async function confirmBooking() {
   refresh();
   openSheet(`
     <h3 class="d">¡Reserva enviada!</h3>
-    <div class="sum"><b>${esc(titulo)}</b> · ${esc(dog.nombre)}<br>${isGroup() ? "Lista del próximo grupo" : o.noDay ? "Comienzo: lo coordinamos contigo al abrir" : nice(R.day) + (R.time ? " · " + esc(R.time) : "")}<br>${R.plan === "dep" ? "Depósito hoy: " + money(payNow) + " de " + money(o.price) : "Total: " + money(o.price)} · ${methodName}<br>Contrato firmado núm. ${MDTContrato.numero(ct.id)}</div>
+    <div class="sum"><b>${esc(titulo)}</b> · ${esc(dog.nombre)}<br>${isGroup() ? "Lista del próximo grupo" : R.tab === "orlando" ? "Fechas: " + ORLANDO.fechas : o.noDay ? "Comienzo: lo coordinamos contigo al abrir" : nice(R.day) + (R.time ? " · " + esc(R.time) : "")}<br>${R.plan === "dep" ? "Depósito hoy: " + money(payNow) + " de " + money(o.price) : "Total: " + money(o.price)} · ${methodName}<br>Contrato firmado núm. ${MDTContrato.numero(ct.id)}</div>
     <p class="note">Hector la revisa y la confirma. Vas a ver el cambio en <b style="color:var(--ink)">Mi perro</b>.</p>
     <div class="step"><span class="n">1</span><div style="flex:1;display:flex;flex-direction:column;gap:8px"><b>Paga para apartar tu espacio</b>${link ? `<a class="btn block" href="${esc(link)}" target="_blank" rel="noopener">Pagar ${money(payNow)} ahora</a><span class="note">Pagas seguro con Stripe. Klarna te deja pagar en cuotas.</span>` : `<span class="note">Te enviamos las instrucciones de pago por WhatsApp${R.method === "ath" ? " para ATH Móvil" : ""}.</span>`}</div></div>
     <div class="step"><span class="n">2</span><div style="flex:1;display:flex;flex-direction:column;gap:8px"><b>¿Quieres avisarle ya?</b><a class="btn wa block" href="${waLink(msg)}" target="_blank" rel="noopener">${ic("wa", 20)} Avisar por WhatsApp</a></div></div>
