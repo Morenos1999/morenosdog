@@ -6,7 +6,7 @@
    ===================================================================== */
 (function () {
   "use strict";
-  const VERSION = "2026-11-v2";
+  const VERSION = "2026-11-v3";
   const SB_URL = "https://izxrwlfppyhmixzgtszi.supabase.co";
   const SB_KEY = "sb_publishable_zlagmwExxroomeqSBvWAWA_OT2nouon";
   const NEGOCIO = "Moreno's Dog Training and More";
@@ -50,8 +50,8 @@
     if (o.tipo === "preapertura") serv.push(
       `Oferta de pre-apertura: Paquete Intensivo en daycare (12 clases, daycare + entrenamiento de lunes a viernes, más 2 clases con el Cliente al final). Valor regular ${money(1100)}; precio de oferta ${money(800)}.`,
       `La oferta es solo para quien paga un depósito de ${money(200)} antes de la apertura del local de Moreno's. La fecha de comienzo se coordina con el Cliente después de la apertura. Si la apertura se atrasa, el espacio y el precio de oferta se mantienen.`);
-    if (o.tipo === "orlando") serv.push(`Entrenamiento Intensivo en Orlando: 9 clases de 45 a 60 minutos, una por día, del sábado 12 al domingo 20 de diciembre de 2026 en Cypress Grove Park, con práctica en Vineland Premium Outlets. Enseña 4 comandos (sit, down, stay y heel) más entrenamiento para hacer sus necesidades. Valor regular ${money(1000)}; precio de oferta ${money(800)}.`,
-      `El viaje a Orlando se confirma solo si se llega al mínimo de clientes. Moreno's confirmará o moverá la fecha a más tardar el viernes 5 de diciembre de 2026. Las clases que el Cliente no tome dentro de esas fechas se pierden y no se reembolsan.`);
+    if (o.tipo === "orlando") serv.push(`Entrenamiento Intensivo en Orlando: 9 clases de 45 a 60 minutos, una por día, del viernes 11 al sábado 19 de diciembre de 2026 en Cypress Grove Park, con práctica en Vineland Premium Outlets. Enseña 4 comandos (sit, down, stay y heel) más entrenamiento para hacer sus necesidades. Valor regular ${money(1000)}; precio de oferta ${money(800)}.`,
+      `El viaje a Orlando se confirma solo si se llega al mínimo de clientes. Moreno's confirmará o moverá la fecha a más tardar el viernes 4 de diciembre de 2026. Las clases que el Cliente no tome dentro de esas fechas se pierden y no se reembolsan.`);
     if (o.tipo === "daycare") serv.push(`Daycare: juego supervisado en grupo, de lunes a viernes de 8:00 am a 5:30 pm. Los días de un paquete se usan según disponibilidad de espacio.`);
     if (o.tipo === "consulta") serv.push(`Consulta de conducta de 45 a 60 minutos para trabajar un problema de conducta específico.`);
     if (o.tipo === "uncomando") serv.push(`Clase de un comando de unos 30 minutos para trabajar una sola destreza.`);

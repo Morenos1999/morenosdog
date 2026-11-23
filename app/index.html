@@ -269,7 +269,7 @@ const PAY = {
   orl: ["https://buy.stripe.com/8x2fZie31fxodIqg09fAc1v", "https://buy.stripe.com/8x228s4sr70S1ZI01bfAc1w"]
 };
 /* Orlando: pon on: false para quitarlo de la app. */
-const ORLANDO = { on: true, titulo: "Orlando · Intensivo", fechas: "12 al 20 de diciembre", valor: 1000, precio: 800, deposito: 200 };
+const ORLANDO = { on: true, titulo: "Orlando · Intensivo", fechas: "11 al 19 de diciembre", valor: 1000, precio: 800, deposito: 200 };
 /* Oferta de pre-apertura. Pon on: false para quitarla de la app. */
 const OFERTA = { on: true, titulo: "Intensivo + Daycare", valor: 1100, precio: 800, deposito: 200 };
 /* Llave pública de las notificaciones (la privada está solo en Supabase). */
@@ -429,7 +429,7 @@ const R = { tab: "daycare", opt: 0, mod: "clases", day: "", time: "", method: "s
 const links = (a) => (a && a.some(Boolean) ? a : null);
 function options() {
   if (R.tab === "oferta") return [{ name: OFERTA.titulo, sub: "12 clases · daycare + entrenamiento lunes a viernes · aparta con $" + OFERTA.deposito + " antes de la apertura", price: OFERTA.precio, was: OFERTA.valor, pay: links(PAY.pre), deposit: true, depAmt: OFERTA.deposito, noDay: true, tipo: "preapertura", paquete: "intensivo", modalidad: "daycare" }];
-  if (R.tab === "orlando") return [{ name: ORLANDO.titulo, sub: ORLANDO.fechas + " · 9 clases en Cypress Grove Park · aparta con $" + ORLANDO.deposito + " antes del 5 de diciembre", price: ORLANDO.precio, was: ORLANDO.valor, pay: links(PAY.orl), deposit: true, depAmt: ORLANDO.deposito, noDay: true, tipo: "orlando" }];
+  if (R.tab === "orlando") return [{ name: ORLANDO.titulo, sub: ORLANDO.fechas + " · 9 clases en Cypress Grove Park · aparta con $" + ORLANDO.deposito + " antes del 4 de diciembre", price: ORLANDO.precio, was: ORLANDO.valor, pay: links(PAY.orl), deposit: true, depAmt: ORLANDO.deposito, noDay: true, tipo: "orlando" }];
   if (R.tab === "daycare") return [
     { name: "Día completo", sub: "Oferta de apertura · regular $30", price: 25, pay: [PAY.dc1], tipo: "daycare" },
     { name: "Medio día", sub: "Hasta 5 horas", price: 18, pay: [PAY.dc05], tipo: "daycare" },
@@ -576,7 +576,7 @@ V.reservar = () => {
   if (!hasStripe && R.method === "stripe") R.method = "ath";
   if (!o.deposit) R.plan = "full";
   const amount = R.plan === "dep" ? depOf(o) : o.price;
-  const titleFor = { oferta: "Oferta de pre-apertura", orlando: "Orlando · 12 al 20 de diciembre", daycare: "Elige el plan", train: "Elige el paquete", clase: "Elige la clase", grupal: "Clase grupal" }[R.tab];
+  const titleFor = { oferta: "Oferta de pre-apertura", orlando: "Orlando · 11 al 19 de diciembre", daycare: "Elige el plan", train: "Elige el paquete", clase: "Elige la clase", grupal: "Clase grupal" }[R.tab];
   return `
   <section class="hero">
     ${paw("right:-20px;top:24px;transform:rotate(18deg);opacity:.22", 130)}
@@ -592,7 +592,7 @@ V.reservar = () => {
     ${opts.map((x, i) => `<button type="button" class="opt" data-opt="${i}" aria-pressed="${i === R.opt}"><span><b>${esc(x.name)}</b><small>${esc(x.sub)}</small></span><span style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">${x.was ? `<span class="was">${money(x.was)}</span>` : ""}<span class="price">${money(x.price)}</span></span></button>`).join("")}
     ${R.tab === "train" ? '<p class="note">Los mismos 5 comandos en los tres paquetes: ven, siéntate, échate, caminar sin halar y quieto. Lo que cambia es dónde y con cuántas distracciones los obedece.</p>' : ""}
   </section>
-  ${R.tab === "oferta" ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona la oferta?</b><p class="note" style="margin-top:6px">El Paquete Intensivo en daycare vale ${money(OFERTA.valor)}. Si apartas tu espacio con un depósito de ${money(OFERTA.deposito)} <b style="color:var(--ink)">antes de la apertura</b> de Moreno's, te lo dejamos en ${money(OFERTA.precio)}. El balance de ${money(OFERTA.precio - OFERTA.deposito)} lo pagas antes de la mitad del paquete, con tarjeta, Klarna, ATH Móvil, efectivo o cheque. Cuando abramos coordinamos contigo el día de comienzo.</p></div></section>` : R.tab === "orlando" ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona?</b><p class="note" style="margin-top:6px">Del sábado 12 al domingo 20 de diciembre en Cypress Grove Park: 9 clases, una por día. Aprende sit, down, stay y heel más entrenamiento para hacer sus necesidades, con práctica en Vineland Premium Outlets. Vale ${money(ORLANDO.valor)}; te lo dejamos en ${money(ORLANDO.precio)}. Aparta con ${money(ORLANDO.deposito)} <b style="color:var(--ink)">antes del viernes 5 de diciembre</b> y paga el resto antes de la mitad del programa, con tarjeta, Klarna, Afterpay, ATH Móvil, efectivo o cheque. Si nosotros movemos la fecha, escoges entre la devolución del depósito o la nueva fecha.</p></div></section>` : isGroup() ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona?</b><p class="note" style="margin-top:6px">Te apuntamos en la lista y, cuando se llenan los cupos (6 a 10 perros), fijamos el sábado y te avisamos por WhatsApp. Es para perros que ya saben algunos comandos.</p></div></section>` : `
+  ${R.tab === "oferta" ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona la oferta?</b><p class="note" style="margin-top:6px">El Paquete Intensivo en daycare vale ${money(OFERTA.valor)}. Si apartas tu espacio con un depósito de ${money(OFERTA.deposito)} <b style="color:var(--ink)">antes de la apertura</b> de Moreno's, te lo dejamos en ${money(OFERTA.precio)}. El balance de ${money(OFERTA.precio - OFERTA.deposito)} lo pagas antes de la mitad del paquete, con tarjeta, Klarna, ATH Móvil, efectivo o cheque. Cuando abramos coordinamos contigo el día de comienzo.</p></div></section>` : R.tab === "orlando" ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona?</b><p class="note" style="margin-top:6px">Del viernes 11 al sábado 19 de diciembre en Cypress Grove Park: 9 clases, una por día. Aprende sit, down, stay y heel más entrenamiento para hacer sus necesidades, con práctica en Vineland Premium Outlets. Vale ${money(ORLANDO.valor)}; te lo dejamos en ${money(ORLANDO.precio)}. Aparta con ${money(ORLANDO.deposito)} <b style="color:var(--ink)">antes del viernes 4 de diciembre</b> y paga el resto antes de la mitad del programa, con tarjeta, Klarna, Afterpay, ATH Móvil, efectivo o cheque. Si nosotros movemos la fecha, escoges entre la devolución del depósito o la nueva fecha.</p></div></section>` : isGroup() ? `<section class="sec"><div class="card"><b class="d" style="font-size:19px">¿Cómo funciona?</b><p class="note" style="margin-top:6px">Te apuntamos en la lista y, cuando se llenan los cupos (6 a 10 perros), fijamos el sábado y te avisamos por WhatsApp. Es para perros que ya saben algunos comandos.</p></div></section>` : `
   ${o.noDay ? "" : `<section class="sec"><h2 class="d" style="font-size:22px">${R.tab === "clase" ? "¿Qué día?" : "¿Qué día empezamos?"}</h2>
     <div class="days" role="group" aria-label="Día">${days.map((d) => { const x = parse(d); return `<button type="button" class="day" data-day="${d}" aria-pressed="${R.day === d}" aria-label="${nice(d)}"><small>${DOW[x.getDay()]}</small><b>${x.getDate()}</b></button>`; }).join("")}</div>
     ${needsTime() ? `<div class="chips" role="group" aria-label="Hora">${TIMES.map((t) => `<button type="button" class="chip" data-time="${t}" aria-pressed="${R.time === t}">${t}</button>`).join("")}</div>` : '<p class="note">Entrada desde las 8:00 am · recogido antes de las 5:30 pm.</p>'}
@@ -992,7 +992,7 @@ function orlandoCard() {
     <span class="ribbon">Orlando · ${esc(ORLANDO.fechas)}</span>
     <h3 class="d">Entrenamiento Intensivo en Orlando</h3>
     <span class="pr"><b>${money(ORLANDO.precio)}</b><s>${money(ORLANDO.valor)}</s></span>
-    <p>9 clases en Cypress Grove Park, con práctica en Vineland Premium Outlets. Aparta con ${money(ORLANDO.deposito)} antes del viernes 5 de diciembre. Todos los planes de pago.</p>
+    <p>9 clases en Cypress Grove Park, con práctica en Vineland Premium Outlets. Aparta con ${money(ORLANDO.deposito)} antes del viernes 4 de diciembre. Todos los planes de pago.</p>
     <span class="go">¡Quiero mi espacio!</span></button></section>`;
 }
 
